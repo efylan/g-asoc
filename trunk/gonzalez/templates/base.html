@@ -1,0 +1,42 @@
+<html>
+    <head>
+
+        <link rel="stylesheet" type="text/css" media="all" href="/media/css/style.css" /> 
+
+        {%block extrahead%}
+            <title> NOMBRE DE LA EMPRESA </title>
+        {%endblock%}
+    </head>
+
+    <body>
+        <div id="topcontent">
+            {%block topcontent%}
+                <h3> TITULO </h3>
+            {%endblock%}
+        </div>
+
+        <div id="sidecontent">
+        {%block sidecontent%}
+
+        <ul>
+            <li>
+                <a href=""> Menu 1 </a>
+            </li>
+            <li>
+                <a href=""> Menu 2 </a>
+            </li>
+            <li>
+                <a href=""> Menu 3 </a>
+            </li>
+        </ul>
+
+        {%endblock%}
+        </div>
+
+
+        <div id="maincontent">
+            {%block maincontent%}
+            {%endblock%}
+        </div>
+    <body>
+</html>
