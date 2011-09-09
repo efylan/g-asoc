@@ -1,0 +1,13 @@
+{%extends "base.html"%}
+
+{%block maincontent%}
+    {%for cliente in clientes%}
+    <div class="cliente">
+        {{cliente.nombre}}
+        {{cliente.giro}}
+        <img src="{{cliente.banner.url}}"/>
+        {{cliente.descripcion}}
+        <a href="{{cliente.website}}">Sitio web</a>
+    </div>
+    {%endfor%}
+{%endblock%}
