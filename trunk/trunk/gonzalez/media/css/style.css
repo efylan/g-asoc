@@ -69,8 +69,8 @@ background: linear-gradient(top, #f2f5f6 0%,#e3eaed 37%,#c8d7dc 100%); /* W3C */
 	font-size: 9pt;
 	padding-left: 2em;
 	padding-right: 2em;
-	padding-top: 1em;
-	margin-right: 2em;
+	padding-top: 2em;
+	/*margin-right: 2em;*/
 	margin-bottom:3em;
 	padding-bottom:5em;
 	position:relative;
@@ -87,3 +87,132 @@ background: -ms-linear-gradient(top, #f2f5f6 0%,#e3eaed 37%,#c8d7dc 100%); /* IE
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f5f6', endColorstr='#c8d7dc',GradientType=0 ); /* IE6-9 */
 background: linear-gradient(top, #f2f5f6 0%,#e3eaed 37%,#c8d7dc 100%); /* W3C */}
 
+
+.object_list
+{
+    margin: auto;
+	font-size: 9pt;
+    border: 1px solid gray;
+}
+
+.object_list tr td
+{   
+    border: 1px solid gray;
+    padding: 0.2em 0.2em;
+    background-color: white;
+    text-align:center;
+}
+
+
+.con_list
+{
+    margin: auto;
+	font-size: 7.5pt;
+    background-color: #DADADA;
+}
+
+.con_list tr td
+{   
+    border: 1px solid gray;
+    padding: 0.2em 0.5em;
+    text-align:center;
+    background-color: #F0F0F0;
+}
+
+
+.info_cheque
+{
+    margin:auto;
+	font-size: 10pt;
+}
+
+.tdnombres
+{   
+
+    padding: 0.2em 0.5em;
+    text-align:center;
+    font-weight:bold;
+}
+
+
+
+.tdvalores
+{   
+    border: 1px solid gray;
+    padding: 0.2em 0.5em;
+    background-color: white;
+    text-align:center;
+}
+
+
+input.new_link.button {
+height: 28px;
+border:0px black none;}
+
+input.cancel_link.button {
+height: 28px;
+border:0px black none;}
+input.cart-update{
+text-indent: -9999px;
+height: 28px;
+width: 37px;
+border:0px black none;
+}
+input.cart-delete{
+text-indent: -9999px;
+height: 28px;
+width: 37px;
+border:0px black none;
+}
+
+.button, .button:visited { 
+  background: #222 repeat-x;
+  display: inline-block;
+  outline: none;
+  padding: 5px 10px 6px;
+  color: #FFF;
+  text-decoration: none;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  
+  position: relative;
+  cursor:pointer
+}
+/* el efecto hover */
+.button:hover { background-color: #111; color: #FFF;}
+ /* el efecto click */
+.button:active{ top: 1px;}
+
+ /* botones medianos */
+.button, .button:visited,.medium.button, .medium.button:visited {
+  font-size: 13px;
+  font-weight: bold;
+
+}
+.new_link.button, .new_link.button:visited { background-color:#59A3F8; float:left; margin-left:1em;}
+
+.new_link2.button, .new_link2.button:visited { background-color:#41E38D;  float:right; margin-right:1em;}
+.new_link.button:hover{ text-decoration: underline; }
+
+.del_link.button, .del_link.button:visited { background-color:red; float:right; margin-left:1em;}
+
+.cancel_link.button, .cancel_link.button:visited { background-color:orange}
+.cancel_link.button:hover{ text-decoration: underline;}
+
+.cart-delete, cart-delete:visited {background:url(/media/img/delete.png) no-repeat;}
+.cart-update, .cart-update:visited {background:url(/media/img/update.png) no-repeat;}
+
+.redf
+{
+    color:red;
+}
+
+.bluef
+{
+    color:blue;
+}
+
+.silverb
+{
+    background-color:#FAFAFA;
+}

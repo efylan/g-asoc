@@ -1,0 +1,14 @@
+{%extends "base.html"%}
+
+{% block extrahead %}
+    <title>Nuestros servicios</title>
+{% endblock %}
+
+{%block maincontent%}
+    {%for servicio in servicios%}
+    <div class="servicios">
+        <h1>{{servicio.nombre}}</h1>
+        <p>{{servicio.descripcion}}</p>
+    </div>
+    {%endfor%}
+{%endblock%}

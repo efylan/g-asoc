@@ -8,7 +8,10 @@ urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'gonzalez.views.index', name='index'),
     url(r'^clientes/$', 'gonzalez.clientes.views.lista_clientes', name='lista_cleintes'),
-    # url(r'^gonzalez/', include('gonzalez.foo.urls')),
+    url(r'^nosotros/$', 'gonzalez.empresa.views.info_empresa', name='info_empresa'),
+    url(r'^servicios/$', 'gonzalez.empresa.views.info_servicios', name='info_servicios'),
+    url(r'^usuarios/', include('gonzalez.users.urls')),
+    url(r'^diot/', include('gonzalez.diot.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
