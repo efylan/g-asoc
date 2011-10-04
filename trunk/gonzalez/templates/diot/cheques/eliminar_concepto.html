@@ -1,0 +1,60 @@
+{%extends "base.html"%}
+
+{%block sidecontent%}
+    {%include "diot/menudiot.html"%}
+{%endblock%}
+
+{%block extrahead%}
+{%load impuestos_tags%}
+<title>Eliminar concepto {{cheque.referencia}} de la cuenta {{cheque.cuenta}}</title>
+<link rel="stylesheet" type="text/css" media="all" href="/media/jquery/css/pepper-grinder/jquery-ui-1.8.16.custom.css" />
+{%endblock%}
+
+
+{%block maincontent%}
+<h1>Eliminar Concepto</h1>
+                <table class="con_list">
+                    <tr>
+                        <th>RFC</th>
+                        <th>Proveedor</th>
+                        <th>Concepto</th>
+                        <th>Subtotal</th>
+                        <th>IVA</th>
+                        <th>IVA</th>
+                        <th>Ret IVA</th>
+                        <th>Ret ISR</th>
+                        <th>Importe</th>
+                        <th>Bancos</th>
+                        <th>Diff</th>
+                        <th>Diff IVA</th>
+
+                    </tr>
+
+                    <tr>
+                        <td>{{concepto.proveedor.rfc}}</td>
+                        <td>{{concepto.proveedor.nombre}}</td>
+                        <td>{{concepto.get_tipo_display}}</td>
+                        <td>{{concepto.subtotal}}</td>
+                        <td>{{concepto.impuesto.nombre}}</td>
+                        <td>{{concepto.impuesto_real}}</td>
+                        <td>{{concepto.ret_iva}}</td>
+                        <td>{{concepto.ret_isr}}</td>
+                        <td>{{concepto.importe}}</td>
+                        <td class="bluef">{{concepto.bancos}}</td>
+                        <td class="redf">{{concepto.diferencia}}</td>
+                        <td class="redf">{{concepto.diferencia_iva}}</td>
+                    </tr>
+
+                </table>
+
+<a href="{%url diot.views.cheques_mes cheque.fecha.year cheque.fecha.month%}" class="medium button new_link">REGRESAR</a>
+
+    <form method="POST">
+    {%impuestos_inputs%}
+        {%csrf_token%}
+        <table>
+            {{form}}
+        </table>
+        <input type="submit" value="ELIMINAR CONCEPTO" class="medium button del_link">
+    </form>
+{%endblock%}

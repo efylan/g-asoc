@@ -1,0 +1,16 @@
+{%extends "base.html"%}
+
+{%block sidecontent%}
+    {%include "diot/menudiot.html"%}
+{%endblock%}
+
+
+{%block maincontent%}
+    <form method="POST">
+        {%csrf_token%}
+        <table>
+            {{form}}
+        </table>
+        <input type="submit" value="Crear Cuenta">
+    </form>
+{%endblock%}

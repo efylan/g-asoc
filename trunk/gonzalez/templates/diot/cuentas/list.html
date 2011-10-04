@@ -1,0 +1,26 @@
+{%extends "base.html"%}
+
+{%block sidecontent%}
+    {%include "diot/menudiot.html"%}
+{%endblock%}
+
+
+{%block maincontent%}
+<div>
+    <a href="{%url diot.views.cuentas_crear%}">Crear Nueva Cuenta</a>
+</div>
+
+
+    <table class="object_list">
+        <tr>
+            <th>Número</th>
+            <th>Banco</th>
+        </tr>
+    {%for cuenta in cuentas%}
+        <tr>
+            <td>{{cuenta.numero}}</td>
+            <td>{{cuenta.banco}}</td>
+        </tr>
+    {%endfor%}
+    </table>
+{%endblock%}
