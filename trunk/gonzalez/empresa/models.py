@@ -25,3 +25,22 @@ try:
     admin.site.register(Empresa,EmpresaAdmin)
 except:
     pass
+
+
+class Servicio(models.Model):
+    nombre = models.CharField(max_length=75)
+    orden = models.IntegerField()
+    descripcion = models.TextField()
+
+    def __unicode__(self):
+        return "%s" % (self.nombre)
+
+class ServicioAdmin(admin.ModelAdmin):
+    list_display = ('nombre','orden','descripcion')
+    order = ('orden',)
+
+try:
+    admin.site.register(Servicio,ServicioAdmin)
+except:
+    pass
+

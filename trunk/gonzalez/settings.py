@@ -30,6 +30,9 @@ DATABASES = {
 # system time zone.
 TIME_ZONE = 'America/Chicago'
 
+
+AUTH_PROFILE_MODULE = 'users.Perfil'
+
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
@@ -86,6 +89,14 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '!(1w%56cn5n)worh^#%un@1*rdr-f+6ep6+(ttib79$jiixki7'
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.request',
+)
+
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
@@ -119,6 +130,9 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'gonzalez.empresa',
     'gonzalez.clientes',
+    'gonzalez.enlaces',
+    'gonzalez.diot',
+    'gonzalez.users',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:

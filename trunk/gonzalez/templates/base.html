@@ -13,22 +13,19 @@
             {%block topcontent%}
                 <h3> TITULO </h3>
             {%endblock%}
+
+            {%if request.user.id%}
+                {{request.user.username}} | <a href= "{%url users.views.panel%}">{{request.user.get_profile.contribuyente}}</a> | <a href="{%url gonzalez.users.views.logout%}">Cerrar Sesion</a>
+            {%else%}
+                {{request.user.username}}
+                Contribuyentes iniciar sesión <a href="{%url gonzalez.users.views.login%}">AQUÍ</a>
+            {%endif%}
         </div>
 
         <div id="sidecontent">
         {%block sidecontent%}
 
-        <ul>
-            <li>
-                <a href=""> Menu 1 </a>
-            </li>
-            <li>
-                <a href=""> Menu 2 </a>
-            </li>
-            <li>
-                <a href=""> Menu 3 </a>
-            </li>
-        </ul>
+            {%include "menu.html"%}
 
         {%endblock%}
         </div>
