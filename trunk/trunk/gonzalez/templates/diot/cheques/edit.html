@@ -1,0 +1,31 @@
+{%extends "base.html"%}
+
+{%block extrahead%}
+<title>Editar Cheque</title>
+{%load impuestos_tags%}
+
+<link rel="stylesheet" type="text/css" media="all" href="/media/jquery/css/pepper-grinder/jquery-ui-1.8.16.custom.css" />
+<script type="text/javascript" src="/media/jquery/js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="/media/jquery/js/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="/media/js/operaciones.js"></script>
+{%endblock%}
+
+{%block sidecontent%}
+    {%include "diot/menudiot.html"%}
+{%endblock%}
+
+
+{%block maincontent%}
+    {%impuestos_inputs%}
+    
+    <form method="POST">
+        {%csrf_token%}
+        <table>
+            {{form}}
+        </table>
+        <input type="submit" value="Guardar Cambios">
+
+
+    </form>
+<a href = "{%url diot.views.eliminar_cheque cheque.id%}" class="medium button del_link"> Eliminar </a>
+{%endblock%}

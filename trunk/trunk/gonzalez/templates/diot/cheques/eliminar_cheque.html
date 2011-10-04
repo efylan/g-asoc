@@ -1,0 +1,81 @@
+{%extends "base.html"%}
+
+{%block sidecontent%}
+    {%include "diot/menudiot.html"%}
+{%endblock%}
+
+{%block extrahead%}
+{%load impuestos_tags%}
+<title>Eliminar cheque {{cheque.referencia}} de la cuenta {{cheque.cuenta}}</title>
+<link rel="stylesheet" type="text/css" media="all" href="/media/jquery/css/pepper-grinder/jquery-ui-1.8.16.custom.css" />
+{%endblock%}
+
+
+{%block maincontent%}
+<h1>Eliminar Cheque</h1>
+
+<table class="info_cheque">
+    <tr>
+        <td class="tdnombres">Referencia: </td> <td class="tdvalores">{{cheque.referencia}} </td>
+        <td class="tdnombres">Cuenta: </td> <td class="tdvalores">{{cheque.cuenta}} </td>
+    </tr>
+    <tr>
+        <td class="tdnombres">Fecha: </td> <td class="tdvalores">{{cheque.fecha}} </td>
+        <td class="tdnombres">Beneficiario: </td> <td class="tdvalores">{{cheque.beneficiario}} </td>
+    </tr>
+    <tr>
+
+        <td class="tdnombres">Bancos: </td> <td class="tdvalores">{{cheque.bancos}} </td>
+        <td class="tdnombres">MONTO PENDIENTE: </td> <td class="tdvalores redf">{{cheque.get_diferencia}} </td>
+    </tr>
+</table>
+
+<h2>Conceptos</h2>
+                <table class="con_list">
+                    <tr>
+                        <th>RFC</th>
+                        <th>Proveedor</th>
+                        <th>Concepto</th>
+                        <th>Subtotal</th>
+                        <th>IVA</th>
+                        <th>IVA</th>
+                        <th>Ret IVA</th>
+                        <th>Ret ISR</th>
+                        <th>Importe</th>
+                        <th>Bancos</th>
+                        <th>Diff</th>
+                        <th>Diff IVA</th>
+
+                    </tr>
+                    {%for concepto in cheque.concepto_set.all%}
+                    <tr>
+                        <td><a href="{%url diot.views.editar_concepto concepto.id%}">{{concepto.proveedor.rfc}}</a></td>
+                        <td>{{concepto.proveedor.nombre}}</td>
+                        <td>{{concepto.get_tipo_display}}</td>
+                        <td>{{concepto.subtotal}}</td>
+                        <td>{{concepto.impuesto.nombre}}</td>
+                        <td>{{concepto.impuesto_real}}</td>
+                        <td>{{concepto.ret_iva}}</td>
+                        <td>{{concepto.ret_isr}}</td>
+                        <td>{{concepto.importe}}</td>
+                        <td class="bluef">{{concepto.bancos}}</td>
+                        <td class="redf">{{concepto.diferencia}}</td>
+                        <td class="redf">{{concepto.diferencia_iva}}</td>
+                    </tr>
+                    {%endfor%}
+                </table>
+<br>
+<br>
+<br>
+
+<a href="{%url diot.views.cheques_mes cheque.fecha.year cheque.fecha.month%}" class="medium button new_link">REGRESAR</a>
+
+    <form method="POST">
+    {%impuestos_inputs%}
+        {%csrf_token%}
+        <table>
+            {{form}}
+        </table>
+        <input type="submit" value="ELIMINAR CHEQUE" class="medium button del_link">
+    </form>
+{%endblock%}

@@ -1,0 +1,74 @@
+{%extends "base.html"%}
+
+{%block sidecontent%}
+    {%include "diot/menudiot.html"%}
+{%endblock%}
+
+
+{%block maincontent%}
+<div>
+    <a href="{%url diot.views.cheques_crear%}" class="medium button new_link">Crear Nuevo Cheque</a>     <a href="{%url diot.views.cheques_crear_rapido%}" class="medium button new_link2">Crear Nuevo Cheque Rapido</a>
+</div>
+<br><br><br>
+    <table class="object_list">
+
+        <tr>
+            <th>Referencia</th>
+            <th>Beneficiario</th>
+            <th>Cuenta</th>
+            <th>Importe</th>
+            <th>Fecha</th>
+            <th>Pendiente</th>
+            <th>Agregar Concepto</th>
+        </tr>
+    {%for cheque in cheques%}
+        <tr>
+            <td><a {%if cheque.estado == 3%} href= "{%url diot.views.editar_rapido cheque.id%}" {%else%} href="{%url diot.views.editar_cheque cheque.id%}" {%endif%}> {{cheque.referencia}} </a></td>
+            <td>{{cheque.beneficiario}}</td>
+            <td>{{cheque.cuenta}}</td>
+            <td class="bluef">{{cheque.bancos}}</td>
+            <td>{{cheque.fecha}}</td>
+            <td class="redf">{{cheque.get_diferencia}}</td>
+            <td>{%if cheque.estado == 1%}<a href="{%url diot.views.agregar_concepto cheque.id%}">Agregar Concepto</a>{%else%}Editar{%endif%}</td>
+        </tr>
+
+        <tr>
+            <td colspan="7">
+                <table class="con_list">
+                    <tr>
+                        <th>RFC</th>
+                        <th>Proveedor</th>
+                        <th>Concepto</th>
+                        <th>Subtotal</th>
+                        <th>IVA</th>
+                        <th>IVA</th>
+                        <th>Ret IVA</th>
+                        <th>Ret ISR</th>
+                        <th>Importe</th>
+                        <th>Bancos</th>
+                        <th>Diff</th>
+                        <th>Diff IVA</th>
+
+                    </tr>
+                    {%for concepto in cheque.concepto_set.all%}
+                    <tr>
+                        <td><a href="{%url diot.views.editar_concepto concepto.id%}">{{concepto.proveedor.rfc}}</a></td>
+                        <td>{{concepto.proveedor.nombre}}</td>
+                        <td>{{concepto.get_tipo_display}}</td>
+                        <td>{{concepto.subtotal}}</td>
+                        <td>{{concepto.impuesto.nombre}}</td>
+                        <td>{{concepto.impuesto_real}}</td>
+                        <td>{{concepto.ret_iva}}</td>
+                        <td>{{concepto.ret_isr}}</td>
+                        <td>{{concepto.importe}}</td>
+                        <td class="bluef">{{concepto.bancos}}</td>
+                        <td class="redf">{{concepto.diferencia}}</td>
+                        <td class="redf">{{concepto.diferencia_iva}}</td>
+                    </tr>
+                    {%endfor%}
+                </table>
+            </td>
+        </tr>
+    {%endfor%}
+    </table>
+{%endblock%}

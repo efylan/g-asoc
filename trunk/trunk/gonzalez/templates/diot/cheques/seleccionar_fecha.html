@@ -1,0 +1,27 @@
+{%extends "base.html"%}
+
+{%block extrahead%}
+    <title>Seleccionar Fecha</title>
+{%endblock%}
+
+{%block sidecontent%}
+    {%include "diot/menudiot.html"%}
+{%endblock%}
+
+{%block maincontent%}
+<div>
+    <a href="{%url diot.views.cheques_crear%}" class="medium button new_link">Crear Nuevo Cheque</a>     <a href="{%url diot.views.cheques_crear_rapido%}" class="medium button new_link2">Crear Nuevo Cheque Rapido</a>
+</div>
+<br>
+<br>
+<br>
+<br>
+{%for year in archive%}
+{{year.value}}   ({{year.entry_count}})
+    {%for month in year.months%}
+        <br><div style="text-indent:2em;"><a href="{%url diot.views.cheques_mes year.value month.value%}"> {{month.name}}({{month.entry_count}})</a>
+    {%endfor%}
+<br>
+{%endfor%}
+
+{%endblock%}

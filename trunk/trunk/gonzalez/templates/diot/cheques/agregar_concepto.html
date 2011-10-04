@@ -1,0 +1,44 @@
+{%extends "base.html"%}
+
+{%block sidecontent%}
+    {%include "diot/menudiot.html"%}
+{%endblock%}
+
+{%block extrahead%}
+{%load impuestos_tags%}
+<title>Agregar concepto al cheque {{cheque.referencia}} de la cuenta {{cheque.cuenta}}</title>
+<link rel="stylesheet" type="text/css" media="all" href="/media/jquery/css/pepper-grinder/jquery-ui-1.8.16.custom.css" />
+<script type="text/javascript" src="/media/jquery/js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="/media/jquery/js/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="/media/js/operaciones.js"></script>
+{%endblock%}
+
+
+{%block maincontent%}
+<h1>Agregar Concepto</h1>
+
+<table class="info_cheque">
+    <tr>
+        <td class="tdnombres">Referencia: </td> <td class="tdvalores">{{cheque.referencia}} </td>
+        <td class="tdnombres">Cuenta: </td> <td class="tdvalores">{{cheque.cuenta}} </td>
+    </tr>
+    <tr>
+        <td class="tdnombres">Fecha: </td> <td class="tdvalores">{{cheque.fecha}} </td>
+        <td class="tdnombres">Beneficiario: </td> <td class="tdvalores">{{cheque.beneficiario}} </td>
+    </tr>
+    <tr>
+
+        <td class="tdnombres">Bancos: </td> <td class="tdvalores">{{cheque.bancos}} </td>
+        <td class="tdnombres">MONTO PENDIENTE: </td> <td class="tdvalores redf">{{cheque.get_diferencia}} </td>
+    </tr>
+</table>
+
+    <form method="POST" onsubmit="calcular_iva();">
+    {%impuestos_inputs%}
+        {%csrf_token%}
+        <table>
+            {{form}}
+        </table>
+        <input type="submit" value="Agregar Concepto">
+    </form>
+{%endblock%}
