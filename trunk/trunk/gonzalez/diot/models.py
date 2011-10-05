@@ -1,8 +1,16 @@
 from django.db import models
 from django.contrib import admin
 
+COMPRAS = 1
+GASTOS = 2
+HONORARIOS =3
+RENTA=4
+IMPUESTOS=5
+MOV_BANCARIOS=6
+ACT_FIJO=7
+OTROS=8
 
-TIPO_CONCEPTO = ((1,"Compras"),(2,"Gastos"),(3,"Honorarios"),(4,"Renta"),(5,"Pago de Impuestos"),(6,"Movimientos Bancarios"),(7, "Activos Fijos"),(8,"Otros"))
+TIPO_CONCEPTO = ((COMPRAS,"Compras"),(GASTOS,"Gastos"),(HONORARIOS,"Honorarios"),(RENTA,"Renta"),(IMPUESTOS,"Pago de Impuestos"),(MOV_BANCARIOS,"Movimientos Bancarios"),(ACT_FIJO, "Activos Fijos"),(OTROS,"Otros"))
 TIPO_PROVEEDOR = ((1,"Nacional"),(2,"Extranjero"),(1,"Global"))
 ESTADO_CHEQUE = ((1,"Nuevo"),(2,"Pendiente"),(3,"Completo"),(4,"Borrado"))
 
@@ -127,6 +135,14 @@ class Cheque(models.Model):
         diferencia = self.bancos - total
         return diferencia
 
+
+    def get_total_conceptos(self):
+        conceptos = self.concepto_set.all()
+        total = 0
+        for concepto in conceptos:
+            total+=concepto.bancos
+
+        return total
 
 #------------------------------------------------------------
     
