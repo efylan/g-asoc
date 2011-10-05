@@ -166,11 +166,14 @@ def cheques_crear_rapido(request):
             concepto.activo = True
             concepto.save()
 
+            if 'add_concepto' in request.POST:
+                return HttpResponseRedirect('/diot/cheques/crear_rapido/')
+            else:
+                return HttpResponseRedirect('/diot/cheques/fechas/%s/%s/'%(cheque.fecha.year,cheque.fecha.month))
 
-            return HttpResponseRedirect('/diot/cheques/fechas/%s/%s/'%(cheque.fecha.year,cheque.fecha.month))
     else:
         f = CrearChequeRapidoForm(contri)
-        return render_to_response('diot/cheques/create.html', {'form':f}, RequestContext(request))
+        return render_to_response('diot/cheques/cheques_rapido.html', {'form':f}, RequestContext(request))
 
 
 def proveedores_consultar(request):
@@ -302,9 +305,10 @@ def editar_rapido(request, cheque_id):
             concepto.save()
 
 
-            return HttpResponseRedirect('/diot/cheques/fechas/%s/%s/'%(cheque.fecha.year,cheque.fecha.month))
-            
-
+            if 'add_concepto' in request.POST:
+                return HttpResponseRedirect('/diot/cheques/crear_rapido/')
+            else:
+                return HttpResponseRedirect('/diot/cheques/fechas/%s/%s/'%(cheque.fecha.year,cheque.fecha.month))
 
     else:
         return render_to_response('diot/cheques/edit_rapido.html', {'form':f, 'cheque':cheque}, RequestContext(request))
