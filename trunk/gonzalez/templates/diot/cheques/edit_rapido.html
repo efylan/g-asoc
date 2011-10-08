@@ -17,7 +17,11 @@
 {%block maincontent%}
     {%impuestos_inputs%}
 <br>
+<a href="{%url diot.views.cheques_mes cheque.fecha.year cheque.fecha.month%}" class="button medium new_link">Regresar</a>
 <br>
+<br>
+<br>
+
     <form method="POST" onsubmit="calcular_iva();">
         {%csrf_token%}
         <table>

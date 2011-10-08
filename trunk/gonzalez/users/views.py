@@ -1,5 +1,5 @@
 from django.shortcuts import HttpResponseRedirect, render_to_response
-from users.forms import LoginForm
+from users.forms import LoginForm, SeleccionarContriForm
 from users.models import Perfil
 from django.template import RequestContext
 from django.contrib import auth
@@ -18,6 +18,8 @@ def login(request):
             if user is not None:
                 if user.is_active:
                     auth.login(request, user)
+                    if user.is_staff:
+                        return HttpResponseRedirect('/usuarios/seleccionar_contri/')
                     try:
                         request.session['contri'] = user.get_profile().contribuyente
                     except Perfil.DoesNotExist:
@@ -42,3 +44,19 @@ def logout(request):
 
 def panel(request):
     return render_to_response("users/panel.html", {}, RequestContext(request))
+
+
+
+def seleccionar_contri(request):
+    f = SeleccionarContriForm()
+    if request.POST:
+        f = SeleccionarContriForm(request.POST)
+        if f.errors:
+            return render_to_response('users/seleccionar_contri.html',{'form':f},RequestContext(request))
+        else:
+            contri = f.cleaned_data['contri']
+            request.session['contri'] = contri
+            return HttpResponseRedirect('/usuarios/panel/')
+    else:
+        return render_to_response('users/seleccionar_contri.html',{'form':f},RequestContext(request))
+        

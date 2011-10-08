@@ -1,0 +1,14 @@
+{%extends "base.html"%}
+
+{%block maincontent%}
+{%if mensaje%}
+<p class="error">{{mensaje}}</p>
+{%endif%}
+<form method = "POST">
+{%csrf_token%}
+    <table>
+        {{form}}
+    </table>
+    <input type="submit" value="Seleccionar Contribuyente">
+</form>
+{%endblock%}

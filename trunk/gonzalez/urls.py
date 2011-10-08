@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url(r'^servicios/$', 'gonzalez.empresa.views.info_servicios', name='info_servicios'),
     url(r'^usuarios/', include('gonzalez.users.urls')),
     url(r'^diot/', include('gonzalez.diot.urls')),
+    url(r'^reportes/', include('gonzalez.reportes.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
