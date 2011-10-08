@@ -16,7 +16,12 @@
 
 {%block maincontent%}
     {%impuestos_inputs%}
+<a href="javascript:history.go(-1)" class="button medium new_link">Regresar</a>
+<br>
+<br>
+<br>
     
+
     <form method="POST">
         {%csrf_token%}
         <table>

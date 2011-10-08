@@ -5,8 +5,10 @@
             <li>
                 <a href="{%url diot.views.seleccionar_fecha%}"> Cheques </a>
             </li>
+            {%if request.user.is_staff%}
             <li>
-                <a href=""> Reportes </a>
+                <a href="{%url reportes.views.index_reportes%}"> Reportes </a>
             </li>
+            {%endif%}
         </ul>
 

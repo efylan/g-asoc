@@ -1,0 +1,63 @@
+body
+    {
+        background-color:gray;
+    }
+
+.reporte
+    {
+        font-family:Verdana, Arial;
+        margin:2em 1em;
+        border:1px solid silver;
+        background-color:white;
+        padding:1em 2em;
+    }
+
+.info_empresa
+    {
+        text-align:center;
+    }
+
+.titulo
+    {
+        border-bottom:2px solid silver;
+        margin-bottom:1em;
+    }
+
+.contenido
+    {
+
+    }
+
+.report_list
+    {
+        font-size:9pt;
+
+    }
+
+.report_list tr td
+    {
+    padding: 0.2em 0.5em;
+    }
+
+.report_list tr th
+    {
+    padding: 0.2em 0.5em;
+
+    }
+
+.conceptos td
+    {
+        border:1px solid #EAEAEA ;
+    }
+
+.parcial td
+    {
+    font-weight:bold;
+    border-top:2px solid #000000 ;
+    }
+
+
+.prov_info
+    {
+        background-color:silver;
+    }

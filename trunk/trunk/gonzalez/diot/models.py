@@ -39,7 +39,7 @@ class Proveedor(models.Model):
     activo = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return "%s - %s - %s" % (self.nombre, self.rfc, self.get_tipo_display())
+        return "%s - %s" % (self.nombre, self.rfc)
 
 try:
     admin.site.register(Proveedor)
@@ -164,7 +164,7 @@ class Concepto(models.Model):
     activo = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return "%s - %s - %s" % (self.fecha, self.proveedor, self.tipo)
+        return "%s - %s" % (self.proveedor.nombre, self.get_tipo_display())
 
     def get_impuesto_calculado(self):
         if self.impuesto == None:
@@ -196,6 +196,48 @@ class Concepto(models.Model):
     def tiene_diferencia_iva(self):
         if self.get_diferencia_impuesto <> 0:
             return True
+
+    def get_base_0(self):
+        if self.impuesto == None:
+            return self.subtotal
+        else:
+            return ""
+
+    def get_sub_11(self):
+        if self.impuesto <> None:
+            if self.impuesto.porcentaje == 11:
+                return self.subtotal
+            else:
+                return ""
+        else:
+            return ""
+
+    def get_sub_16(self):
+        if self.impuesto <> None:
+            if self.impuesto.porcentaje == 16:
+                return self.subtotal
+            else:
+                return ""
+        else:
+            return ""
+
+    def get_iva_11(self):
+        if self.impuesto <> None:
+            if self.impuesto.porcentaje == 11:
+                return self.impuesto_real
+            else:
+                return ""
+        else:
+            return ""
+
+    def get_iva_16(self):
+        if self.impuesto <> None:
+            if self.impuesto.porcentaje == 16:
+                return self.impuesto_real
+            else:
+                return ""
+        else:
+            return ""
 
 #------------------------------------------------------------
 
