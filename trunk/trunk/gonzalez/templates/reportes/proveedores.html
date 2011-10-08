@@ -1,0 +1,88 @@
+{%extends 'reportes/reportes_base.html'%}
+{%block extrahead%}
+    <title>Relacion de Movimientos Bancarios</title>
+{%endblock%}
+
+{%block titlecontent%}
+<h2>Relacion de Movimientos Bancarios</h2>
+{%endblock%}
+
+{%block maincontent%}
+<table class="report_list">
+    <tr>
+        <th>Cuenta</th>
+        <th>Concepto</th>
+        <th>Base 0%</th>
+        <th>Sub. 11%</th>
+        <th>Sub. 16%</th>
+        <th>Desc.</th>
+        <th>IVA 11%</th>
+        <th>IVA 16%</th>
+        <th>IVA Desc.</th>
+        <th>Ret. IVA</th>
+        <th>Ret. ISR</th>
+        <th>Importe</th>
+    </tr>
+    {%for res in resumen%}
+    <tr>
+        <td colspan="10" class="prov_info">{{res.proveedor.nombre}}</td>        
+        <td colspan="2" class="prov_info">{{res.proveedor.rfc}}</td>
+    </tr>
+    {%for concepto in res.conceptos%}
+    <tr class="conceptos">
+        <td>{{concepto.cheque.cuenta}}</td>
+        <td>{{concepto.get_tipo_display}}</td>
+        <td>{{concepto.get_base_0}}</td>
+        <td>{{concepto.get_sub_11}}</td>
+        <td>{{concepto.get_sub_16}}</td>
+        <td></td>
+        <td>{{concepto.get_iva_11}}</td>
+        <td>{{concepto.get_iva_16}}</td>
+        <td></td>
+        <td>{%if concepto.ret_iva != 0%}{{concepto.ret_iva}}{%endif%}</td>
+        <td>{%if concepto.ret_isr != 0%}{{concepto.ret_isr}}{%endif%}</td>
+        <td>{{concepto.bancos}}</td>
+    </tr>
+    {%endfor%}
+    {%if res.count > 1%}
+    <tr class="parcial">
+        <td colspan="2">TOTALES</td>
+        <td>{%if res.base_0 != 0%}{{res.base_0}}{%endif%}</td>
+        <td>{%if res.sub_11 != 0%}{{res.sub_11}}{%endif%}</td>
+        <td>{%if res.sub_16 != 0%}{{res.sub_16}}{%endif%}</td>
+        <td></td>
+        <td>{%if res.iva_11 != 0%}{{res.iva_11}}{%endif%}</td>
+        <td>{%if res.iva_16 != 0%}{{res.iva_16}}{%endif%}</td>
+        <td></td>
+        <td>{%if res.ret_iva != 0%}{{res.ret_iva}}{%endif%}</td>
+        <td>{%if res.ret_isr != 0%}{{res.ret_isr}}{%endif%}</td>
+        <td>{{res.importe}}</td>
+    </tr>
+    {%endif%}
+    {%endfor%}
+<tr>
+    <td></td>
+</tr>
+<tr>
+    <td></td>
+</tr>
+
+    <tr class="parcial">
+        <td colspan="2">GRAN TOTAL</td>
+        <td>{%if totales.base_0 != 0%}{{totales.base_0}}{%endif%}</td>
+        <td>{%if totales.sub_11 != 0%}{{totales.sub_11}}{%endif%}</td>
+        <td>{%if totales.sub_16 != 0%}{{totales.sub_16}}{%endif%}</td>
+        <td></td>
+        <td>{%if totales.iva_11 != 0%}{{totales.iva_11}}{%endif%}</td>
+        <td>{%if totales.iva_16 != 0%}{{totales.iva_16}}{%endif%}</td>
+        <td></td>
+        <td>{%if totales.ret_iva != 0%}{{totales.ret_iva}}{%endif%}</td>
+        <td>{%if totales.ret_isr != 0%}{{totales.ret_isr}}{%endif%}</td>
+        <td>{{totales.importe}}</td>
+    </tr>
+
+</table>
+
+
+
+{%endblock%}

@@ -1,0 +1,17 @@
+{%extends 'base.html'%}
+
+{%block extrahead%}
+    <title>Reportes</title>
+{%endblock%}
+
+{%block sidecontent%}
+    {%include 'diot/menudiot.html'%}
+{%endblock%}
+
+{%block maincontent%}
+
+    <ul class = "reportmenu">
+        <li><a href="{%url reportes.views.reporte_proveedor%}">Reporte ordenado por Provedor</a></li>
+    </ul>
+
+{%endblock%}
