@@ -1,0 +1,40 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" media="all" href="/media/css/reportes.css" /> 
+        {%block extrahead%}
+            <title>REPORTES</title>
+            
+        {%endblock%}
+    </head>
+
+    <body>
+            
+        <div class="reporte">
+            <div class="info_empresa">
+            {{empresa.nombre}}
+            </div>
+
+            <div class="titulo">
+
+
+            <br>
+            <br>
+            Contribuyente: {{contri.nombre}}
+            <br>
+            RFC: {{contri.rfc}}
+            <br>
+
+            {%block titlecontent%}
+            {%endblock%}
+            </div>
+
+            <div class="contenido">
+            {%block maincontent%}
+            {%endblock%}
+            </div>
+
+        </div>
+
+    </body>
+
+</html>

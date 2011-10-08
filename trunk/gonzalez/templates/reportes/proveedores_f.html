@@ -1,0 +1,19 @@
+{%extends 'base.html'%}
+
+{%block sidecontent%}
+    {%include 'diot/menudiot.html'%}
+{%endblock%}
+
+{%block maincontent%}
+    <h1>Reporte por Proveedor</h1>
+
+    <form method="POST">
+        {%csrf_token%}
+        <table>
+            {{form}}
+        </table>
+
+        <input type="submit" value="Generar Reporte">
+    </form>
+{%endblock%}
+
