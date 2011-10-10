@@ -30,6 +30,7 @@ background: linear-gradient(top, #cedce7 0%,#596a72 100%); /* W3C */	font-family
 	-moz-border-radius:5px;
 	-webkit-border-radius:5px;
 	border-radius:5px;
+    /*behavior:url(/media/css/border-radius.htc);*/
 background: #f2f5f6; /* Old browsers */
 background: -moz-linear-gradient(top, #f2f5f6 0%, #e3eaed 37%, #c8d7dc 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f5f6), color-stop(37%,#e3eaed), color-stop(100%,#c8d7dc)); /* Chrome,Safari4+ */
@@ -53,7 +54,7 @@ background: linear-gradient(top, #f2f5f6 0%,#e3eaed 37%,#c8d7dc 100%); /* W3C */
 	-moz-border-radius:5px;
 	-webkit-border-radius:5px;background: #F0F2EF; /* old browsers */
     border-radius:5px;
-
+    /*behavior:url(/media/css/border-radius.htc);*/
 background: #f2f5f6; /* Old browsers */
 background: -moz-linear-gradient(top, #f2f5f6 0%, #e3eaed 37%, #c8d7dc 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f5f6), color-stop(37%,#e3eaed), color-stop(100%,#c8d7dc)); /* Chrome,Safari4+ */
@@ -78,6 +79,7 @@ background: linear-gradient(top, #f2f5f6 0%,#e3eaed 37%,#c8d7dc 100%); /* W3C */
 	-moz-border-radius:5px;
 	-webkit-border-radius:5px;
 	border-radius:5px;
+    /*behavior:url(/media/css/border-radius.htc);*/
 background: #f2f5f6; /* Old browsers */
 background: -moz-linear-gradient(top, #f2f5f6 0%, #e3eaed 37%, #c8d7dc 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f5f6), color-stop(37%,#e3eaed), color-stop(100%,#c8d7dc)); /* Chrome,Safari4+ */
@@ -174,7 +176,8 @@ border:0px black none;
   text-decoration: none;
   -moz-border-radius: 6px;
   -webkit-border-radius: 6px;
-  
+	border-radius:6px;
+  /*behavior:url(/media/css/border-radius.htc);  */
   position: relative;
   cursor:pointer
 }
