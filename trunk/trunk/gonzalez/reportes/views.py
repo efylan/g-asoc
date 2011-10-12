@@ -24,13 +24,32 @@ def reporte_proveedor(request):
 
 
 def core_reporte_proveedor(contri, month, year, request):
+    EXCLUDE_LIST = [HONORARIOS,IMPUESTOS,MOV_BANCARIOS]
     empresa = Empresa.objects.all()[0]
     #cheques = Cheque.objects.filter(fecha__month=month, fecha__year=year, cuenta__contri=contri)
-    conceptos = Concepto.objects.filter(cheque__fecha__month=month, cheque__fecha__year=year,  cheque__cuenta__contri=contri)
+    conceptos_raw = Concepto.objects.filter(cheque__fecha__month=month, cheque__fecha__year=year,  cheque__cuenta__contri=contri)
+    conceptos = conceptos_raw.exclude(tipo__in=EXCLUDE_LIST)
+    excluidos = conceptos_raw.filter(tipo__in=EXCLUDE_LIST).order_by('proveedor')
     final = resumen_proveedores(conceptos)
+    tot_exc = resumen_totales(excluidos)
     resumen = final['prov_list']
     totales = final['totales']
-    return render_to_response('reportes/proveedores.html',{'resumen':resumen, 'empresa':empresa, 'contri':contri, 'totales':totales}, RequestContext(request))
+    tipos = resumen_tipos(conceptos_raw)
+
+
+    gran_tot = {}
+    gran_tot['base_0'] = totales['base_0'] + tot_exc['base_0'] 
+    gran_tot['sub_11'] = totales['sub_11'] + tot_exc['sub_11']
+    gran_tot['sub_16'] = totales['sub_16'] + tot_exc['sub_16']
+    gran_tot['iva_11'] = totales['iva_11'] + tot_exc['iva_11']
+    gran_tot['iva_16'] = totales['iva_16'] + tot_exc['iva_16']
+    gran_tot['ret_iva'] = totales['ret_iva'] + tot_exc['ret_iva']
+    gran_tot['ret_isr'] = totales['ret_isr'] + tot_exc['ret_isr']
+    gran_tot['importe'] = totales['importe'] + tot_exc['importe']
+    gran_tot['descuento'] = totales['descuento'] + tot_exc['descuento']
+    gran_tot['descuento_iva'] = totales['descuento_iva'] + tot_exc['descuento_iva']
+
+    return render_to_response('reportes/proveedores.html',{'resumen':resumen, 'empresa':empresa, 'contri':contri, 'totales':totales,'excluidos':excluidos, 'tot_exc':tot_exc, 'gran_tot':gran_tot, 'tipos':tipos}, RequestContext(request))
 
 
 def resumen_proveedores(conceptos):
@@ -96,3 +115,127 @@ def resumen_proveedores(conceptos):
     return final_dict
 
 
+def resumen_totales(conceptos):
+    total_dict={}
+    total_dict['base_0'] = 0
+    total_dict['sub_11'] = 0
+    total_dict['sub_16'] = 0
+    total_dict['iva_11'] = 0
+    total_dict['iva_16'] = 0
+    total_dict['ret_iva'] = 0
+    total_dict['ret_isr'] = 0
+    total_dict['importe'] = 0
+    total_dict['descuento'] = 0 #?
+    total_dict['descuento_iva'] = 0 #?
+    total_dict['count'] = conceptos.count()
+    for con in conceptos:
+        if con.impuesto == None:
+            total_dict['base_0'] += con.subtotal
+        elif con.impuesto.porcentaje == 11:
+            total_dict['sub_11'] += con.subtotal
+            total_dict['iva_11'] += con.impuesto_real
+        elif con.impuesto.porcentaje == 16:
+            total_dict['sub_16'] += con.subtotal
+            total_dict['iva_16'] += con.impuesto_real
+
+        total_dict['ret_iva'] += con.ret_iva
+        total_dict['ret_isr'] += con.ret_isr
+        total_dict['importe'] += con.bancos
+
+    return total_dict
+
+
+def resumen_tipos(conceptos):
+    dict_tipos={}
+    dict_tipos['compras'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0}
+    dict_tipos['gastos'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0}
+    dict_tipos['honorarios'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0}
+    dict_tipos['renta'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0}
+    dict_tipos['impuestos'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0}
+    dict_tipos['mov_bancarios'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0}
+    dict_tipos['act_fijo'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0}
+    dict_tipos['otros'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0}
+
+    for concepto in conceptos:
+        if concepto.impuesto==None:
+            if concepto.tipo == COMPRAS:
+                dict_tipos['compras']['base_0']+=concepto.subtotal
+            elif concepto.tipo == GASTOS:
+                dict_tipos['gastos']['base_0']+=concepto.subtotal
+            elif concepto.tipo == HONORARIOS:
+                dict_tipos['honorarios']['base_0']+=concepto.subtotal
+            elif concepto.tipo == RENTA:
+                dict_tipos['renta']['base_0']+=concepto.subtotal
+            elif concepto.tipo == IMPUESTOS:
+                dict_tipos['impuestos']['base_0']+=concepto.subtotal
+            elif concepto.tipo == MOV_BANCARIOS:
+                dict_tipos['mov_bancarios']['base_0']+=concepto.subtotal
+            elif concepto.tipo == ACT_FIJO:
+                dict_tipos['act_fijo']['base_0']+=concepto.subtotal
+            elif concepto.tipo == OTROS:
+                dict_tipos['otros']['base_0']+=concepto.subtotal
+
+        elif concepto.impuesto.porcentaje==11:
+            if concepto.tipo == COMPRAS:
+                dict_tipos['compras']['sub_11']+=concepto.subtotal
+                dict_tipos['compras']['iva_11']+=concepto.impuesto_real
+            elif concepto.tipo == GASTOS:
+                dict_tipos['gastos']['sub_11']+=concepto.subtotal
+                dict_tipos['gastos']['iva_11']+=concepto.impuesto_real
+            elif concepto.tipo == HONORARIOS:
+                dict_tipos['honorarios']['sub_11']+=concepto.subtotal
+                dict_tipos['honorarios']['iva_11']+=concepto.impuesto_real
+            elif concepto.tipo == RENTA:
+                dict_tipos['renta']['sub_11']+=concepto.subtotal
+                dict_tipos['renta']['iva_11']+=concepto.impuesto_real
+            elif concepto.tipo == IMPUESTOS:
+                dict_tipos['impuestos']['sub_11']+=concepto.subtotal
+                dict_tipos['impuestos']['iva_11']+=concepto.impuesto_real
+            elif concepto.tipo == MOV_BANCARIOS:
+                dict_tipos['mov_bancarios']['sub_11']+=concepto.subtotal
+                dict_tipos['mov_bancarios']['iva_11']+=concepto.impuesto_real
+            elif concepto.tipo == ACT_FIJO:
+                dict_tipos['act_fijo']['sub_11']+=concepto.subtotal
+                dict_tipos['act_fijo']['iva_11']+=concepto.impuesto_real
+            elif concepto.tipo == OTROS:
+                dict_tipos['otros']['sub_11']+=concepto.subtotal
+                dict_tipos['otros']['iva_11']+=concepto.impuesto_real
+
+        elif concepto.impuesto.porcentaje ==16:
+
+            if concepto.tipo == COMPRAS:
+                dict_tipos['compras']['sub_16']+=concepto.subtotal
+                dict_tipos['compras']['iva_16']+=concepto.impuesto_real
+            elif concepto.tipo == GASTOS:
+                dict_tipos['gastos']['sub_16']+=concepto.subtotal
+                dict_tipos['gastos']['iva_16']+=concepto.impuesto_real
+            elif concepto.tipo == HONORARIOS:
+                dict_tipos['honorarios']['sub_16']+=concepto.subtotal
+                dict_tipos['honorarios']['iva_16']+=concepto.impuesto_real
+            elif concepto.tipo == RENTA:
+                dict_tipos['renta']['sub_16']+=concepto.subtotal
+                dict_tipos['renta']['iva_16']+=concepto.impuesto_real
+            elif concepto.tipo == IMPUESTOS:
+                dict_tipos['impuestos']['sub_16']+=concepto.subtotal
+                dict_tipos['impuestos']['iva_16']+=concepto.impuesto_real
+            elif concepto.tipo == MOV_BANCARIOS:
+                dict_tipos['mov_bancarios']['sub_16']+=concepto.subtotal
+                dict_tipos['mov_bancarios']['iva_16']+=concepto.impuesto_real
+            elif concepto.tipo == ACT_FIJO:
+                dict_tipos['act_fijo']['sub_16']+=concepto.subtotal
+                dict_tipos['act_fijo']['iva_16']+=concepto.impuesto_real
+            elif concepto.tipo == OTROS:
+                dict_tipos['otros']['sub_16']+=concepto.subtotal
+                dict_tipos['otros']['iva_16']+=concepto.impuesto_real
+
+        dict_tipos['compras']['total']=dict_tipos['compras']['base_0'] + dict_tipos['compras']['sub_11'] + dict_tipos['compras']['sub_16']
+        dict_tipos['gastos']['total']=dict_tipos['gastos']['base_0'] + dict_tipos['gastos']['sub_11'] + dict_tipos['gastos']['sub_16']
+        dict_tipos['honorarios']['total']=dict_tipos['honorarios']['base_0'] + dict_tipos['honorarios']['sub_11'] + dict_tipos['honorarios']['sub_16']
+        dict_tipos['renta']['total']=dict_tipos['renta']['base_0'] + dict_tipos['renta']['sub_11'] + dict_tipos['renta']['sub_16']
+        dict_tipos['impuestos']['total']=dict_tipos['impuestos']['base_0'] + dict_tipos['impuestos']['sub_11'] + dict_tipos['impuestos']['sub_16']
+        dict_tipos['mov_bancarios']['total']=dict_tipos['mov_bancarios']['base_0'] + dict_tipos['mov_bancarios']['sub_11'] + dict_tipos['mov_bancarios']['sub_16']
+        dict_tipos['act_fijo']['total']=dict_tipos['act_fijo']['base_0'] + dict_tipos['act_fijo']['sub_11'] + dict_tipos['act_fijo']['sub_16']
+        dict_tipos['otros']['total']=dict_tipos['otros']['base_0'] + dict_tipos['otros']['sub_11'] + dict_tipos['otros']['sub_16']
+
+
+    return dict_tipos

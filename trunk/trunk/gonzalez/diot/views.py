@@ -662,3 +662,6 @@ def resumen_cuentas(cheques, contri=None):
 
         cuenta_list.append(cuenta_dict)
     return cuenta_list
+
+
+

@@ -61,3 +61,19 @@ body
     {
         background-color:silver;
     }
+
+.object_list
+{
+    margin: auto;
+	font-size: 9pt;
+    border: 1px solid gray;
+}
+
+.object_list tr td
+{   
+    border: 1px solid gray;
+    padding: 0.2em 0.2em;
+    background-color: white;
+    text-align:center;
+}
+
