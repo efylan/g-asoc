@@ -74,6 +74,15 @@ body
     border: 1px solid gray;
     padding: 0.2em 0.2em;
     background-color: white;
-    text-align:center;
+
 }
 
+.number
+{
+    text-align:right;
+}
+
+.small
+{
+    font-size:7pt;
+}
