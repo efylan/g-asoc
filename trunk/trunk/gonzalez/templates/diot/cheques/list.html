@@ -161,12 +161,20 @@
         <td class="bluef">{{final.tipos.renta.total}}</td>
     </tr>
     <tr>
-        <th>PAGO DE IMPUESTOS</th>
+        <th>IMPUESTOS</th>
         <td>{{final.tipos.impuestos.base_0}}</td>
         <td>{{final.tipos.impuestos.sub_11}}</td>
         <td>{{final.tipos.impuestos.sub_16}}</td>
         <td class="bluef">{{final.tipos.impuestos.total}}</td>
     </tr>
+    <tr>
+        <th>SUELDOS</th>
+        <td>{{final.tipos.sueldos.base_0}}</td>
+        <td>{{final.tipos.sueldos.sub_11}}</td>
+        <td>{{final.tipos.sueldos.sub_16}}</td>
+        <td class="bluef">{{final.tipos.sueldos.total}}</td>
+    </tr>
+
     <tr>
         <th>MOV. BANCARIOS</th>
         <td>{{final.tipos.mov_bancarios.base_0}}</td>
@@ -205,8 +213,6 @@
         <td>{{cuenta.total}}</td>
     </tr>
     {%endfor%}
-
-
 </table>
 
 {%endblock%}

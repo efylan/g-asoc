@@ -9,8 +9,9 @@ IMPUESTOS=5
 MOV_BANCARIOS=6
 ACT_FIJO=7
 OTROS=8
+SUELDOS=9
 
-TIPO_CONCEPTO = ((COMPRAS,"Compras"),(GASTOS,"Gastos"),(HONORARIOS,"Honorarios"),(RENTA,"Renta"),(IMPUESTOS,"Pago de Impuestos"),(MOV_BANCARIOS,"Movimientos Bancarios"),(ACT_FIJO, "Activos Fijos"),(OTROS,"Otros"))
+TIPO_CONCEPTO = ((COMPRAS,"Compras"),(GASTOS,"Gastos"),(HONORARIOS,"Honorarios"),(RENTA,"Renta"),(IMPUESTOS, "Impuestos"),(SUELDOS,'Sueldos'),(MOV_BANCARIOS,"Movimientos Bancarios"),(ACT_FIJO, "Activos Fijos"),(OTROS,"Otros"))
 TIPO_PROVEEDOR = ((1,"Nacional"),(2,"Extranjero"),(1,"Global"))
 ESTADO_CHEQUE = ((1,"Nuevo"),(2,"Pendiente"),(3,"Completo"),(4,"Borrado"))
 
