@@ -1,0 +1,32 @@
+{%extends "base.html"%}
+
+{%block extrahead%}
+<title>Editar Total</title>
+{%endblock%}
+
+{%block sidecontent%}
+    {%include "diot/menudiot.html"%}
+{%endblock%}
+
+
+{%block maincontent%}
+<br>
+<a href="{%url diot.views.cheques_mes tmensual.year tmensual.month%}" class="button medium new_link">Regresar</a>
+<br>
+<br>
+    
+
+    <form method="POST">
+        {%csrf_token%}
+        <table>
+            {{form}}
+        </table>
+        <input type="submit" value="Guardar">
+        <input type="submit" value="Guardar y Agregar otro" name="add_another">
+
+    </form>
+<br>
+<br>
+<br>
+<a href = "{%url diot.views.tmensual_eliminar tmensual.id%}" class="medium button del_link"> Eliminar </a>
+{%endblock%}

@@ -2,10 +2,12 @@ from django.shortcuts import render_to_response, HttpResponseRedirect
 from diot.models import Cuenta, Cheque, Proveedor, Concepto, COMPRAS, GASTOS, HONORARIOS, RENTA, IMPUESTOS, MOV_BANCARIOS, ACT_FIJO, OTROS, SUELDOS
 
 from django.template import RequestContext
-from diot.forms import CrearCuentaForm, CrearChequeForm, CrearChequeRapidoForm, AgregarConceptoForm, EditarConceptoForm, EditarChequeRapidoForm
+from diot.forms import CrearCuentaForm, CrearChequeForm, CrearChequeRapidoForm, AgregarConceptoForm, EditarConceptoForm, EditarChequeRapidoForm, CrearTotalForm, EditarTotalForm
 from django.http import Http404
-
+from diot.models import TotalMensual
 #from django.contrib.auth.decorators import login_required
+#TODO escribir una adivinada de operacion de proveedor por el concepto que se metio primero
+
 
 #@login_required
 def cuentas_lista(request):
@@ -234,7 +236,9 @@ def cheques_mes(request, year, month):
     cheques = Cheque.get_actives.filter(cuenta__contri__id=contri.id, fecha__year=year,fecha__month=month)
     final = get_all_totales(cheques)
     resumen = resumen_cuentas(cheques, contri)
-    return render_to_response('diot/cheques/list.html', {'cheques':cheques,'final':final, 'resumen':resumen}, RequestContext(request))
+    mensuales = TotalMensual.objects.filter(contri=contri, month=month, year=year)
+
+    return render_to_response('diot/cheques/list.html', {'cheques':cheques,'final':final, 'resumen':resumen, 'mensuales':mensuales,'month':month, 'year':year}, RequestContext(request))
 
 
 
@@ -733,12 +737,81 @@ def concepto_siguiente(request, concepto_id):
         return HttpResponseRedirect('/diot/conceptos/editar/%s/' % siguiente.id)
 
 
+def tmensual_crear(request, month=None, year=None):
+    contri = request.session['contri']
+    f = CrearTotalForm(month=month, year=year, contri=contri)
+    if request.POST:
+        f = CrearTotalForm(month, year, contri, request.POST)
+        if f.errors:
+            return render_to_response('diot/totales/create_total.html',{'month':month, 'year':year, 'form':f}, RequestContext(request))
+        else:
+            cuenta = f.cleaned_data['cuenta']
+            total = f.cleaned_data['total']
+            month = f.cleaned_data['month']
+            year = f.cleaned_data['year']
 
-#def total_mensual_crear(request, month=None, year=None):
-#    contri = request.session['contri']
-#    f = CrearTotal()
+            mensual = TotalMensual()
+            mensual.cuenta = cuenta
+            mensual.total = total
+            mensual.contri = contri
+            mensual.month = month
+            mensual.year = year
+            mensual.save()
+            if 'add_another' in request.POST:
+                return HttpResponseRedirect('/diot/totales/crear/%s/%s/'%(year,month))
+            else:
+                return HttpResponseRedirect('/diot/cheques/fechas/%s/%s/'%(year,month))
 
 
+    else:
+        return render_to_response('diot/totales/create_total.html',{'month':month, 'year':year, 'form':f}, RequestContext(request))
 
 
+def tmensual_edit(request, tmensual_id):
+    contri = request.session['contri']
+    tmensual = TotalMensual.objects.get(id=tmensual_id)
+    f = EditarTotalForm(tmensual)
+
+    if request.POST:
+        f = EditarTotalForm(tmensual, request.POST)
+        if f.errors:
+            return render_to_response('diot/totales/edit_total.html',{'form':f, 'tmensual':tmensual}, RequestContext(request))
+        else:
+            cuenta = f.cleaned_data['cuenta']
+            total = f.cleaned_data['total']
+            month = f.cleaned_data['month']
+            year = f.cleaned_data['year']
+
+            tmensual.cuenta = cuenta
+            tmensual.total = total
+            tmensual.contri = contri
+            tmensual.month = month
+            tmensual.year = year
+            tmensual.save()
+            if 'add_another' in request.POST:
+                return HttpResponseRedirect('/diot/totales/crear/%s/%s/'%(year,month))
+            else:
+                return HttpResponseRedirect('/diot/cheques/fechas/%s/%s/'%(year,month))
+
+    else:
+        return render_to_response('diot/totales/edit_total.html',{'form':f,'tmensual':tmensual}, RequestContext(request))
+
+
+def tmensual_eliminar(request, tmensual_id):
+    contri = request.session['contri']
+    try:
+        tmensual = TotalMensual.objects.get(id=tmensual_id)
+        month = tmensual.month
+        year = tmensual.year
+    except Cheque.DoesNotExist:
+        raise Http404
+
+    if not tmensual.contri.id == contri.id:
+        raise Http404
+
+    if request.POST:
+        tmensual.delete()
+        return HttpResponseRedirect('/diot/cheques/fechas/%s/%s/'%(year,month))
+    else:
+        return render_to_response('diot/totales/eliminar_total.html',{'tmensual':tmensual}, RequestContext(request))
 

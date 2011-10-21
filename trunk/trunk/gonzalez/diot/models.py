@@ -267,14 +267,15 @@ class TotalMensual(models.Model):
     
     
     def get_diferencia(self):
-        conceptos = Concepto.objects.filter(cheque__contri = self.contri, cheque__cuenta = self.cuenta, cheque__fecha_creacion__month=self.month, cheque__fecha_creacion__year=self.year)
+        conceptos = Concepto.objects.filter(cheque__cuenta = self.cuenta, cheque__fecha__month=self.month, cheque__fecha__year=self.year)
         total_con=0
 
         for con in conceptos:
             total_con += con.bancos
 
         diferencia = self.total - total_con
-        return diferencia
+        results = {'diferencia':diferencia,'capturado':total_con}
+        return results
 
 
 
