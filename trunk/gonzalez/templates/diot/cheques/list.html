@@ -132,6 +132,8 @@
         <th>Subtotal 16%</th>
         <th class="bluef">TOTAL</th>
     </tr>
+
+    {% if final.tipos.compras.total != 0 %}
     <tr>
         <th>COMPRAS</th>
         <td>{{final.tipos.compras.base_0}}</td>
@@ -139,6 +141,9 @@
         <td>{{final.tipos.compras.sub_16}}</td>
         <td class="bluef">{{final.tipos.compras.total}}</td>
     </tr>
+    {%endif%}
+
+    {% if final.tipos.gastos.total != 0 %}
     <tr>
         <th>GASTOS</th>
         <td>{{final.tipos.gastos.base_0}}</td>
@@ -146,6 +151,9 @@
         <td>{{final.tipos.gastos.sub_16}}</td>
         <td class="bluef">{{final.tipos.gastos.total}}</td>
     </tr>
+    {%endif%}
+
+    {% if final.tipos.honorarios.total != 0 %}
     <tr>
         <th>HONORARIOS</th>
         <td>{{final.tipos.honorarios.base_0}}</td>
@@ -153,6 +161,9 @@
         <td>{{final.tipos.honorarios.sub_16}}</td>
         <td class="bluef">{{final.tipos.honorarios.total}}</td>
     </tr>
+    {%endif%}
+
+    {% if final.tipos.renta.total != 0 %}
     <tr>
         <th>RENTA</th>
         <td>{{final.tipos.renta.base_0}}</td>
@@ -160,6 +171,9 @@
         <td>{{final.tipos.renta.sub_16}}</td>
         <td class="bluef">{{final.tipos.renta.total}}</td>
     </tr>
+    {%endif%}
+
+    {% if final.tipos.impuestos.total != 0 %}
     <tr>
         <th>IMPUESTOS</th>
         <td>{{final.tipos.impuestos.base_0}}</td>
@@ -167,6 +181,9 @@
         <td>{{final.tipos.impuestos.sub_16}}</td>
         <td class="bluef">{{final.tipos.impuestos.total}}</td>
     </tr>
+    {%endif%}
+
+    {% if final.tipos.sueldos.total != 0 %}
     <tr>
         <th>SUELDOS</th>
         <td>{{final.tipos.sueldos.base_0}}</td>
@@ -174,7 +191,9 @@
         <td>{{final.tipos.sueldos.sub_16}}</td>
         <td class="bluef">{{final.tipos.sueldos.total}}</td>
     </tr>
+    {%endif%}
 
+    {% if final.tipos.mov_bancarios.total != 0 %}
     <tr>
         <th>MOV. BANCARIOS</th>
         <td>{{final.tipos.mov_bancarios.base_0}}</td>
@@ -182,6 +201,9 @@
         <td>{{final.tipos.mov_bancarios.sub_16}}</td>
         <td class="bluef">{{final.tipos.mov_bancarios.total}}</td>
     </tr>
+    {%endif%}
+
+    {% if final.tipos.act_fijo.total != 0 %}
     <tr>
         <th>ACT. FIJO</th>
         <td>{{final.tipos.act_fijo.base_0}}</td>
@@ -189,6 +211,9 @@
         <td>{{final.tipos.act_fijo.sub_16}}</td>
         <td class="bluef">{{final.tipos.act_fijo.total}}</td>
     </tr>
+    {%endif%}
+
+    {% if final.tipos.otros.total != 0 %}
     <tr>
         <th>OTROS</th>
         <td>{{final.tipos.otros.base_0}}</td>
@@ -196,6 +221,7 @@
         <td>{{final.tipos.otros.sub_16}}</td>
         <td class="bluef">{{final.tipos.otros.total}}</td>
     </tr>
+    {%endif%}
 
 </table>
 

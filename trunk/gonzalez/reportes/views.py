@@ -1,9 +1,12 @@
-from django.shortcuts import render_to_response, HttpResponseRedirect
+from django.shortcuts import render_to_response, HttpResponseRedirect, HttpResponse
 from diot.models import Cuenta, Cheque, Proveedor, Concepto, COMPRAS, GASTOS, HONORARIOS, RENTA, IMPUESTOS, MOV_BANCARIOS, ACT_FIJO, OTROS, SUELDOS
 from empresa.models import Empresa
 from django.template import RequestContext
 from django.http import Http404
 from reportes.forms import MesForm
+import csv
+
+EXCLUDE_LIST = [SUELDOS,IMPUESTOS,MOV_BANCARIOS]
 
 def index_reportes(request):
     return render_to_response('reportes/main_reportes.html',{},RequestContext(request))
@@ -24,7 +27,7 @@ def reporte_proveedor(request):
 
 
 def core_reporte_proveedor(contri, month, year, request):
-    EXCLUDE_LIST = [SUELDOS,IMPUESTOS,MOV_BANCARIOS]
+
     empresa = Empresa.objects.all()[0]
     #cheques = Cheque.objects.filter(fecha__month=month, fecha__year=year, cuenta__contri=contri)
     conceptos_raw = Concepto.objects.filter(cheque__fecha__month=month, cheque__fecha__year=year,  cheque__cuenta__contri=contri)
@@ -279,3 +282,38 @@ def resumen_tipos(conceptos):
         dict_tipos['t_total'] += dict_tipos[key]['total']
 
     return dict_tipos
+
+
+def generar_txt(request):
+    contri = request.session['contri']
+    f = MesForm()
+    if request.POST:
+        f = MesForm(request.POST)
+        if f.errors:
+            return render_to_response('reportes/gentxt_f.html',{'form':f},RequestContext(request))
+        else:
+
+            month = f.cleaned_data['month']
+            year = f.cleaned_data['year']
+            conceptos_raw = Concepto.objects.filter(cheque__fecha__month=month, cheque__fecha__year=year,  cheque__cuenta__contri=contri)
+            conceptos = conceptos_raw.exclude(tipo__in=EXCLUDE_LIST)
+            excluidos = conceptos_raw.filter(tipo__in=EXCLUDE_LIST).order_by('proveedor')
+
+            # Create the HttpResponse object with the appropriate CSV header.
+            response = HttpResponse(mimetype='text/csv')
+            response['Content-Disposition'] = 'attachment; filename=diot.txt'
+            writer = csv.writer(response, delimiter = '|')
+            resumen_txt = totales_txt(conceptos)
+            for elem in resumen_txt:
+                writer.writerow(['First row', 'Foo', 'Bar', 'Baz'])
+            return response
+    else:
+        return render_to_response('reportes/gentxt_f.html',{'form':f},RequestContext(request))
+
+def totales_txt(conceptos):
+    res = resumen_proveedores(conceptos)    
+    for prov in res:
+        [prov.proveedor.tipo, prov.proveedor.operacion, prov.proveedor.rfc,' ' ,' ' ,' ' ,' ' , ]
+
+
+

@@ -85,6 +85,14 @@ $( document ).ready( function() {
         calcular_retenciones();
     });
 
+    $('#id_descuento').change(function() {
+        calcular_iva();
+    });
+
+    $('#id_iva_descuento').change(function() {
+        calcular_iva();
+    });
+
 
     $('#id_ret_iva').change(function() {
         calcular_retenciones();
@@ -140,7 +148,13 @@ function calcular_iva()
     ret_iva = get_val($('#id_ret_iva')) 
     ret_isr = get_val($("#id_ret_isr"))
 
-    total = subtotal + iva_registrado - ret_iva - ret_isr
+    
+    descuento = get_val($('#id_descuento')) 
+    if (isNaN(descuento)){descuento=0}
+    descuento_iva = get_val($("#id_iva_descuento"))
+    if (isNaN(descuento_iva)){descuento_iva=0}
+
+    total = subtotal + iva_registrado - ret_iva - ret_isr - descuento - descuento_iva
 
     diferencia = get_val($('#id_bancos')) - total
     if (isNaN(iva)){iva=0}
@@ -169,13 +183,25 @@ function calcular_retenciones()
     iva = get_val($('#id_iva'))
     if (isNaN(iva)){iva=0}
     diferencia_iva = iva_registrado - iva
+
+
     if (isNaN(diferencia_iva)){diferencia_iva=0}
+
+
     $('#id_diferencia_iva').val(diferencia_iva.toFixed(2))
     iva_registrado=get_val($("#id_iva_registrado"))
     if (isNaN(iva_registrado)){iva_registrado=0}
     ret_iva = get_val($('#id_ret_iva')) 
     ret_isr = get_val($("#id_ret_isr"))
-    total = subtotal + iva_registrado - ret_iva - ret_isr
+
+
+    descuento = get_val($('#id_descuento')) 
+    if (isNaN(descuento)){descuento=0}
+    descuento_iva = get_val($("#id_iva_descuento"))
+    if (isNaN(descuento_iva)){descuento_iva=0}
+
+    total = subtotal + iva_registrado - ret_iva - ret_isr - descuento - descuento_iva
+
     if (isNaN(total)){total=0}
     diferencia = get_val($('#id_bancos')) - total
     if (isNaN(diferencia)){diferencia=0}

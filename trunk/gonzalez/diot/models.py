@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib import admin
 
+#--------------------------------------------------------
 COMPRAS = 1
 GASTOS = 2
 HONORARIOS =3
@@ -10,12 +11,25 @@ MOV_BANCARIOS=6
 ACT_FIJO=7
 OTROS=8
 SUELDOS=9
-
 TIPO_CONCEPTO = ((COMPRAS,"Compras"),(GASTOS,"Gastos"),(HONORARIOS,"Honorarios"),(RENTA,"Renta"),(IMPUESTOS, "Impuestos"),(SUELDOS,'Sueldos'),(MOV_BANCARIOS,"Movimientos Bancarios"),(ACT_FIJO, "Activos Fijos"),(OTROS,"Otros"))
-TIPO_PROVEEDOR = ((1,"Nacional"),(2,"Extranjero"),(1,"Global"))
+#------------------------------------------------------------
+NACIONAL = 1
+EXTRANJERO = 2
+GLOBAL = 3
+TIPO_PROVEEDOR = ((NACIONAL,"Nacional"),(EXTRANJERO, "Extranjero"),(GLOBAL, "Global"))
+
+#----------------------------------------------------------
+OP_SERVICIOS = 1
+OP_ARRENDAMIENTO = 2
+OP_OTROS = 3
+
+OPERACION_PROVEEDOR = ((OP_SERVICIOS,'Prestacion de servicios Profesionales'),(OP_ARRENDAMIENTO,'Arrendamiento de inmuebles'),(OP_OTROS,'Otros'))
+
+
+#----------------------------------------------------------
 ESTADO_CHEQUE = ((1,"Nuevo"),(2,"Pendiente"),(3,"Completo"),(4,"Borrado"))
 
-#------------------------------------------------------------
+
 
 class Contribuyente(models.Model):
     nombre = models.CharField(max_length=75)
@@ -37,6 +51,7 @@ class Proveedor(models.Model):
     rfc = models.CharField(max_length=14, unique=True)
     nombre = models.CharField(max_length=75) 
     tipo = models.PositiveSmallIntegerField(choices=TIPO_PROVEEDOR, null=True, blank=True)
+    operacion = models.IntegerField(choices=OPERACION_PROVEEDOR)
     activo = models.BooleanField(default=True)
 
     def __unicode__(self):
@@ -154,6 +169,8 @@ class Concepto(models.Model):
     subtotal = models.DecimalField(max_digits=12, decimal_places=2)
     impuesto = models.ForeignKey(Impuesto, blank=True, null=True)
     impuesto_real = models.DecimalField(max_digits=12, decimal_places=2, verbose_name='IVA registrado')
+    descuento = models.DecimalField(max_digits=12, decimal_places=2, verbose_name='Descuento/Bonificacion', default=0)
+    iva_descuento = models.DecimalField(max_digits=12, decimal_places=2, verbose_name='IVA de Descuento/Bonificacion', default=0)
     diferencia_iva = models.DecimalField(max_digits=12, decimal_places=2)
     importe = models.DecimalField(max_digits=12, decimal_places=2)
     bancos = models.DecimalField(max_digits=12, decimal_places=2)
@@ -239,6 +256,25 @@ class Concepto(models.Model):
                 return ""
         else:
             return ""
-
 #------------------------------------------------------------
+
+class TotalMensual(models.Model):
+    contri = models.ForeignKey(Contribuyente)
+    cuenta = models.ForeignKey(Cuenta)
+    total = models.DecimalField(max_digits=12, decimal_places=2)
+    month = models.IntegerField()
+    year = models.IntegerField()
+    
+    
+    def get_diferencia(self):
+        conceptos = Concepto.objects.filter(cheque__contri = self.contri, cheque__cuenta = self.cuenta, cheque__fecha_creacion__month=self.month, cheque__fecha_creacion__year=self.year)
+        total_con=0
+
+        for con in conceptos:
+            total_con += con.bancos
+
+        diferencia = self.total - total_con
+        return diferencia
+
+
 

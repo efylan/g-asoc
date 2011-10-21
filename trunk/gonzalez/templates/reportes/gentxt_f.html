@@ -1,16 +1,15 @@
 {%extends 'base.html'%}
 
 {%block extrahead%}
-<title>Reporte Ordenado por Proveedor</title>
+<title>Generar Archivo TXT</title>
 {%endblock%}
-
 
 {%block sidecontent%}
     {%include 'diot/menudiot.html'%}
 {%endblock%}
 
 {%block maincontent%}
-    <h1>Reporte por Proveedor</h1>
+    <h1>Generar Archivo TXT</h1>
 
     <form method="POST">
         {%csrf_token%}
@@ -18,7 +17,7 @@
             {{form}}
         </table>
 
-        <input type="submit" value="Generar Reporte">
+        <input type="submit" value="Generar Archivo">
     </form>
 {%endblock%}
 
