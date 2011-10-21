@@ -13,4 +13,3 @@ class MesForm(forms.Form):
         hoy = date.today()    
         self.fields['month'].initial = hoy.month
         self.fields['year'].initial = hoy.year
-

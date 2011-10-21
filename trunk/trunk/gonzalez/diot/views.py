@@ -121,6 +121,8 @@ def cheques_crear_rapido(request):
             subtotal = f.cleaned_data['subtotal']
             impuesto = f.cleaned_data['impuesto']
             impuesto_real = f.cleaned_data['iva_registrado']
+            descuento = f.cleaned_data['descuento']
+            iva_descuento = f.cleaned_data['iva_descuento']
             ret_iva = f.cleaned_data['ret_iva']
             ret_isr = f.cleaned_data['ret_isr']
             importe = f.cleaned_data['importe']
@@ -156,6 +158,8 @@ def cheques_crear_rapido(request):
             concepto.subtotal = subtotal
             concepto.impuesto = impuesto
             concepto.impuesto_real = impuesto_real
+            concepto.descuento = descuento
+            concepto.iva_descuento = iva_descuento
             concepto.diferencia_iva = diferencia_iva
             concepto.importe = importe
             concepto.bancos = bancos
@@ -239,6 +243,7 @@ def editar_rapido(request, cheque_id):
 
     try:
         cheque = Cheque.get_actives.get(id=cheque_id)
+        concepto = cheque.concepto_set.all()[0]
     except Cheque.DoesNotExist:
         raise Http404
 
@@ -249,7 +254,7 @@ def editar_rapido(request, cheque_id):
     if request.POST:
         f = EditarChequeRapidoForm(contri, cheque, request.POST)
         if f.errors:
-            return render_to_response('diot/cheques/edit_rapido.html', {'form':f, 'cheque':cheque}, RequestContext(request))
+            return render_to_response('diot/cheques/edit_rapido.html', {'form':f, 'cheque':cheque, 'concepto':concepto}, RequestContext(request))
         else:
             cuenta = f.cleaned_data['cuenta']
             referencia = f.cleaned_data['referencia']
@@ -261,6 +266,9 @@ def editar_rapido(request, cheque_id):
             subtotal = f.cleaned_data['subtotal']
             impuesto = f.cleaned_data['impuesto']
             impuesto_real = f.cleaned_data['iva_registrado']
+            descuento = f.cleaned_data['descuento']
+            iva_descuento = f.cleaned_data['iva_descuento']
+
             ret_iva = f.cleaned_data['ret_iva']
             ret_isr = f.cleaned_data['ret_isr']
             importe = f.cleaned_data['importe']
@@ -294,6 +302,8 @@ def editar_rapido(request, cheque_id):
             concepto.subtotal = subtotal
             concepto.impuesto = impuesto
             concepto.impuesto_real = impuesto_real
+            concepto.descuento = descuento
+            concepto.iva_descuento = iva_descuento
             concepto.diferencia_iva = diferencia_iva
             concepto.importe = importe
             concepto.bancos = bancos
@@ -307,11 +317,18 @@ def editar_rapido(request, cheque_id):
 
             if 'add_concepto' in request.POST:
                 return HttpResponseRedirect('/diot/cheques/crear_rapido/')
+            elif 'add_anterior' in request.POST:
+                return HttpResponseRedirect('/diot/conceptos/anterior/%s/' % concepto.id)
+            elif 'add_siguiente' in request.POST:
+                return HttpResponseRedirect('/diot/conceptos/siguiente/%s/' % concepto.id)
             else:
                 return HttpResponseRedirect('/diot/cheques/fechas/%s/%s/'%(cheque.fecha.year,cheque.fecha.month))
 
+
+
+
     else:
-        return render_to_response('diot/cheques/edit_rapido.html', {'form':f, 'cheque':cheque}, RequestContext(request))
+        return render_to_response('diot/cheques/edit_rapido.html', {'form':f, 'cheque':cheque, 'concepto':concepto}, RequestContext(request))
 
 
 def editar_cheque(request, cheque_id):
@@ -379,6 +396,10 @@ def editar_concepto(request, concepto_id):
 
             if 'add_concepto' in request.POST:
                 return HttpResponseRedirect('/diot/cheques/%s/agregar_concepto/' % cheque.id)
+            elif 'add_anterior' in request.POST:
+                return HttpResponseRedirect('/diot/conceptos/anterior/%s/' % concepto.id)
+            elif 'add_siguiente' in request.POST:
+                return HttpResponseRedirect('/diot/conceptos/siguiente/%s/' % concepto.id)
             else:
                 return HttpResponseRedirect('/diot/cheques/fechas/%s/%s/'%(cheque.fecha.year,cheque.fecha.month))
 
@@ -672,6 +693,52 @@ def resumen_cuentas(cheques, contri=None):
 
         cuenta_list.append(cuenta_dict)
     return cuenta_list
+
+
+from utils import get_next_or_previous
+
+def concepto_anterior(request, concepto_id):
+    contri = request.session['contri']
+    concepto = Concepto.objects.get(id=concepto_id)
+    conceptos = Concepto.objects.filter(cheque__cuenta__contri__id=contri.id).order_by('fecha_creacion')
+    anterior = get_next_or_previous(conceptos, concepto, next=False)
+    if anterior == None:
+        if concepto.cheque.estado == 3:
+            return HttpResponseRedirect('/diot/cheques/editar_rapido/%s/' % concepto.cheque.id)
+        else:
+            return HttpResponseRedirect('/diot/conceptos/editar/%s/' % concepto.id)
+        
+    if anterior.cheque.estado == 3:
+        return HttpResponseRedirect('/diot/cheques/editar_rapido/%s/' % anterior.cheque.id)
+    else:
+        return HttpResponseRedirect('/diot/conceptos/editar/%s/' % anterior.id)
+
+
+
+
+def concepto_siguiente(request, concepto_id):
+    contri = request.session['contri']
+    concepto = Concepto.objects.get(id=concepto_id)
+    conceptos = Concepto.objects.filter(cheque__cuenta__contri__id=contri.id).order_by('fecha_creacion')
+    siguiente = get_next_or_previous(conceptos, concepto, next=True)
+    if siguiente == None:
+        if concepto.cheque.estado == 3:
+            return HttpResponseRedirect('/diot/cheques/editar_rapido/%s/' % concepto.cheque.id)
+        else:
+            return HttpResponseRedirect('/diot/conceptos/editar/%s/' % concepto.id)
+
+    if siguiente.cheque.estado == 3:
+        return HttpResponseRedirect('/diot/cheques/editar_rapido/%s/' % siguiente.cheque.id)
+    else:
+        return HttpResponseRedirect('/diot/conceptos/editar/%s/' % siguiente.id)
+
+
+
+#def total_mensual_crear(request, month=None, year=None):
+#    contri = request.session['contri']
+#    f = CrearTotal()
+
+
 
 
 

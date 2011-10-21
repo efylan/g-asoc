@@ -22,6 +22,13 @@
 <br>
 <br>
 <br>
+<br>
+<a href="{%url diot.views.concepto_anterior concepto.id%}" class="button medium new_link">Concepto Anterior</a>
+<a href="{%url diot.views.concepto_siguiente concepto.id%}" class="button medium new_link2">Siguiente Concepto</a>
+<br>
+<br>
+<br>
+
 
 
 <table class="info_cheque">
@@ -48,6 +55,14 @@
         </table>
         <input type="submit" value="Guardar Cambios">
         <input type="submit" value="Guardar y Agregar Concepto" name="add_concepto">
+        <br>
+        <br>
+        <input type="submit" class="button medium new_link" value="<< Guardar y Anterior" name="add_anterior">
+        <input type="submit" class="button medium new_link2" value="Guardar y Siguiente >>" name="add_siguiente">
+
     </form>
+<br>
+<br>
+<br>
 <a href = "{%url diot.views.eliminar_concepto concepto.id%}" class="medium button del_link"> Eliminar </a>
 {%endblock%}

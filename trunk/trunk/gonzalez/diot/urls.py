@@ -19,6 +19,8 @@ urlpatterns = patterns('',
 
     url(r'^conceptos/editar/(?P<concepto_id>\d+)/$', 'gonzalez.diot.views.editar_concepto', name='editar_concepto'),
     url(r'^conceptos/eliminar/(?P<concepto_id>\d+)/$', 'gonzalez.diot.views.eliminar_concepto', name='eliminar_concepto'),
+    url(r'^conceptos/siguiente/(?P<concepto_id>\d+)/$', 'gonzalez.diot.views.concepto_siguiente', name='eliminar_concepto'),
+    url(r'^conceptos/anterior/(?P<concepto_id>\d+)/$', 'gonzalez.diot.views.concepto_anterior', name='eliminar_concepto'),
 
 
 #    url(r'^clientes/$', 'gonzalez.clientes.views.lista_clientes', name='lista_cleintes'),

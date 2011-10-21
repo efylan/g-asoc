@@ -30,6 +30,9 @@ class CrearChequeRapidoForm(forms.Form):
     impuesto = forms.ModelChoiceField(Impuesto.objects, required=False)
     iva = forms.DecimalField(max_digits=12, decimal_places=2, required=False, label='IVA calculado')#X?
     iva_registrado = forms.DecimalField(max_digits=12, decimal_places=2, required=False, label='IVA registrado')#X?
+    descuento = forms.DecimalField(max_digits=12, decimal_places=2, initial = 0)
+    iva_descuento = forms.DecimalField(max_digits=12, decimal_places=2, initial=0)
+
     diferencia_iva = forms.DecimalField(max_digits=12, decimal_places=2, required=False, initial=0)#X?
     ret_iva = forms.DecimalField(max_digits=12, decimal_places=2, required=False, initial=0)#?
     ret_isr = forms.DecimalField(max_digits=12, decimal_places=2, required=False, initial=0)#?
@@ -58,7 +61,7 @@ class AgregarConceptoForm(forms.ModelForm):
 
     class Meta:
         model = Concepto
-        fields = ('RFC_proveedor', 'nombre_proveedor', 'tipo', 'subtotal', 'impuesto', 'iva', 'iva_registrado','diferencia_iva','ret_iva', 'ret_isr', 'importe', 'bancos','diferencia')
+        fields = ('RFC_proveedor', 'nombre_proveedor', 'tipo', 'subtotal', 'impuesto', 'iva', 'iva_registrado', 'descuento', 'iva_descuento','diferencia_iva','ret_iva', 'ret_isr', 'importe', 'bancos','diferencia')
 
     def __init__(self, *args, **kwargs):
         super(AgregarConceptoForm, self).__init__(*args, **kwargs)
@@ -82,6 +85,8 @@ class EditarChequeRapidoForm(forms.Form):
     impuesto = forms.ModelChoiceField(Impuesto.objects, required=False)
     iva = forms.DecimalField(max_digits=12, decimal_places=2, required=False, label='IVA calculado')#X?
     iva_registrado = forms.DecimalField(max_digits=12, decimal_places=2, required=False, label='IVA registrado')#X?
+    descuento = forms.DecimalField(max_digits=12, decimal_places=2, initial=0)
+    iva_descuento = forms.DecimalField(max_digits=12, decimal_places=2, initial=0)
     diferencia_iva = forms.DecimalField(max_digits=12, decimal_places=2, required=False, initial=0)#X?
     ret_iva = forms.DecimalField(max_digits=12, decimal_places=2, required=False, initial=0)#?
     ret_isr = forms.DecimalField(max_digits=12, decimal_places=2, required=False, initial=0)#?
@@ -131,7 +136,7 @@ class EditarConceptoForm(forms.ModelForm):
 
     class Meta:
         model = Concepto
-        fields = ('RFC_proveedor', 'nombre_proveedor', 'tipo', 'subtotal', 'impuesto', 'iva', 'iva_registrado','diferencia_iva','ret_iva', 'ret_isr', 'importe', 'bancos','diferencia')
+        fields = ('RFC_proveedor', 'nombre_proveedor', 'tipo', 'subtotal', 'impuesto', 'iva', 'iva_registrado', 'descuento', 'iva_descuento','diferencia_iva','ret_iva', 'ret_isr', 'importe', 'bancos','diferencia')
 
     def __init__(self, *args, **kwargs):
         super(EditarConceptoForm, self).__init__(*args, **kwargs)
