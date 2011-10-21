@@ -8,8 +8,34 @@
 {%block maincontent%}
 <div>
     <a href="{%url diot.views.cheques_crear%}" class="medium button new_link">Crear Nuevo Cheque</a>     <a href="{%url diot.views.cheques_crear_rapido%}" class="medium button new_link2">Crear Nuevo Cheque Rapido</a>
+<a href="{%url diot.views.tmensual_crear%}" class="medium button new_link">Crear Nuevo Saldo</a>
 </div>
 <br><br><br>
+
+    <table class="object_list">
+        <tr>
+            <th>Cuenta</th>
+            <th>A saldar</th>
+            <th>En conceptos</th>
+            <th>Diferencia</th>
+        </tr>
+        {%for men in mensuales%}
+            {%with men.get_diferencia as res_mensual%}
+            <tr>
+                <td><a href="{%url diot.views.tmensual_edit men.id%}">{{men.cuenta}}</a></td>
+                <td>{{men.total}}</td>
+                <td>{{res_mensual.capturado}}</td>
+                <td>{{res_mensual.diferencia}}</td>
+            </tr>
+            {%endwith%}
+        {%endfor%}
+        <tr>
+            <td colspan = "4"><a href="{%url diot.views.tmensual_crear year month%}">Crear Nuevo</a></td>
+        </tr>
+    </table>
+    <br>
+    <br>
+
     <table class="object_list">
 
         <tr>

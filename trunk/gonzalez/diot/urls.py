@@ -21,7 +21,10 @@ urlpatterns = patterns('',
     url(r'^conceptos/eliminar/(?P<concepto_id>\d+)/$', 'gonzalez.diot.views.eliminar_concepto', name='eliminar_concepto'),
     url(r'^conceptos/siguiente/(?P<concepto_id>\d+)/$', 'gonzalez.diot.views.concepto_siguiente', name='eliminar_concepto'),
     url(r'^conceptos/anterior/(?P<concepto_id>\d+)/$', 'gonzalez.diot.views.concepto_anterior', name='eliminar_concepto'),
-
+    url(r'^totales/crear/$', 'gonzalez.diot.views.tmensual_crear', name='tmensual_crear'),
+    url(r'^totales/editar/(?P<tmensual_id>\d+)/$', 'gonzalez.diot.views.tmensual_edit', name='tmensual_crearsf'),
+    url(r'^totales/crear/(?P<year>\d+)/(?P<month>\d+)/$', 'gonzalez.diot.views.tmensual_crear', name='tmensual_crear'),
+    url(r'^totales/eliminar/(?P<tmensual_id>\d+)/$', 'gonzalez.diot.views.tmensual_eliminar', name='tmensual_eliminar'),
 
 #    url(r'^clientes/$', 'gonzalez.clientes.views.lista_clientes', name='lista_cleintes'),
 )

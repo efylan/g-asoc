@@ -1,0 +1,43 @@
+{%extends "base.html"%}
+
+{%block sidecontent%}
+    {%include "diot/menudiot.html"%}
+{%endblock%}
+
+{%block extrahead%}
+{%load impuestos_tags%}
+<title>Eliminar Total a Saldar</title>
+<link rel="stylesheet" type="text/css" media="all" href="/media/jquery/css/pepper-grinder/jquery-ui-1.8.16.custom.css" />
+{%endblock%}
+
+
+{%block maincontent%}
+<h1>Eliminar Saldo</h1>
+    <table class="object_list">
+        <tr>
+            <th>Cuenta</th>
+            <th>A saldar</th>
+            <th>En conceptos</th>
+            <th>Diferencia</th>
+        </tr>
+            {%with tmensual.get_diferencia as res_mensual%}
+            <tr>
+                <td>{{tmensual.cuenta}}</td>
+                <td>{{tmensual.total}}</td>
+                <td>{{res_mensual.capturado}}</td>
+                <td>{{res_mensual.diferencia}}</td>
+            </tr>
+            {%endwith%}
+    </table>
+
+<a href="{%url diot.views.cheques_mes tmensual.year tmensual.month%}" class="medium button new_link">REGRESAR</a>
+
+    <form method="POST">
+    {%impuestos_inputs%}
+        {%csrf_token%}
+        <table>
+            {{form}}
+        </table>
+        <input type="submit" value="ELIMINAR SALDO" class="medium button del_link">
+    </form>
+{%endblock%}

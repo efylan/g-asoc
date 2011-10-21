@@ -2,6 +2,10 @@ from django import forms
 from diot.models import Cuenta, Cheque, Impuesto, Concepto
 from diot.models import TIPO_CONCEPTO
 
+MONTH = ((1,'Enero'),(2,'Febrero'),(3,'Marzo'),(4,'Abril'),(5,'Mayo'),(6,'Junio'),(7,'Julio'), (8,'Agosto'), (9,'Septiembre'), (10,'Octubre'),(11,'Noviembre'),(12,'Diciembre')) 
+YEAR = ((2011,'2011'), (2012,'2012'))
+
+
 class CrearCuentaForm(forms.ModelForm):
     class Meta:
         model=Cuenta
@@ -162,4 +166,29 @@ class EditarConceptoForm(forms.ModelForm):
         self.fields['diferencia'].initial = concepto.diferencia
 
 
+class CrearTotalForm(forms.Form):
+    cuenta = forms.ModelChoiceField(Cuenta.objects.none())
+    total = forms.DecimalField(max_digits=12, decimal_places=2)
+    month = forms.ChoiceField(choices = MONTH)
+    year = forms.ChoiceField(choices = YEAR)
+
+    def __init__(self, month, year, contri, *args, **kwargs):
+        super(CrearTotalForm, self).__init__(*args, **kwargs)
+        self.fields['month'].initial = month
+        self.fields['year'].initial = year
+        self.fields['cuenta'].queryset=Cuenta.get_actives.filter(contri__id=contri.id)
+
+class EditarTotalForm(forms.Form):
+    cuenta = forms.ModelChoiceField(Cuenta.objects.none())
+    total = forms.DecimalField(max_digits=12, decimal_places=2)
+    month = forms.ChoiceField(choices = MONTH)
+    year = forms.ChoiceField(choices = YEAR)
+
+    def __init__(self, tmensual, *args, **kwargs):
+        super(EditarTotalForm, self).__init__(*args, **kwargs)
+        self.fields['month'].initial = tmensual.month
+        self.fields['year'].initial = tmensual.year
+        self.fields['total'].initial = tmensual.total
+        self.fields['cuenta'].queryset=Cuenta.get_actives.filter(contri__id=tmensual.contri.id)
+        self.fields['cuenta'].initial = tmensual.cuenta
 

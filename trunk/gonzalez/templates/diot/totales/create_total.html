@@ -1,0 +1,27 @@
+{%extends "base.html"%}
+
+{%block extrahead%}
+<title>Crear nuevo TOTAL</title>
+{%endblock%}
+
+{%block sidecontent%}
+    {%include "diot/menudiot.html"%}
+{%endblock%}
+
+
+{%block maincontent%}
+<br>
+<br>
+<br>
+    
+
+    <form method="POST">
+        {%csrf_token%}
+        <table>
+            {{form}}
+        </table>
+        <input type="submit" value="Crear">
+        <input type="submit" value="Crear y Agregar otro" name="add_another">
+
+    </form>
+{%endblock%}
