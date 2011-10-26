@@ -1,5 +1,5 @@
 from django.shortcuts import render_to_response, HttpResponseRedirect, HttpResponse
-from diot.models import Cuenta, Cheque, Proveedor, Concepto, COMPRAS, GASTOS, HONORARIOS, RENTA, IMPUESTOS, MOV_BANCARIOS, ACT_FIJO, OTROS, SUELDOS
+from diot.models import Cuenta, Cheque, Proveedor, Concepto, COMPRAS, GASTOS, HONORARIOS, RENTA, IMPUESTOS, MOV_BANCARIOS, ACT_FIJO, OTROS, SUELDOS, EXTRANJERO, NACIONAL, GLOBAL
 from empresa.models import Empresa
 from django.template import RequestContext
 from django.http import Http404
@@ -41,7 +41,7 @@ def core_reporte_proveedor(contri, month, year, request):
 
 
     gran_tot = {}
-    gran_tot['base_0'] = totales['base_0'] + tot_exc['base_0'] 
+    gran_tot['base_0'] = totales['base_0'] + tot_exc['base_0']
     gran_tot['sub_11'] = totales['sub_11'] + tot_exc['sub_11']
     gran_tot['sub_16'] = totales['sub_16'] + tot_exc['sub_16']
     gran_tot['iva_11'] = totales['iva_11'] + tot_exc['iva_11']
@@ -88,6 +88,7 @@ def resumen_proveedores(conceptos):
         prov_dict['descuento_iva'] = 0 #?
         prov_dict['count'] = conceptos_prov.count()
         for con in conceptos_prov:
+            prov_dict['base_0'] += con.exento
             if con.impuesto == None:
                 prov_dict['base_0'] += con.subtotal
             elif con.impuesto.porcentaje == 11:
@@ -97,6 +98,8 @@ def resumen_proveedores(conceptos):
                 prov_dict['sub_16'] += con.subtotal
                 prov_dict['iva_16'] += con.impuesto_real
 
+            prov_dict['descuento'] += con.descuento
+            prov_dict['descuento_iva'] += con.iva_descuento
             prov_dict['ret_iva'] += con.ret_iva
             prov_dict['ret_isr'] += con.ret_isr
             prov_dict['importe'] += con.bancos
@@ -132,6 +135,7 @@ def resumen_totales(conceptos):
     total_dict['descuento_iva'] = 0 #?
     total_dict['count'] = conceptos.count()
     for con in conceptos:
+        total_dict['base_0'] += con.exento
         if con.impuesto == None:
             total_dict['base_0'] += con.subtotal
         elif con.impuesto.porcentaje == 11:
@@ -141,6 +145,8 @@ def resumen_totales(conceptos):
             total_dict['sub_16'] += con.subtotal
             total_dict['iva_16'] += con.impuesto_real
 
+        total_dict['descuento'] += con.descuento
+        total_dict['descuento_iva'] += con.iva_descuento
         total_dict['ret_iva'] += con.ret_iva
         total_dict['ret_isr'] += con.ret_isr
         total_dict['importe'] += con.bancos
@@ -150,95 +156,169 @@ def resumen_totales(conceptos):
 
 def resumen_tipos(conceptos):
     dict_tipos={}
-    dict_tipos['compras'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0}
-    dict_tipos['gastos'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0}
-    dict_tipos['honorarios'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0}
-    dict_tipos['renta'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0}
-    dict_tipos['impuestos'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0}
-    dict_tipos['mov_bancarios'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0}
-    dict_tipos['act_fijo'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0}
-    dict_tipos['otros'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0}
-    dict_tipos['sueldos'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0}
+    dict_tipos['compras'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0,'ret_iva':0, 'ret_isr':0, 'desc':0, 'desc_iva':0}
+    dict_tipos['gastos'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0,'ret_iva':0, 'ret_isr':0, 'desc':0, 'desc_iva':0}
+    dict_tipos['honorarios'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0,'ret_iva':0, 'ret_isr':0, 'desc':0, 'desc_iva':0}
+    dict_tipos['renta'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0,'ret_iva':0, 'ret_isr':0, 'desc':0, 'desc_iva':0}
+    dict_tipos['impuestos'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0,'ret_iva':0, 'ret_isr':0, 'desc':0, 'desc_iva':0}
+    dict_tipos['mov_bancarios'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0,'ret_iva':0, 'ret_isr':0, 'desc':0, 'desc_iva':0}
+    dict_tipos['act_fijo'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0,'ret_iva':0, 'ret_isr':0, 'desc':0, 'desc_iva':0}
+    dict_tipos['otros'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0,'ret_iva':0, 'ret_isr':0, 'desc':0, 'desc_iva':0}
+    dict_tipos['sueldos'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0,'ret_iva':0, 'ret_isr':0, 'desc':0, 'desc_iva':0}
 
     for concepto in conceptos:
+        #TODO
+        if concepto.tipo == COMPRAS:
+            dict_tipos['compras']['ret_iva']+=concepto.ret_iva
+            dict_tipos['compras']['ret_isr']+=concepto.ret_isr
+            dict_tipos['compras']['desc']+=concepto.descuento
+            dict_tipos['compras']['desc_iva']+=concepto.iva_descuento
+        elif concepto.tipo == GASTOS:
+            dict_tipos['gastos']['ret_iva']+=concepto.ret_iva
+            dict_tipos['gastos']['ret_isr']+=concepto.ret_isr
+            dict_tipos['gastos']['desc']+=concepto.descuento
+            dict_tipos['gastos']['desc_iva']+=concepto.iva_descuento
+        elif concepto.tipo == HONORARIOS:
+            dict_tipos['honorarios']['ret_iva']+=concepto.ret_iva
+            dict_tipos['honorarios']['ret_isr']+=concepto.ret_isr
+            dict_tipos['honorarios']['desc']+=concepto.descuento
+            dict_tipos['honorarios']['desc_iva']+=concepto.iva_descuento
+        elif concepto.tipo == RENTA:
+            dict_tipos['renta']['ret_iva']+=concepto.ret_iva
+            dict_tipos['renta']['ret_isr']+=concepto.ret_isr
+            dict_tipos['renta']['desc']+=concepto.descuento
+            dict_tipos['renta']['desc_iva']+=concepto.iva_descuento
+        elif concepto.tipo == IMPUESTOS:
+            dict_tipos['impuestos']['ret_iva']+=concepto.ret_iva
+            dict_tipos['impuestos']['ret_isr']+=concepto.ret_isr
+            dict_tipos['impuestos']['desc']+=concepto.descuento
+            dict_tipos['impuestos']['desc_iva']+=concepto.iva_descuento
+        elif concepto.tipo == MOV_BANCARIOS:
+            dict_tipos['mov_bancarios']['ret_iva']+=concepto.ret_iva
+            dict_tipos['mov_bancarios']['ret_isr']+=concepto.ret_isr
+            dict_tipos['mov_bancarios']['desc']+=concepto.descuento
+            dict_tipos['mov_bancarios']['desc_iva']+=concepto.iva_descuento
+        elif concepto.tipo == ACT_FIJO:
+            dict_tipos['act_fijo']['ret_iva']+=concepto.ret_iva
+            dict_tipos['act_fijo']['ret_isr']+=concepto.ret_isr
+            dict_tipos['act_fijo']['desc']+=concepto.descuento
+            dict_tipos['act_fijo']['desc_iva']+=concepto.iva_descuento
+        elif concepto.tipo == OTROS:
+            dict_tipos['otros']['ret_iva']+=concepto.ret_iva
+            dict_tipos['otros']['ret_isr']+=concepto.ret_isr
+            dict_tipos['otros']['desc']+=concepto.descuento
+            dict_tipos['otros']['desc_iva']+=concepto.iva_descuento
+        elif concepto.tipo == SUELDOS:
+            dict_tipos['sueldos']['ret_iva']+=concepto.ret_iva
+            dict_tipos['sueldos']['ret_isr']+=concepto.ret_isr
+            dict_tipos['sueldos']['desc']+=concepto.descuento
+            dict_tipos['sueldos']['desc_iva']+=concepto.iva_descuento
+
         if concepto.impuesto==None:
             if concepto.tipo == COMPRAS:
                 dict_tipos['compras']['base_0']+=concepto.subtotal
+                dict_tipos['compras']['base_0']+=concepto.exento
             elif concepto.tipo == GASTOS:
                 dict_tipos['gastos']['base_0']+=concepto.subtotal
+                dict_tipos['gastos']['base_0']+=concepto.exento
             elif concepto.tipo == HONORARIOS:
                 dict_tipos['honorarios']['base_0']+=concepto.subtotal
+                dict_tipos['honorarios']['base_0']+=concepto.exento
             elif concepto.tipo == RENTA:
                 dict_tipos['renta']['base_0']+=concepto.subtotal
+                dict_tipos['renta']['base_0']+=concepto.exento
             elif concepto.tipo == IMPUESTOS:
                 dict_tipos['impuestos']['base_0']+=concepto.subtotal
+                dict_tipos['impuestos']['base_0']+=concepto.exento
             elif concepto.tipo == MOV_BANCARIOS:
                 dict_tipos['mov_bancarios']['base_0']+=concepto.subtotal
+                dict_tipos['mov_bancarios']['base_0']+=concepto.exento
             elif concepto.tipo == ACT_FIJO:
                 dict_tipos['act_fijo']['base_0']+=concepto.subtotal
+                dict_tipos['act_fijo']['base_0']+=concepto.exento
             elif concepto.tipo == OTROS:
                 dict_tipos['otros']['base_0']+=concepto.subtotal
+                dict_tipos['otros']['base_0']+=concepto.exento
             elif concepto.tipo == SUELDOS:
                 dict_tipos['sueldos']['base_0']+=concepto.subtotal
+                dict_tipos['sueldos']['base_0']+=concepto.exento
 
         elif concepto.impuesto.porcentaje==11:
             if concepto.tipo == COMPRAS:
                 dict_tipos['compras']['sub_11']+=concepto.subtotal
                 dict_tipos['compras']['iva_11']+=concepto.impuesto_real
+                dict_tipos['compras']['base_0']+=concepto.exento
             elif concepto.tipo == GASTOS:
                 dict_tipos['gastos']['sub_11']+=concepto.subtotal
                 dict_tipos['gastos']['iva_11']+=concepto.impuesto_real
+                dict_tipos['gastos']['base_0']+=concepto.exento
             elif concepto.tipo == HONORARIOS:
                 dict_tipos['honorarios']['sub_11']+=concepto.subtotal
                 dict_tipos['honorarios']['iva_11']+=concepto.impuesto_real
+                dict_tipos['honorarios']['base_0']+=concepto.exento
             elif concepto.tipo == RENTA:
                 dict_tipos['renta']['sub_11']+=concepto.subtotal
                 dict_tipos['renta']['iva_11']+=concepto.impuesto_real
+                dict_tipos['renta']['base_0']+=concepto.exento
             elif concepto.tipo == IMPUESTOS:
                 dict_tipos['impuestos']['sub_11']+=concepto.subtotal
                 dict_tipos['impuestos']['iva_11']+=concepto.impuesto_real
+                dict_tipos['impuestos']['base_0']+=concepto.exento
             elif concepto.tipo == MOV_BANCARIOS:
                 dict_tipos['mov_bancarios']['sub_11']+=concepto.subtotal
                 dict_tipos['mov_bancarios']['iva_11']+=concepto.impuesto_real
+                dict_tipos['mov_bancarios']['base_0']+=concepto.exento
             elif concepto.tipo == ACT_FIJO:
                 dict_tipos['act_fijo']['sub_11']+=concepto.subtotal
                 dict_tipos['act_fijo']['iva_11']+=concepto.impuesto_real
+                dict_tipos['act_fijo']['base_0']+=concepto.exento
             elif concepto.tipo == OTROS:
                 dict_tipos['otros']['sub_11']+=concepto.subtotal
                 dict_tipos['otros']['iva_11']+=concepto.impuesto_real
+                dict_tipos['otros']['base_0']+=concepto.exento
             elif concepto.tipo == SUELDOS:
                 dict_tipos['sueldos']['sub_11']+=concepto.subtotal
                 dict_tipos['sueldos']['iva_11']+=concepto.impuesto_real
+                dict_tipos['sueldos']['base_0']+=concepto.exento
 
         elif concepto.impuesto.porcentaje ==16:
 
             if concepto.tipo == COMPRAS:
                 dict_tipos['compras']['sub_16']+=concepto.subtotal
                 dict_tipos['compras']['iva_16']+=concepto.impuesto_real
+                dict_tipos['compras']['base_0']+=concepto.exento
             elif concepto.tipo == GASTOS:
                 dict_tipos['gastos']['sub_16']+=concepto.subtotal
                 dict_tipos['gastos']['iva_16']+=concepto.impuesto_real
+                dict_tipos['gastos']['base_0']+=concepto.exento
             elif concepto.tipo == HONORARIOS:
                 dict_tipos['honorarios']['sub_16']+=concepto.subtotal
                 dict_tipos['honorarios']['iva_16']+=concepto.impuesto_real
+                dict_tipos['honorarios']['base_0']+=concepto.exento
             elif concepto.tipo == RENTA:
                 dict_tipos['renta']['sub_16']+=concepto.subtotal
                 dict_tipos['renta']['iva_16']+=concepto.impuesto_real
+                dict_tipos['renta']['base_0']+=concepto.exento
             elif concepto.tipo == IMPUESTOS:
                 dict_tipos['impuestos']['sub_16']+=concepto.subtotal
                 dict_tipos['impuestos']['iva_16']+=concepto.impuesto_real
+                dict_tipos['impuestos']['base_0']+=concepto.exento
             elif concepto.tipo == MOV_BANCARIOS:
                 dict_tipos['mov_bancarios']['sub_16']+=concepto.subtotal
                 dict_tipos['mov_bancarios']['iva_16']+=concepto.impuesto_real
+                dict_tipos['mov_bancarios']['base_0']+=concepto.exento
             elif concepto.tipo == ACT_FIJO:
                 dict_tipos['act_fijo']['sub_16']+=concepto.subtotal
                 dict_tipos['act_fijo']['iva_16']+=concepto.impuesto_real
+                dict_tipos['act_fijo']['base_0']+=concepto.exento
             elif concepto.tipo == OTROS:
                 dict_tipos['otros']['sub_16']+=concepto.subtotal
                 dict_tipos['otros']['iva_16']+=concepto.impuesto_real
+                dict_tipos['otros']['base_0']+=concepto.exento
             elif concepto.tipo == SUELDOS:
                 dict_tipos['sueldos']['sub_16']+=concepto.subtotal
                 dict_tipos['sueldos']['iva_16']+=concepto.impuesto_real
+                dict_tipos['sueldos']['base_0']+=concepto.exento
 
 
     dict_tipos['compras']['subtotal']=dict_tipos['compras']['base_0'] + dict_tipos['compras']['sub_11'] + dict_tipos['compras']['sub_16']
@@ -301,19 +381,80 @@ def generar_txt(request):
 
             # Create the HttpResponse object with the appropriate CSV header.
             response = HttpResponse(mimetype='text/csv')
-            response['Content-Disposition'] = 'attachment; filename=diot.txt'
-            writer = csv.writer(response, delimiter = '|')
+            response['Content-Disposition'] = 'attachment; filename=diot_%s_%s_%s.txt' % (contri.rfc, month, year)
+            writer = csv.writer(response, delimiter = '|', lineterminator="|\n")
             resumen_txt = totales_txt(conceptos)
-            for elem in resumen_txt:
-                writer.writerow(['First row', 'Foo', 'Bar', 'Baz'])
+            for fila in resumen_txt:
+                writer.writerow(fila)
             return response
     else:
         return render_to_response('reportes/gentxt_f.html',{'form':f},RequestContext(request))
 
 def totales_txt(conceptos):
-    res = resumen_proveedores(conceptos)    
+    res = resumen_proveedores(conceptos)['prov_list']
+    lista_diot = []
     for prov in res:
-        [prov.proveedor.tipo, prov.proveedor.operacion, prov.proveedor.rfc,' ' ,' ' ,' ' ,' ' , ]
+        if prov['proveedor'].tipo == EXTRANJERO:
+            valor_11 = ''
+            valor_16 = ''
+            exento = ''
+            impo_11 = prov['sub_11']
+            impo_16 = prov['sub_16']
+            impo_exento = prov['base_0']
+            if impo_11 == 0:
+                impo_11 = ''
+            if impo_16 == 0:
+                impo_16 = ''
+            if impo_exento == 0:
+                impo_exento = ''
+            
+        else:
+            valor_11 = prov['sub_11']
+            valor_16 = prov['sub_16']
+            exento = prov['base_0']
+            impo_11 = ''
+            impo_16 = ''
+            impo_exento = ''
+
+            if valor_11 == 0:
+                valor_11 = ''
+            if valor_16 == 0:
+                valor_16 = ''
+            if exento == 0:
+                exento = ''
 
 
+
+        retencion = prov['ret_iva'] + prov['ret_isr']
+        if retencion == 0:
+            retencion = ''
+
+        iva_desc = prov['descuento_iva']
+        if iva_desc == 0:
+            iva_desc = ''
+
+        fila = [prov['proveedor'].get_tipo(), prov['proveedor'].get_operacion(), prov['proveedor'].rfc, '' ,'' ,'' ,'' , valor_16, '', '', valor_11, '', '', impo_16, '', impo_11, '', impo_exento, '', exento, retencion, iva_desc]
+        lista_diot.append(fila)
+
+    return lista_diot
+
+
+
+#OK-Valor de los actos o actividades pagados a la tasa del 15%  16% de IVA
+#Valor de los actos o actividades pagados a la tasa del 15% de IVA
+#TODO?-Monto del IVA pagado no acreditable a la tasa del 15%  16%  (correspondiente en la proporcin de las deducciones autorizadas)
+#OK-Valor de los actos o actividades pagados a la tasa del 10% u 11% de IVA	
+#Valor de los actos o actividades pagados a la tasa del 10% de IVA
+#TODO?-Monto del IVA pagado no acreditable a la tasa del 10% u 11% (correspondiente en la proporcin de las deducciones autorizadas)
+
+#OK-Valor de los actos o actividades pagados en la importacin de bienes y servicios  a la tasa del 15%  16% de  IVA
+#Monto del IVA pagado no acreditable por la importacion  a la tasa del 15%  16% (correspondiente en la proporcin de las deducciones autorizadas)
+#OK-Valor de los actos o actividades pagados en la importacion de bienes y servicios a la tasa del 10% u 11% de IVA
+#Monto del IVA pagado no acreditable por la importacion a la tasa del 10% u 11% (Correspondiente en la proporcion de las deducciones autorizadas
+#OK-Valor de los actos o actividades pagados en la importacin de bienes y servicios por los que no se paraga el IVA (Exentos)
+
+#TODO?-Valor de los demas actos o actividades pagados a la tasa del 0% de IVA	
+#OK-Valor de los actos o actividades pagados por los que no se pagara el IVA (Exentos)	
+#OK-IVA Retenido por el contribuyente	
+#OK-IVA correspondiente a las devoluciones, descuentos y bonificaciones sobre compras
 

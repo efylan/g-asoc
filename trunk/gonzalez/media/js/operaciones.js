@@ -59,6 +59,11 @@ $( document ).ready( function() {
 
     set_date_input($('#id_fecha'))
 
+    $('#id_exento').change(function() {
+        calcular_iva();
+    });
+
+
     $('#id_subtotal').change(function() {
         calcular_iva();
     });
@@ -139,6 +144,7 @@ function calcular_iva()
     porcentaje = get_val($(txt_id))
     if (isNaN(porcentaje)){porcentaje=0}
     subtotal = get_val($("#id_subtotal"))
+    if (isNaN(subtotal)){subtotal=0}
     iva = (subtotal * (porcentaje/100))
     iva_registrado=get_val($("#id_iva_registrado"))
     if (isNaN(iva_registrado)){iva_registrado=0}
@@ -148,13 +154,14 @@ function calcular_iva()
     ret_iva = get_val($('#id_ret_iva')) 
     ret_isr = get_val($("#id_ret_isr"))
 
-    
+    exento = get_val($("#id_exento"))
+    if (isNaN(exento)){exento=0}
     descuento = get_val($('#id_descuento')) 
     if (isNaN(descuento)){descuento=0}
     descuento_iva = get_val($("#id_iva_descuento"))
     if (isNaN(descuento_iva)){descuento_iva=0}
 
-    total = subtotal + iva_registrado - ret_iva - ret_isr - descuento - descuento_iva
+    total = subtotal + iva_registrado + exento - ret_iva - ret_isr - descuento - descuento_iva
 
     diferencia = get_val($('#id_bancos')) - total
     if (isNaN(iva)){iva=0}
@@ -179,6 +186,7 @@ function calcular_retenciones()
     porcentaje = get_val($(txt_id))
     if (isNaN(porcentaje)){porcentaje=0}
     subtotal = get_val($("#id_subtotal"))
+    if (isNaN(subtotal)){subtotal=0}
     iva = (subtotal * (porcentaje/100))
     iva = get_val($('#id_iva'))
     if (isNaN(iva)){iva=0}
@@ -194,13 +202,15 @@ function calcular_retenciones()
     ret_iva = get_val($('#id_ret_iva')) 
     ret_isr = get_val($("#id_ret_isr"))
 
+    exento = get_val($("#id_exento"))
+    if (isNaN(exento)){exento=0}
 
     descuento = get_val($('#id_descuento')) 
     if (isNaN(descuento)){descuento=0}
     descuento_iva = get_val($("#id_iva_descuento"))
     if (isNaN(descuento_iva)){descuento_iva=0}
 
-    total = subtotal + iva_registrado - ret_iva - ret_isr - descuento - descuento_iva
+    total = subtotal + iva_registrado + exento - ret_iva - ret_isr - descuento - descuento_iva
 
     if (isNaN(total)){total=0}
     diferencia = get_val($('#id_bancos')) - total

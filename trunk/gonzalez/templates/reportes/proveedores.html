@@ -18,6 +18,7 @@
         <th>Sub. 11%</th>
         <th>Sub. 16%</th>
         <th>Desc.</th>
+        <th>IVA Desc.</th>
         <th>IVA 11%</th>
         <th>IVA 16%</th>
         <th>Ret. IVA</th>
@@ -27,7 +28,7 @@
     {%for res in resumen%}
     <tr>
         <td colspan="10" class="prov_info">{{res.proveedor.nombre}}</td>        
-        <td colspan="2" class="prov_info">{{res.proveedor.rfc}}</td>
+        <td colspan="3" class="prov_info">{{res.proveedor.rfc}}</td>
     </tr>
     {%for concepto in res.conceptos%}
     <tr class="conceptos">
@@ -37,7 +38,8 @@
         <td class="number">{{concepto.get_base_0|intcomma}}</td>
         <td class="number">{{concepto.get_sub_11|intcomma}}</td>
         <td class="number">{{concepto.get_sub_16|intcomma}}</td>
-        <td></td>
+        <td class="number">{{concepto.get_desc|intcomma}}</td>
+        <td class="number">{{concepto.get_iva_desc|intcomma}}</td>
         <td class="number">{{concepto.get_iva_11|intcomma}}</td>
         <td class="number">{{concepto.get_iva_16|intcomma}}</td>
         <td class="number">{%if concepto.ret_iva != 0%}{{concepto.ret_iva|intcomma}}{%endif%}</td>
@@ -51,7 +53,8 @@
         <td class="number">{%if res.base_0 != 0%}{{res.base_0|intcomma}}{%endif%}</td>
         <td class="number">{%if res.sub_11 != 0%}{{res.sub_11|intcomma}}{%endif%}</td>
         <td class="number">{%if res.sub_16 != 0%}{{res.sub_16|intcomma}}{%endif%}</td>
-        <td></td>
+        <td class="number">{%if res.descuento != 0%}{{res.descuento|intcomma}}{%endif%}</td>
+        <td class="number">{%if res.descuento_iva != 0%}{{res.descuento_iva|intcomma}}{%endif%}</td>
         <td class="number">{%if res.iva_11 != 0%}{{res.iva_11|intcomma}}{%endif%}</td>
         <td class="number">{%if res.iva_16 != 0%}{{res.iva_16|intcomma}}{%endif%}</td>
         <td class="number">{%if res.ret_iva != 0%}{{res.ret_iva|intcomma}}{%endif%}</td>
@@ -72,7 +75,8 @@
         <td class="number">{%if totales.base_0 != 0%}{{totales.base_0|intcomma}}{%endif%}</td>
         <td class="number">{%if totales.sub_11 != 0%}{{totales.sub_11|intcomma}}{%endif%}</td>
         <td class="number">{%if totales.sub_16 != 0%}{{totales.sub_16|intcomma}}{%endif%}</td>
-        <td></td>
+        <td class="number">{%if totales.descuento != 0%}{{totales.descuento|intcomma}}{%endif%}</td>
+        <td class="number">{%if totales.descuento_iva != 0%}{{totales.descuento_iva|intcomma}}{%endif%}</td>
         <td class="number">{%if totales.iva_11 != 0%}{{totales.iva_11|intcomma}}{%endif%}</td>
         <td class="number">{%if totales.iva_16 != 0%}{{totales.iva_16|intcomma}}{%endif%}</td>
         <td class="number">{%if totales.ret_iva != 0%}{{totales.ret_iva|intcomma}}{%endif%}</td>
@@ -93,7 +97,8 @@
         <td class="number">{{excluido.get_base_0|intcomma}}</td>
         <td class="number">{{excluido.get_sub_11|intcomma}}</td>
         <td class="number">{{excluido.get_sub_16|intcomma}}</td>
-        <td></td>
+        <td class="number">{{excluido.get_desc|intcomma}}</td>
+        <td class="number">{{excluido.get_iva_desc|intcomma}}</td>
         <td class="number">{{excluido.get_iva_11|intcomma}}</td>
         <td class="number">{{excluido.get_iva_16|intcomma}}</td>
         <td class="number">{%if excluido.ret_iva != 0%}{{excluido.ret_iva|intcomma}}{%endif%}</td>
@@ -107,7 +112,8 @@
         <td class="number">{%if tot_exc.base_0 != 0%}{{tot_exc.base_0|intcomma}}{%endif%}</td>
         <td class="number">{%if tot_exc.sub_11 != 0%}{{tot_exc.sub_11|intcomma}}{%endif%}</td>
         <td class="number">{%if tot_exc.sub_16 != 0%}{{tot_exc.sub_16|intcomma}}{%endif%}</td>
-        <td></td>
+        <td class="number">{%if tot_exc.descuento != 0%}{{tot_exc.descuento|intcomma}}{%endif%}</td>
+        <td class="number">{%if tot_exc.descuento_iva != 0%}{{tot_exc.descuento_iva|intcomma}}{%endif%}</td>
         <td class="number">{%if tot_exc.iva_11 != 0%}{{tot_exc.iva_11|intcomma}}{%endif%}</td>
         <td class="number">{%if tot_exc.iva_16 != 0%}{{tot_exc.iva_16|intcomma}}{%endif%}</td>
         <td class="number">{%if tot_exc.ret_iva != 0%}{{tot_exc.ret_iva|intcomma}}{%endif%}</td>
@@ -125,7 +131,8 @@
         <td class="number">{%if gran_tot.base_0 != 0%}{{gran_tot.base_0|intcomma}}{%endif%}</td>
         <td class="number">{%if gran_tot.sub_11 != 0%}{{gran_tot.sub_11|intcomma}}{%endif%}</td>
         <td class="number">{%if gran_tot.sub_16 != 0%}{{gran_tot.sub_16|intcomma}}{%endif%}</td>
-        <td></td>
+        <td class="number">{%if gran_tot.descuento != 0%}{{gran_tot.descuento|intcomma}}{%endif%}</td>
+        <td class="number">{%if gran_tot.descuento_iva != 0%}{{gran_tot.descuento_iva|intcomma}}{%endif%}</td>
         <td class="number">{%if gran_tot.iva_11 != 0%}{{gran_tot.iva_11|intcomma}}{%endif%}</td>
         <td class="number">{%if gran_tot.iva_16 != 0%}{{gran_tot.iva_16|intcomma}}{%endif%}</td>
         <td class="number">{%if gran_tot.ret_iva != 0%}{{gran_tot.ret_iva|intcomma}}{%endif%}</td>
@@ -150,6 +157,7 @@
         <th>SUBTOTAL</th>
         <th class="bluef">TOTAL</th>
     </tr>
+    {%if tipos.compras.total != 0%}
     <tr>
         <th>COMPRAS</th>
         <td class="number">{{tipos.compras.base_0|intcomma}}</td>
@@ -160,6 +168,9 @@
         <td class="number">{{tipos.compras.subtotal|intcomma}}</td>
         <td class="bluef number">{{tipos.compras.total|intcomma}}</td>
     </tr>
+    {%endif%}
+
+    {%if tipos.gastos.total != 0%}
     <tr>
         <th>GASTOS</th>
         <td class="number">{{tipos.gastos.base_0|intcomma}}</td>
@@ -170,6 +181,8 @@
         <td class="number">{{tipos.gastos.subtotal|intcomma}}</td>
         <td class="bluef number">{{tipos.gastos.total|intcomma}}</td>
     </tr>
+    {%endif%}
+    {%if tipos.honorarios.total != 0%}
     <tr>
         <th>HONORARIOS</th>
         <td class="number">{{tipos.honorarios.base_0|intcomma}}</td>
@@ -180,6 +193,8 @@
         <td class="number">{{tipos.honorarios.subtotal|intcomma}}</td>
         <td class="bluef number">{{tipos.honorarios.total|intcomma}}</td>
     </tr>
+    {%endif%}
+    {%if tipos.renta.total != 0%}
     <tr>
         <th>RENTA</th>
         <td class="number">{{tipos.renta.base_0|intcomma}}</td>
@@ -190,6 +205,8 @@
         <td class="number">{{tipos.renta.subtotal|intcomma}}</td>
         <td class="bluef number">{{tipos.renta.total|intcomma}}</td>
     </tr>
+    {%endif%}
+    {%if tipos.impuestos.total != 0%}
     <tr>
         <th>IMPUESTOS</th>
         <td class="number">{{tipos.impuestos.base_0|intcomma}}</td>
@@ -200,6 +217,8 @@
         <td class="number">{{tipos.impuestos.subtotal|intcomma}}</td>
         <td class="bluef number">{{tipos.impuestos.total|intcomma}}</td>
     </tr>
+    {%endif%}
+    {%if tipos.sueldos.total != 0%}
     <tr>
         <th>SUELDOS</th>
         <td class="number">{{tipos.sueldos.base_0|intcomma}}</td>
@@ -210,6 +229,8 @@
         <td class="number">{{tipos.sueldos.subtotal|intcomma}}</td>
         <td class="bluef number">{{tipos.sueldos.total|intcomma}}</td>
     </tr>
+    {%endif%}
+    {%if tipos.mov_bancarios.total != 0%}
     <tr>
         <th>MOV. BANCARIOS</th>
         <td class="number">{{tipos.mov_bancarios.base_0|intcomma}}</td>
@@ -220,6 +241,8 @@
         <td class="number">{{tipos.mov_bancarios.subtotal|intcomma}}</td>
         <td class="bluef number">{{tipos.mov_bancarios.total|intcomma}}</td>
     </tr>
+    {%endif%}
+    {%if tipos.act_fijo.total != 0%}
     <tr>
         <th>ACT. FIJO</th>
         <td class="number">{{tipos.act_fijo.base_0|intcomma}}</td>
@@ -230,6 +253,8 @@
         <td class="number">{{tipos.act_fijo.subtotal|intcomma}}</td>
         <td class="bluef number">{{tipos.act_fijo.total|intcomma}}</td>
     </tr>
+    {%endif%}
+    {%if tipos.otros.total != 0%}
     <tr>
         <th>OTROS</th>
         <td class="number">{{tipos.otros.base_0|intcomma}}</td>
@@ -240,6 +265,7 @@
         <td class="number">{{tipos.otros.subtotal|intcomma}}</td>
         <td class="bluef number">{{tipos.otros.total|intcomma}}</td>
     </tr>
+    {%endif%}
     <tr>
         <th>TOTALES</th>
         <th class="number">{{tipos.t_base0|intcomma}}</th>
