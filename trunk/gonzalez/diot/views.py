@@ -80,7 +80,6 @@ def agregar_concepto(request, cheque_id):
             impuesto_real = f.cleaned_data['iva_registrado']
             diferencia_iva = f.cleaned_data['diferencia_iva']
 
-
             try:
                 prov = Proveedor.objects.get(rfc=RFC_proveedor)
             except Proveedor.DoesNotExist:
@@ -89,6 +88,15 @@ def agregar_concepto(request, cheque_id):
                 prov.nombre = nombre_proveedor 
                 prov.tipo = 1
                 prov.activo = True
+
+                tipo_concepto = int(concepto.tipo)
+                if tipo_concepto == HONORARIOS:
+                    prov.operacion = 1
+                elif tipo_concepto == RENTA:
+                    prov.operacion = 2
+                else:
+                    prov.operacion = 3
+
                 prov.save()
 
             concepto.proveedor=prov
@@ -152,6 +160,14 @@ def cheques_crear_rapido(request):
                 prov.nombre = nombre_proveedor 
                 prov.tipo = 1
                 prov.activo = True
+
+                if tipo_concepto == HONORARIOS:
+                    prov.operacion = 1
+                elif tipo_concepto == RENTA:
+                    prov.operacion = 2
+                else:
+                    prov.operacion = 3
+
                 prov.save()
 
             concepto = Concepto()
@@ -300,6 +316,14 @@ def editar_rapido(request, cheque_id):
                 prov.nombre = nombre_proveedor 
                 prov.tipo = 1
                 prov.activo = True
+
+                if tipo_concepto == HONORARIOS:
+                    prov.operacion = 1
+                elif tipo_concepto == RENTA:
+                    prov.operacion = 2
+                else:
+                    prov.operacion = 3
+
                 prov.save()
 
             concepto = cheque.concepto_set.all()[0]
@@ -394,6 +418,15 @@ def editar_concepto(request, concepto_id):
                 prov.nombre = nombre_proveedor 
                 prov.tipo = 1
                 prov.activo = True
+
+                tipo_concepto = int(concepto.tipo)
+                if tipo_concepto == HONORARIOS:
+                    prov.operacion = 1
+                elif tipo_concepto == RENTA:
+                    prov.operacion = 2
+                else:
+                    prov.operacion = 3
+
                 prov.save()
 
             concepto.proveedor=prov
