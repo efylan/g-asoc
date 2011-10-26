@@ -5,6 +5,7 @@ from django.template import RequestContext
 from django.http import Http404
 from reportes.forms import MesForm
 import csv
+from decimal import Decimal
 
 EXCLUDE_LIST = [SUELDOS,IMPUESTOS,MOV_BANCARIOS]
 
@@ -398,9 +399,9 @@ def totales_txt(conceptos):
             valor_11 = ''
             valor_16 = ''
             exento = ''
-            impo_11 = prov['sub_11']
-            impo_16 = prov['sub_16']
-            impo_exento = prov['base_0']
+            impo_11 = Decimal(str(prov['sub_11'])).quantize(Decimal(0))
+            impo_16 = Decimal(str(prov['sub_16'])).quantize(Decimal(0))
+            impo_exento = Decimal(str(prov['base_0'])).quantize(Decimal(0))
             if impo_11 == 0:
                 impo_11 = ''
             if impo_16 == 0:
@@ -409,9 +410,9 @@ def totales_txt(conceptos):
                 impo_exento = ''
             
         else:
-            valor_11 = prov['sub_11']
-            valor_16 = prov['sub_16']
-            exento = prov['base_0']
+            valor_11 = Decimal(str(prov['sub_11'])).quantize(Decimal(0))
+            valor_16 = Decimal(str(prov['sub_16'])).quantize(Decimal(0))
+            exento = Decimal(str(prov['base_0'])).quantize(Decimal(0))
             impo_11 = ''
             impo_16 = ''
             impo_exento = ''
@@ -428,10 +429,14 @@ def totales_txt(conceptos):
         retencion = prov['ret_iva'] + prov['ret_isr']
         if retencion == 0:
             retencion = ''
+        else:
+            retencion = Decimal(str(retencion)).quantize(Decimal(0))
 
         iva_desc = prov['descuento_iva']
         if iva_desc == 0:
             iva_desc = ''
+        else:
+            iva_desc = Decimal(str(iva_desc)).quantize(Decimal(0))
 
         fila = [prov['proveedor'].get_tipo(), prov['proveedor'].get_operacion(), prov['proveedor'].rfc, '' ,'' ,'' ,'' , valor_16, '', '', valor_11, '', '', impo_16, '', impo_11, '', impo_exento, '', exento, retencion, iva_desc]
         lista_diot.append(fila)
