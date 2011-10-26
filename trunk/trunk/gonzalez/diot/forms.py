@@ -30,6 +30,7 @@ class CrearChequeRapidoForm(forms.Form):
     nombre_proveedor = forms.CharField(max_length=75) #para crear proveedor
     beneficiario = forms.CharField(max_length=75)
     concepto = forms.ChoiceField(choices = TIPO_CONCEPTO)
+    exento = forms.DecimalField(max_digits=12, decimal_places=2, initial=0)
     subtotal = forms.DecimalField(max_digits=12, decimal_places=2)
     impuesto = forms.ModelChoiceField(Impuesto.objects, required=False)
     iva = forms.DecimalField(max_digits=12, decimal_places=2, required=False, label='IVA calculado')#X?
@@ -65,7 +66,7 @@ class AgregarConceptoForm(forms.ModelForm):
 
     class Meta:
         model = Concepto
-        fields = ('RFC_proveedor', 'nombre_proveedor', 'tipo', 'subtotal', 'impuesto', 'iva', 'iva_registrado', 'descuento', 'iva_descuento','diferencia_iva','ret_iva', 'ret_isr', 'importe', 'bancos','diferencia')
+        fields = ('RFC_proveedor', 'nombre_proveedor', 'tipo','exento', 'subtotal', 'impuesto', 'iva', 'iva_registrado', 'descuento', 'iva_descuento','diferencia_iva','ret_iva', 'ret_isr', 'importe', 'bancos','diferencia')
 
     def __init__(self, *args, **kwargs):
         super(AgregarConceptoForm, self).__init__(*args, **kwargs)
@@ -85,6 +86,7 @@ class EditarChequeRapidoForm(forms.Form):
     nombre_proveedor = forms.CharField(max_length=75) #para crear proveedor
     beneficiario = forms.CharField(max_length=75)
     concepto = forms.ChoiceField(choices = TIPO_CONCEPTO)
+    exento = forms.DecimalField(max_digits=12, decimal_places=2)
     subtotal = forms.DecimalField(max_digits=12, decimal_places=2)
     impuesto = forms.ModelChoiceField(Impuesto.objects, required=False)
     iva = forms.DecimalField(max_digits=12, decimal_places=2, required=False, label='IVA calculado')#X?
@@ -115,6 +117,7 @@ class EditarChequeRapidoForm(forms.Form):
         self.fields['nombre_proveedor'].widget.attrs['readonly']=True
         self.fields['beneficiario'].initial = cheque.beneficiario
         self.fields['concepto'].initial = concepto.tipo
+        self.fields['exento'].initial = concepto.exento
         self.fields['subtotal'].initial = concepto.subtotal
         self.fields['impuesto'].initial = concepto.impuesto
         self.fields['iva'].initial = concepto.get_impuesto_calculado
@@ -140,7 +143,7 @@ class EditarConceptoForm(forms.ModelForm):
 
     class Meta:
         model = Concepto
-        fields = ('RFC_proveedor', 'nombre_proveedor', 'tipo', 'subtotal', 'impuesto', 'iva', 'iva_registrado', 'descuento', 'iva_descuento','diferencia_iva','ret_iva', 'ret_isr', 'importe', 'bancos','diferencia')
+        fields = ('RFC_proveedor', 'nombre_proveedor', 'tipo', 'exento', 'subtotal', 'impuesto', 'iva', 'iva_registrado', 'descuento', 'iva_descuento','diferencia_iva','ret_iva', 'ret_isr', 'importe', 'bancos','diferencia')
 
     def __init__(self, *args, **kwargs):
         super(EditarConceptoForm, self).__init__(*args, **kwargs)
@@ -154,6 +157,7 @@ class EditarConceptoForm(forms.ModelForm):
         self.fields['nombre_proveedor'].initial = concepto.proveedor.nombre
         self.fields['nombre_proveedor'].widget.attrs['readonly']=True
         self.fields['tipo'].initial = concepto.tipo
+        self.fields['exento'].initial = concepto.exento
         self.fields['subtotal'].initial = concepto.subtotal
         self.fields['impuesto'].initial = concepto.impuesto
         self.fields['iva'].initial = concepto.get_impuesto_calculado

@@ -57,6 +57,25 @@ class Proveedor(models.Model):
     def __unicode__(self):
         return "%s - %s" % (self.nombre, self.rfc)
 
+    def get_tipo(self):
+        if self.tipo == NACIONAL:
+            return '04'
+        elif self.tipo == EXTRANJERO:
+            return '05'
+        elif self.tipo == GLOBAL:
+            return '15'
+        else:
+            return '04'
+
+    def get_operacion(self):
+        if self.operacion == OP_SERVICIOS:
+            return '03'
+        elif self.operacion == OP_ARRENDAMIENTO:
+            return '06'
+        elif self.operacion == OP_OTROS:
+            return '85'
+        else:
+            return '85'
 try:
     admin.site.register(Proveedor)
 except:
@@ -166,6 +185,7 @@ class Concepto(models.Model):
     cheque = models.ForeignKey(Cheque)
     proveedor = models.ForeignKey(Proveedor)
     tipo = models.PositiveSmallIntegerField(choices = TIPO_CONCEPTO)
+    exento = models.DecimalField(max_digits=12, decimal_places=2)
     subtotal = models.DecimalField(max_digits=12, decimal_places=2)
     impuesto = models.ForeignKey(Impuesto, blank=True, null=True)
     impuesto_real = models.DecimalField(max_digits=12, decimal_places=2, verbose_name='IVA registrado')
@@ -192,7 +212,7 @@ class Concepto(models.Model):
         return impuesto
 
     def get_importe_calculado(self):
-        importe = self.subtotal + self.get_impuesto_calculado()
+        importe = self.subtotal + self.get_impuesto_calculado() + self.exento
         return importe
 
     def get_diferencia_iva(self):
@@ -216,8 +236,20 @@ class Concepto(models.Model):
             return True
 
     def get_base_0(self):
+        if self.exento == None or self.exento == 0:
+            exento = 0
+        else:
+            exento = self.exento
+
         if self.impuesto == None:
-            return self.subtotal
+            sub0=self.subtotal
+        else:
+            sub0=0
+
+        exento += sub0
+
+        if exento > 0:
+            return exento
         else:
             return ""
 
@@ -256,7 +288,21 @@ class Concepto(models.Model):
                 return ""
         else:
             return ""
-#------------------------------------------------------------
+
+    def get_desc(self):
+        if self.descuento > 0:
+            return self.descuento
+        else:
+            return ""
+
+    def get_iva_desc(self):
+        if self.iva_descuento > 0:
+            return self.iva_descuento
+        else:
+            return ""
+
+
+#-----------------------------------------------------
 
 class TotalMensual(models.Model):
     contri = models.ForeignKey(Contribuyente)
@@ -276,6 +322,5 @@ class TotalMensual(models.Model):
         diferencia = self.total - total_con
         results = {'diferencia':diferencia,'capturado':total_con}
         return results
-
 
 
