@@ -1,5 +1,5 @@
 from django.shortcuts import render_to_response, HttpResponseRedirect, HttpResponse
-from diot.models import Cuenta, Cheque, Proveedor, Concepto, COMPRAS, GASTOS, HONORARIOS, RENTA, IMPUESTOS, MOV_BANCARIOS, ACT_FIJO, OTROS, SUELDOS, EXTRANJERO, NACIONAL, GLOBAL
+from diot.models import Cuenta, Cheque, Proveedor, Concepto, COMPRAS, GASTOS, HONORARIOS, RENTA, IMPUESTOS, MOV_BANCARIOS, ACT_FIJO, OTROS, SUELDOS, EXTRANJERO, NACIONAL, GLOBAL, COMISIONES
 from empresa.models import Empresa
 from django.template import RequestContext
 from django.http import Http404
@@ -166,6 +166,8 @@ def resumen_tipos(conceptos):
     dict_tipos['act_fijo'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0,'ret_iva':0, 'ret_isr':0, 'desc':0, 'desc_iva':0}
     dict_tipos['otros'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0,'ret_iva':0, 'ret_isr':0, 'desc':0, 'desc_iva':0}
     dict_tipos['sueldos'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0,'ret_iva':0, 'ret_isr':0, 'desc':0, 'desc_iva':0}
+    dict_tipos['comisiones'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0,'ret_iva':0, 'ret_isr':0, 'desc':0, 'desc_iva':0}
+
 
     for concepto in conceptos:
         #TODO
@@ -214,6 +216,12 @@ def resumen_tipos(conceptos):
             dict_tipos['sueldos']['ret_isr']+=concepto.ret_isr
             dict_tipos['sueldos']['desc']+=concepto.descuento
             dict_tipos['sueldos']['desc_iva']+=concepto.iva_descuento
+        elif concepto.tipo == COMISIONES:
+            dict_tipos['comisiones']['ret_iva']+=concepto.ret_iva
+            dict_tipos['comisiones']['ret_isr']+=concepto.ret_isr
+            dict_tipos['comisiones']['desc']+=concepto.descuento
+            dict_tipos['comisiones']['desc_iva']+=concepto.iva_descuento
+
 
         if concepto.impuesto==None:
             if concepto.tipo == COMPRAS:
@@ -243,6 +251,10 @@ def resumen_tipos(conceptos):
             elif concepto.tipo == SUELDOS:
                 dict_tipos['sueldos']['base_0']+=concepto.subtotal
                 dict_tipos['sueldos']['base_0']+=concepto.exento
+            elif concepto.tipo == COMISIONES:
+                dict_tipos['comisiones']['base_0']+=concepto.subtotal
+                dict_tipos['comisiones']['base_0']+=concepto.exento
+
 
         elif concepto.impuesto.porcentaje==11:
             if concepto.tipo == COMPRAS:
@@ -281,6 +293,10 @@ def resumen_tipos(conceptos):
                 dict_tipos['sueldos']['sub_11']+=concepto.subtotal
                 dict_tipos['sueldos']['iva_11']+=concepto.impuesto_real
                 dict_tipos['sueldos']['base_0']+=concepto.exento
+            elif concepto.tipo == COMISIONES:
+                dict_tipos['comisiones']['sub_11']+=concepto.subtotal
+                dict_tipos['comisiones']['iva_11']+=concepto.impuesto_real
+                dict_tipos['comisiones']['base_0']+=concepto.exento
 
         elif concepto.impuesto.porcentaje ==16:
 
@@ -320,6 +336,10 @@ def resumen_tipos(conceptos):
                 dict_tipos['sueldos']['sub_16']+=concepto.subtotal
                 dict_tipos['sueldos']['iva_16']+=concepto.impuesto_real
                 dict_tipos['sueldos']['base_0']+=concepto.exento
+            elif concepto.tipo == COMISIONES:
+                dict_tipos['comisiones']['sub_16']+=concepto.subtotal
+                dict_tipos['comisiones']['iva_16']+=concepto.impuesto_real
+                dict_tipos['comisiones']['base_0']+=concepto.exento
 
 
     dict_tipos['compras']['subtotal']=dict_tipos['compras']['base_0'] + dict_tipos['compras']['sub_11'] + dict_tipos['compras']['sub_16']
@@ -331,6 +351,7 @@ def resumen_tipos(conceptos):
     dict_tipos['act_fijo']['subtotal']=dict_tipos['act_fijo']['base_0'] + dict_tipos['act_fijo']['sub_11'] + dict_tipos['act_fijo']['sub_16']
     dict_tipos['otros']['subtotal']=dict_tipos['otros']['base_0'] + dict_tipos['otros']['sub_11'] + dict_tipos['otros']['sub_16']
     dict_tipos['sueldos']['subtotal']=dict_tipos['sueldos']['base_0'] + dict_tipos['sueldos']['sub_11'] + dict_tipos['sueldos']['sub_16']
+    dict_tipos['comisiones']['subtotal']=dict_tipos['comisiones']['base_0'] + dict_tipos['comisiones']['sub_11'] + dict_tipos['comisiones']['sub_16']
 
 
     dict_tipos['compras']['total']=dict_tipos['compras']['base_0'] + dict_tipos['compras']['sub_11'] + dict_tipos['compras']['sub_16'] + dict_tipos['compras']['iva_11'] +dict_tipos['compras']['iva_16']
@@ -342,7 +363,9 @@ def resumen_tipos(conceptos):
     dict_tipos['act_fijo']['total']=dict_tipos['act_fijo']['base_0'] + dict_tipos['act_fijo']['sub_11'] + dict_tipos['act_fijo']['sub_16'] + dict_tipos['act_fijo']['iva_11'] + dict_tipos['act_fijo']['iva_16']
     dict_tipos['otros']['total']=dict_tipos['otros']['base_0'] + dict_tipos['otros']['sub_11'] + dict_tipos['otros']['sub_16'] + dict_tipos['otros']['iva_11'] + dict_tipos['otros']['iva_16']
     dict_tipos['sueldos']['total']=dict_tipos['sueldos']['base_0'] + dict_tipos['sueldos']['sub_11'] + dict_tipos['sueldos']['sub_16']+ dict_tipos['sueldos']['iva_11'] + dict_tipos['sueldos']['iva_16']
+    dict_tipos['comisiones']['total']=dict_tipos['comisiones']['base_0'] + dict_tipos['comisiones']['sub_11'] + dict_tipos['comisiones']['sub_16']+ dict_tipos['comisiones']['iva_11'] + dict_tipos['comisiones']['iva_16']
 
+    print dict_tipos['comisiones']
 
     keys = dict_tipos.keys()
     dict_tipos['t_base0'] = 0
