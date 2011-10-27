@@ -229,6 +229,17 @@
     </tr>
     {%endif%}
 
+    {% if final.tipos.comisiones.total != 0 %}
+    <tr>
+        <th>COMISIONES</th>
+        <td>{{final.tipos.comisiones.base_0}}</td>
+        <td>{{final.tipos.comisiones.sub_11}}</td>
+        <td>{{final.tipos.comisiones.sub_16}}</td>
+        <td class="bluef">{{final.tipos.comisiones.total}}</td>
+    </tr>
+    {%endif%}
+
+
     {% if final.tipos.mov_bancarios.total != 0 %}
     <tr>
         <th>MOV. BANCARIOS</th>

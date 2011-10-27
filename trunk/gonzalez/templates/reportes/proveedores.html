@@ -230,6 +230,20 @@
         <td class="bluef number">{{tipos.sueldos.total|intcomma}}</td>
     </tr>
     {%endif%}
+
+    {%if tipos.comisiones.total != 0%}
+    <tr>
+        <th>COMISIONES</th>
+        <td class="number">{{tipos.comisiones.base_0|intcomma}}</td>
+        <td class="number">{{tipos.comisiones.sub_11|intcomma}}</td>
+        <td class="number">{{tipos.comisiones.sub_16|intcomma}}</td>
+        <td class="number">{{tipos.comisiones.iva_11|intcomma}}</td>
+        <td class="number">{{tipos.comisiones.iva_16|intcomma}}</td>
+        <td class="number">{{tipos.comisiones.subtotal|intcomma}}</td>
+        <td class="bluef number">{{tipos.comisiones.total|intcomma}}</td>
+    </tr>
+    {%endif%}
+
     {%if tipos.mov_bancarios.total != 0%}
     <tr>
         <th>MOV. BANCARIOS</th>
