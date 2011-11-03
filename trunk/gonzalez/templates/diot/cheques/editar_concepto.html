@@ -46,16 +46,17 @@
         <td class="tdnombres">MONTO PENDIENTE: </td> <td class="tdvalores redf">{{cheque.get_diferencia}} </td>
     </tr>
 </table>
-
+<br>
     <form method="POST" onsubmit="calcular_iva();">
     {%impuestos_inputs%}
         {%csrf_token%}
-        <table>
+        <table class="form_cc">
             {{form}}
         </table>
+        <br>
+
         <input type="submit" value="Guardar Cambios">
         <input type="submit" value="Guardar y Agregar Concepto" name="add_concepto">
-        <br>
         <br>
         <input type="submit" class="button medium new_link" value="<< Guardar y Anterior" name="add_anterior">
         <input type="submit" class="button medium new_link2" value="Guardar y Siguiente >>" name="add_siguiente">

@@ -145,7 +145,6 @@ def cheques_crear_rapido(request):
             cheque.referencia = referencia
             cheque.beneficiario = beneficiario
             cheque.cuenta = cuenta
-            cheque.importe = importe
             cheque.bancos = bancos
             cheque.fecha = fecha
             cheque.estado = 3 #completo
@@ -302,7 +301,6 @@ def editar_rapido(request, cheque_id):
             cheque.referencia = referencia
             cheque.beneficiario = beneficiario
             cheque.cuenta = cuenta
-            cheque.importe = importe
             cheque.bancos = bancos
             cheque.fecha = fecha
             cheque.activo = True

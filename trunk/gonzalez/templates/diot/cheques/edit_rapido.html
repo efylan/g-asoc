@@ -28,9 +28,11 @@
 
     <form method="POST" onsubmit="calcular_iva();">
         {%csrf_token%}
-        <table>
+        <table class="form_cc">
             {{form}}
         </table>
+        <br>
+
         <input type="submit" value="Guardar Cambios">
         <input type="submit" value="Guardar y Agregar Otro" name="add_concepto">
         <br>
