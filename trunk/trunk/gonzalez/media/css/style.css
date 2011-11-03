@@ -71,12 +71,12 @@ body{
     -webkit-box-shadow: -3px 3px 4px 3px#968F8F;
     box-shadow:  -3px 3px 4px 3px #968F8F; 
 	
-	padding-left: 4em;
-	padding-right: 4em;
-	padding-top: 4em;
-    padding-bottom:5em;    
-    margin-left:7em;	
-    margin-right: 7em;
+	padding-left: 3em;
+	padding-right: 3em;
+	padding-top: 3em;
+    padding-bottom:4em;    
+    margin-left:5em;	
+    margin-right: 5em;
 	margin-bottom:3em;
 	position:relative; 
     -moz-border-radius:10px; 
@@ -305,9 +305,12 @@ A.login_info:hover {text-decoration: none; color: #FEFAD4;}
 }
 
 #form{
+    /*
     width:25%;
     margin:auto;    
+    */
 }
+
 #form table{
     text-align:right;
     padding:1em;
@@ -315,6 +318,7 @@ A.login_info:hover {text-decoration: none; color: #FEFAD4;}
     -webkit-box-shadow: 0 0 5px #888;
     box-shadow: 0 0 5px #888;
     background-image:url(/media/img/dot.png);
+    margin:auto;    
 }
 
 .welcome{

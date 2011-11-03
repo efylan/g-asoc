@@ -1,5 +1,5 @@
 {%extends "base.html"%}
-
+{%load humanize%}
 {%block sidecontent%}
     {%include "diot/menudiot.html"%}
 {%endblock%}
@@ -7,8 +7,9 @@
 
 {%block maincontent%}
 <div>
-    <a href="{%url diot.views.cheques_crear%}" class="medium button new_link"><img src="/media/img/newfile.gif" class="icono">  Crear Nuevo Cheque</a>     <a href="{%url diot.views.cheques_crear_rapido%}" class="medium button new_link2"><img src="/media/img/newfile.gif" class="icono">  Crear Nuevo Cheque Rapido</a>
-<a href="{%url diot.views.tmensual_crear%}" class="medium button new_link">Crear Nuevo Saldo</a>
+    <a href="{%url diot.views.cheques_crear%}" class="medium button new_link"><img src="/media/img/newfile.gif" class="icono">  Crear Nuevo Cheque</a>     
+    <a href="{%url diot.views.tmensual_crear%}" class="medium button new_link"><img src="/media/img/newfile.gif" class="icono"> Crear Nuevo Saldo</a>
+    <a href="{%url diot.views.cheques_crear_rapido%}" class="medium button new_link2"><img src="/media/img/newfile.gif" class="icono">  Crear Nuevo Cheque Rapido</a>
 </div>
 <br><br><br>
 
@@ -23,9 +24,9 @@
             {%with men.get_diferencia as res_mensual%}
             <tr>
                 <td><a href="{%url diot.views.tmensual_edit men.id%}">{{men.cuenta}}</a></td>
-                <td>{{men.total}}</td>
-                <td>{{res_mensual.capturado}}</td>
-                <td>{{res_mensual.diferencia}}</td>
+                <td>{{men.total|intcomma}}</td>
+                <td>{{res_mensual.capturado|intcomma}}</td>
+                <td>{{res_mensual.diferencia|intcomma}}</td>
             </tr>
             {%endwith%}
         {%endfor%}
@@ -52,9 +53,9 @@
             <td><a {%if cheque.estado == 3%} href= "{%url diot.views.editar_rapido cheque.id%}" {%else%} href="{%url diot.views.editar_cheque cheque.id%}" {%endif%}> {{cheque.referencia}} </a></td>
             <td>{{cheque.beneficiario}}</td>
             <td>{{cheque.cuenta}}</td>
-            <td class="bluef">{{cheque.bancos}}</td>
+            <td class="bluef">{{cheque.bancos|intcomma}}</td>
             <td>{{cheque.fecha}}</td>
-            <td class="redf">{{cheque.get_diferencia}}</td>
+            <td class="redf">{{cheque.get_diferencia|intcomma}}</td>
             <td>{%if cheque.estado == 1%}<a href="{%url diot.views.agregar_concepto cheque.id%}">Agregar Concepto</a>{%else%}Editar{%endif%}</td>
         </tr>
 
@@ -84,18 +85,18 @@
                         <td><a href="{%url diot.views.editar_concepto concepto.id%}">{{concepto.proveedor.rfc}}</a></td>
                         <td>{{concepto.proveedor.nombre}}</td>
                         <td>{{concepto.get_tipo_display}}</td>
-                        <td>{{concepto.exento}}</td>
-                        <td>{{concepto.subtotal}}</td>
+                        <td>{{concepto.exento|intcomma}}</td>
+                        <td>{{concepto.subtotal|intcomma}}</td>
                         <td>{{concepto.impuesto.nombre}}</td>
-                        <td>{{concepto.impuesto_real}}</td>
-                        <td>{{concepto.descuento}}</td>
-                        <td>{{concepto.iva_descuento}}</td>
-                        <td>{{concepto.ret_iva}}</td>
-                        <td>{{concepto.ret_isr}}</td>
-                        <td>{{concepto.importe}}</td>
-                        <td class="bluef">{{concepto.bancos}}</td>
-                        <td class="redf">{{concepto.diferencia}}</td>
-                        <td class="redf">{{concepto.diferencia_iva}}</td>
+                        <td>{{concepto.impuesto_real|intcomma}}</td>
+                        <td>{{concepto.descuento|intcomma}}</td>
+                        <td>{{concepto.iva_descuento|intcomma}}</td>
+                        <td>{{concepto.ret_iva|intcomma}}</td>
+                        <td>{{concepto.ret_isr|intcomma}}</td>
+                        <td>{{concepto.importe|intcomma}}</td>
+                        <td class="bluef">{{concepto.bancos|intcomma}}</td>
+                        <td class="redf">{{concepto.diferencia|intcomma}}</td>
+                        <td class="redf">{{concepto.diferencia_iva|intcomma}}</td>
                     </tr>
                     {%endfor%}
                 </table>
@@ -129,36 +130,40 @@
         <th class="redf">IVA 16%</td>
     </tr>
     <tr>
-        <td>{{final.totales.base_0}}</td>
-        <td>{{final.totales.sub_11}}</td>
-        <td>{{final.totales.sub_16}}</td>
-        <td>{{final.totales.iva_11}}</td>
-        <td>{{final.totales.iva_16}}</td>
-        <td>{{final.totales.desc}}</td>
-        <td>{{final.totales.iva_desc}}</td>
-        <td>{{final.totales.ret_iva}}</td>
-        <td>{{final.totales.ret_isr}}</td>
-        <td>{{final.totales.importe}}</td>
-        <td class="bluef">{{final.totales.bancos}}</td>
-        <td class="redf">{{final.totales.diff}}</td>
-        <td class="redf">{{final.totales.diff_11}}</td>
-        <td class="redf">{{final.totales.diff_16}}</td>
+        <td>{{final.totales.base_0|intcomma}}</td>
+        <td>{{final.totales.sub_11|intcomma}}</td>
+        <td>{{final.totales.sub_16|intcomma}}</td>
+        <td>{{final.totales.iva_11|intcomma}}</td>
+        <td>{{final.totales.iva_16|intcomma}}</td>
+        <td>{{final.totales.desc|intcomma}}</td>
+        <td>{{final.totales.iva_desc|intcomma}}</td>
+        <td>{{final.totales.ret_iva|intcomma}}</td>
+        <td>{{final.totales.ret_isr|intcomma}}</td>
+        <td>{{final.totales.importe|intcomma}}</td>
+        <td class="bluef">{{final.totales.bancos|intcomma}}</td>
+        <td class="redf">{{final.totales.diff|intcomma}}</td>
+        <td class="redf">{{final.totales.diff_11|intcomma}}</td>
+        <td class="redf">{{final.totales.diff_16|intcomma}}</td>
     </tr>
 </table>
 
 <br>
 
+
+{%comment%}
 <table class="object_list">
     <tr>
         <th>Deducciones autorizadas para IETU</th>
         <th>Total acreditable 11% y 16%</th>
     </tr>
     <tr>
-        <td>{{final.totales.ded_autorizadas}}</td>
-        <td>{{final.totales.total_acreditable}}</td>
+        <td>{{final.totales.ded_autorizadas|intcomma}}</td>
+        <td>{{final.totales.total_acreditable|intcomma}}</td>
     </tr>
 </table>
 <br>
+{%endcomment%}
+
 
 <table class="object_list">
     <tr>
@@ -172,70 +177,70 @@
     {% if final.tipos.compras.total != 0 %}
     <tr>
         <th>COMPRAS</th>
-        <td>{{final.tipos.compras.base_0}}</td>
-        <td>{{final.tipos.compras.sub_11}}</td>
-        <td>{{final.tipos.compras.sub_16}}</td>
-        <td class="bluef">{{final.tipos.compras.total}}</td>
+        <td>{{final.tipos.compras.base_0|intcomma}}</td>
+        <td>{{final.tipos.compras.sub_11|intcomma}}</td>
+        <td>{{final.tipos.compras.sub_16|intcomma}}</td>
+        <td class="bluef">{{final.tipos.compras.total|intcomma}}</td>
     </tr>
     {%endif%}
 
     {% if final.tipos.gastos.total != 0 %}
     <tr>
         <th>GASTOS</th>
-        <td>{{final.tipos.gastos.base_0}}</td>
-        <td>{{final.tipos.gastos.sub_11}}</td>
-        <td>{{final.tipos.gastos.sub_16}}</td>
-        <td class="bluef">{{final.tipos.gastos.total}}</td>
+        <td>{{final.tipos.gastos.base_0|intcomma}}</td>
+        <td>{{final.tipos.gastos.sub_11|intcomma}}</td>
+        <td>{{final.tipos.gastos.sub_16|intcomma}}</td>
+        <td class="bluef">{{final.tipos.gastos.total|intcomma}}</td>
     </tr>
     {%endif%}
 
     {% if final.tipos.honorarios.total != 0 %}
     <tr>
         <th>HONORARIOS</th>
-        <td>{{final.tipos.honorarios.base_0}}</td>
-        <td>{{final.tipos.honorarios.sub_11}}</td>
-        <td>{{final.tipos.honorarios.sub_16}}</td>
-        <td class="bluef">{{final.tipos.honorarios.total}}</td>
+        <td>{{final.tipos.honorarios.base_0|intcomma}}</td>
+        <td>{{final.tipos.honorarios.sub_11|intcomma}}</td>
+        <td>{{final.tipos.honorarios.sub_16|intcomma}}</td>
+        <td class="bluef">{{final.tipos.honorarios.total|intcomma}}</td>
     </tr>
     {%endif%}
 
     {% if final.tipos.renta.total != 0 %}
     <tr>
         <th>RENTA</th>
-        <td>{{final.tipos.renta.base_0}}</td>
-        <td>{{final.tipos.renta.sub_11}}</td>
-        <td>{{final.tipos.renta.sub_16}}</td>
-        <td class="bluef">{{final.tipos.renta.total}}</td>
+        <td>{{final.tipos.renta.base_0|intcomma}}</td>
+        <td>{{final.tipos.renta.sub_11|intcomma}}</td>
+        <td>{{final.tipos.renta.sub_16|intcomma}}</td>
+        <td class="bluef">{{final.tipos.renta.total|intcomma}}</td>
     </tr>
     {%endif%}
 
     {% if final.tipos.impuestos.total != 0 %}
     <tr>
         <th>IMPUESTOS</th>
-        <td>{{final.tipos.impuestos.base_0}}</td>
-        <td>{{final.tipos.impuestos.sub_11}}</td>
-        <td>{{final.tipos.impuestos.sub_16}}</td>
-        <td class="bluef">{{final.tipos.impuestos.total}}</td>
+        <td>{{final.tipos.impuestos.base_0|intcomma}}</td>
+        <td>{{final.tipos.impuestos.sub_11|intcomma}}</td>
+        <td>{{final.tipos.impuestos.sub_16|intcomma}}</td>
+        <td class="bluef">{{final.tipos.impuestos.total|intcomma}}</td>
     </tr>
     {%endif%}
 
     {% if final.tipos.sueldos.total != 0 %}
     <tr>
         <th>SUELDOS</th>
-        <td>{{final.tipos.sueldos.base_0}}</td>
-        <td>{{final.tipos.sueldos.sub_11}}</td>
-        <td>{{final.tipos.sueldos.sub_16}}</td>
-        <td class="bluef">{{final.tipos.sueldos.total}}</td>
+        <td>{{final.tipos.sueldos.base_0|intcomma}}</td>
+        <td>{{final.tipos.sueldos.sub_11|intcomma}}</td>
+        <td>{{final.tipos.sueldos.sub_16|intcomma}}</td>
+        <td class="bluef">{{final.tipos.sueldos.total|intcomma}}</td>
     </tr>
     {%endif%}
 
     {% if final.tipos.comisiones.total != 0 %}
     <tr>
         <th>COMISIONES</th>
-        <td>{{final.tipos.comisiones.base_0}}</td>
-        <td>{{final.tipos.comisiones.sub_11}}</td>
-        <td>{{final.tipos.comisiones.sub_16}}</td>
-        <td class="bluef">{{final.tipos.comisiones.total}}</td>
+        <td>{{final.tipos.comisiones.base_0|intcomma}}</td>
+        <td>{{final.tipos.comisiones.sub_11|intcomma}}</td>
+        <td>{{final.tipos.comisiones.sub_16|intcomma}}</td>
+        <td class="bluef">{{final.tipos.comisiones.total|intcomma}}</td>
     </tr>
     {%endif%}
 
@@ -243,30 +248,30 @@
     {% if final.tipos.mov_bancarios.total != 0 %}
     <tr>
         <th>MOV. BANCARIOS</th>
-        <td>{{final.tipos.mov_bancarios.base_0}}</td>
-        <td>{{final.tipos.mov_bancarios.sub_11}}</td>
-        <td>{{final.tipos.mov_bancarios.sub_16}}</td>
-        <td class="bluef">{{final.tipos.mov_bancarios.total}}</td>
+        <td>{{final.tipos.mov_bancarios.base_0|intcomma}}</td>
+        <td>{{final.tipos.mov_bancarios.sub_11|intcomma}}</td>
+        <td>{{final.tipos.mov_bancarios.sub_16|intcomma}}</td>
+        <td class="bluef">{{final.tipos.mov_bancarios.total|intcomma}}</td>
     </tr>
     {%endif%}
 
     {% if final.tipos.act_fijo.total != 0 %}
     <tr>
         <th>ACT. FIJO</th>
-        <td>{{final.tipos.act_fijo.base_0}}</td>
-        <td>{{final.tipos.act_fijo.sub_11}}</td>
-        <td>{{final.tipos.act_fijo.sub_16}}</td>
-        <td class="bluef">{{final.tipos.act_fijo.total}}</td>
+        <td>{{final.tipos.act_fijo.base_0|intcomma}}</td>
+        <td>{{final.tipos.act_fijo.sub_11|intcomma}}</td>
+        <td>{{final.tipos.act_fijo.sub_16|intcomma}}</td>
+        <td class="bluef">{{final.tipos.act_fijo.total|intcomma}}</td>
     </tr>
     {%endif%}
 
     {% if final.tipos.otros.total != 0 %}
     <tr>
         <th>OTROS</th>
-        <td>{{final.tipos.otros.base_0}}</td>
-        <td>{{final.tipos.otros.sub_11}}</td>
-        <td>{{final.tipos.otros.sub_16}}</td>
-        <td class="bluef">{{final.tipos.otros.total}}</td>
+        <td>{{final.tipos.otros.base_0|intcomma}}</td>
+        <td>{{final.tipos.otros.sub_11|intcomma}}</td>
+        <td>{{final.tipos.otros.sub_16|intcomma}}</td>
+        <td class="bluef">{{final.tipos.otros.total|intcomma}}</td>
     </tr>
     {%endif%}
 
@@ -283,7 +288,7 @@
     {%for cuenta in resumen%}
     <tr>
         <td>{{cuenta.banco}} {{cuenta.numero}}</td>
-        <td>{{cuenta.total}}</td>
+        <td>{{cuenta.total|intcomma}}</td>
     </tr>
     {%endfor%}
 </table>

@@ -20,9 +20,11 @@
     
     <form method="POST">
         {%csrf_token%}
-        <table>
+        <table class="form_cc">
             {{form}}
         </table>
+        <br>
+
         <input type="submit" value="Guardar Cambios">
 
 

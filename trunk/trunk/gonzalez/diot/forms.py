@@ -11,10 +11,10 @@ class CrearCuentaForm(forms.ModelForm):
         model=Cuenta
         fields = ('numero','banco')
 
-class CrearChequeForm(forms.ModelForm): #Filtrar cuenta en init!
+class CrearChequeForm(forms.ModelForm): 
     class Meta:
         model=Cheque
-        fields = ('referencia','fecha','beneficiario','cuenta','importe','bancos')
+        fields = ('referencia','fecha','beneficiario','cuenta','bancos')
 
     def __init__(self, contri, *args, **kwargs):
         super(CrearChequeForm, self).__init__(*args, **kwargs)
@@ -59,7 +59,7 @@ class AgregarConceptoForm(forms.ModelForm):
     iva_registrado = forms.DecimalField(max_digits=12, decimal_places=2, required=False, label='IVA registrado')#X?
     RFC_proveedor = forms.CharField(min_length=12,max_length=18) #hacer txtfield que se actualize con javascript
     nombre_proveedor = forms.CharField(max_length=75) #para crear proveedor
-    bancos = forms.DecimalField(max_digits=12, decimal_places=2)
+    bancos = forms.DecimalField(max_digits=12, decimal_places=2, label="Importe TOTAL factura")
     diferencia = forms.DecimalField(max_digits=12, decimal_places=2, required=False)#X?
     diferencia_iva = forms.DecimalField(max_digits=12, decimal_places=2, required=False)#X?
 

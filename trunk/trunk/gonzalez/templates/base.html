@@ -1,12 +1,13 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <html>
+{%load impuestos_tags%}
     <head>
 
         <link rel="stylesheet" type="text/css" media="all" href="/media/css/style.css" /> 
 
         {%block extrahead%}
-            <title> NOMBRE DE LA EMPRESA </title>
+            <title> {%get_nombre_empresa%} </title>
         {%endblock%}
     </head>
 
@@ -14,20 +15,30 @@
         <div id="topcontent">
             <IMG SRC="/media/img/l.png" ID="imga"> 
 <DIV ID="title">
-        <h3> {{empresa.nombre}} </h3>
+        <h3> {%get_nombre_empresa%} </h3>
 </DIV>
             {%block topcontent%}
-                <h3>  </h3>               
+                <h3>  </h3>
             {%endblock%}
 
             <div id="contri">
+
+
+
                 {%if request.user.id%}
-                                {%if request.user.is_staff%}<a class="login_info" href="{%url users.views.seleccionar_contri%}">{{request.user.username}}</a>
-                                {%else%} {{request.user.username}} {%endif%}  | 
-                                <a class="login_info" href= "{%url users.views.panel%}">{{request.user.get_profile.contribuyente}}</a> | 
-                                <a class="login_info" href="{%url gonzalez.users.views.logout%}">Cerrar Sesion</a>
+
+    {%if request.user.is_staff%}
+
+                <a href="{%url users.views.seleccionar_contri%}" class="login_info">{{request.user.username}}</a> | <a class="login_info" href= "{%url users.views.panel%}">{{request.session.contri}}</a> | <a class="login_info" href="{%url gonzalez.users.views.logout%}">Cerrar Sesion</a>
+
                 {%else%}
-                    {{request.user.username}}
+
+                {{request.user.username}} | <a class="login_info" href= "{%url users.views.panel%}">{{request.user.get_profile.contribuyente}}</a> | <a class="login_info" href="{%url gonzalez.users.views.logout%}">Cerrar Sesion</a>
+
+                {%endif%}
+
+
+                {%else%}
                     Contribuyentes iniciar sesión <a class="login_info" href="{%url gonzalez.users.views.login%}">AQUÍ</a>
                 {%endif%}
             </div>

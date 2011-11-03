@@ -55,6 +55,10 @@ class Proveedor(models.Model):
     tipo = models.PositiveSmallIntegerField(choices=TIPO_PROVEEDOR, null=True, blank=True)
     operacion = models.IntegerField(choices=OPERACION_PROVEEDOR)
     activo = models.BooleanField(default=True)
+    class Meta:
+        verbose_name = "Proveedor"
+        verbose_name_plural = "Proveedores"
+
 
     def __unicode__(self):
         return "%s - %s" % (self.nombre, self.rfc)
@@ -78,8 +82,14 @@ class Proveedor(models.Model):
             return '85'
         else:
             return '85'
+
+class ProveedorAdmin(admin.ModelAdmin):
+    list_display=('rfc','nombre','get_tipo_display','get_operacion_display')
+
+
+
 try:
-    admin.site.register(Proveedor)
+    admin.site.register(Proveedor, ProveedorAdmin)
 except:
     pass
 
@@ -152,8 +162,8 @@ class Cheque(models.Model):
     referencia = models.CharField(max_length=20) #Sera que si sera que no?
     beneficiario = models.CharField(max_length=75)
     cuenta = models.ForeignKey(Cuenta)
-    importe = models.DecimalField(max_digits=12, decimal_places=2) #ELIMINAR?
-    bancos = models.DecimalField(max_digits=12, decimal_places=2)
+    #importe = models.DecimalField(max_digits=12, decimal_places=2) #ELIMINAR?
+    bancos = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="BANCOS (Importe)")
     fecha = models.DateField()
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_modificacion = models.DateTimeField(auto_now=True)

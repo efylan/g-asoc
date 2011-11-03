@@ -15,8 +15,10 @@
 
 
 {%block maincontent%}
-<h1>Agregar Concepto</h1>
 
+<a href="{%url diot.views.cheques_mes cheque.fecha.year cheque.fecha.month%}" class="button medium new_link">Regresar</a>
+<br>
+<h1>Agregar Concepto</h1>
 <table class="info_cheque">
     <tr>
         <td class="tdnombres">Referencia: </td> <td class="tdvalores">{{cheque.referencia}} </td>
