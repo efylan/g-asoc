@@ -17,11 +17,13 @@
 
     <form method="POST">
         {%csrf_token%}
-        <table>
+        <table class="form_cc">
             {{form}}
+        <tr>
+            <td> <input type="submit" value="Crear"> </td>
+            <td> <input type="submit" value="Crear y Agregar otro" name="add_another"> </td>
+        </tr>
         </table>
-        <input type="submit" value="Crear">
-        <input type="submit" value="Crear y Agregar otro" name="add_another">
 
     </form>
 {%endblock%}

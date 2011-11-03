@@ -24,11 +24,14 @@
 
     <form method="POST">
         {%csrf_token%}
-        <table>
+        <table class="form_cc">
             {{form}}
+        <tr>
+            <td> <input type="submit" value="Crear Cheque"> </td>
+            <td> <input type="submit" value="Crear y Agregar Concepto" name="add_concepto"> </td>
+        </tr>
         </table>
-        <input type="submit" value="Crear Cheque">
-        <input type="submit" value="Crear y Agregar Concepto" name="add_concepto">
+
 
     </form>
 {%endblock%}

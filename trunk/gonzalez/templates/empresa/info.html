@@ -1,34 +1,21 @@
 {%extends "base.html"%}
 
 {% block extrahead %}
-<title>Acerca de Nosotros</title>
+    <title>Acerca de Nosotros</title>
 {% endblock %}
 
+
 {%block maincontent%}
-    <div class="empresa-info">
-        <h1>{{empresa.nombre}}</h1>
-
-        <div class="mis-vis">
-            <h2>Misión</h2>
-            <p>{{empresa.mision}}</p>
-            <h2>Visión</h2>
-            <p>{{empresa.vision}}</p>
-        </div>
-        
-        {{empresa.ciudad}}, {{empresa.estado}}, {{empresa.pais}}<br>
-        {{empresa.direccion}}<br>
-        <table class="info">
-        <tr>
-            <td>Teléfono</td> <td>{{empresa.telefono}}</td>
-        </tr>
-        <tr>
-            <td>Fax</td> <td>{{empresa.fax}}</td>
-        </tr>
-        <tr>
-            <td>Correo Electrónico</td> <td>{{empresa.email}}</td>
-        </tr>
-        </table>
-
-
+    <div class="mis-vis">
+       <h2>Misión</h2>
+        <p>{{empresa.mision}}</p>
+        <h2>Visión</h2>
+        <p>{{empresa.vision}}</p>
     </div>
-{%endblock%}
+
+    <div class="direcciones">
+        {{empresa.ciudad}}, {{empresa.estado}}, {{empresa.pais}} {{empresa.direccion}}
+        <br>
+        Teléfono/Fax: {{empresa.telefono}}/{{empresa.fax}}, Correo Electrónico: {{empresa.email}}
+    </div>
+{%endblock%}	

@@ -19,11 +19,14 @@
     
     <form method="POST" onsubmit="calcular_iva();">
         {%csrf_token%}
-        <table>
+        <table class="form_cc">
             {{form}}
+        <tr>
+            <td> <input type="submit" value="Crear Cheque Rapido"> </td>
+            <td> <input type="submit" value="Crear y Agregar Otro" name="a<dd_concepto"> <td>
+        </tr>
         </table>
-        <input type="submit" value="Crear Cheque Rapido">
-        <input type="submit" value="Crear y Agregar Otro" name="add_concepto">
+
 
     </form>
 {%endblock%}

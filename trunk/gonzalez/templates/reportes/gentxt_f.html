@@ -13,11 +13,13 @@
 
     <form method="POST">
         {%csrf_token%}
-        <table>
+        <table class="form_cc">
             {{form}}
+            <tr>
+                <td> <input type="submit" value="Generar Archivo"> </td>
+            </tr>    
         </table>
 
-        <input type="submit" value="Generar Archivo">
     </form>
 {%endblock%}
 
