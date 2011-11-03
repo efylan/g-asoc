@@ -1,14 +1,26 @@
 {%extends "base.html"%}
 
+{%block topcontent%}
+    <DIV ID="title">
+       <BR>GOFUA Servicios Fiscales S.C. 
+    </DIV>             
+{%endblock%}
+
 {%block maincontent%}
 {%if mensaje%}
 <p class="error">{{mensaje}}</p>
 {%endif%}
 <form method = "POST">
 {%csrf_token%}
+<div id="form">    
     <table>
-        {{form}}
+    <tr>
+        <td>{{form}}</td>
+</tr><td>
+        <td><input type="submit" value="Iniciar Sesión"><td>
+    </tr>
     </table>
-    <input type="submit" value="Iniciar Sesión">
+
+</div>
 </form>
 {%endblock%}

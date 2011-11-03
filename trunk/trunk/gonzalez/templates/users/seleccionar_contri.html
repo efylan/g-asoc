@@ -6,9 +6,12 @@
 {%endif%}
 <form method = "POST">
 {%csrf_token%}
-    <table>
+    <table class="form">
         {{form}}
+        <tr>
+            <td> <input type="submit" value="Seleccionar Contribuyente"> </td>
+        </tr>
     </table>
-    <input type="submit" value="Seleccionar Contribuyente">
+    
 </form>
 {%endblock%}

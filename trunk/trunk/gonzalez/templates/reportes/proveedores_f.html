@@ -14,11 +14,13 @@
 
     <form method="POST">
         {%csrf_token%}
-        <table>
+        <table class="form_cc">
             {{form}}
+            <tr>
+                <td> <input type="submit" value="Generar Reporte"> </td>
+            </tr>
         </table>
 
-        <input type="submit" value="Generar Reporte">
     </form>
 {%endblock%}
 

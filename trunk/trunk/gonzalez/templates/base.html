@@ -12,25 +12,25 @@
 
     <body>
         <div id="topcontent">
+            <IMG SRC="/media/img/l.png" ID="imga"> 
+<DIV ID="title">
+        <h3> {{empresa.nombre}} </h3>
+</DIV>
             {%block topcontent%}
-                <h3> TITULO </h3>
+                <h3>  </h3>               
             {%endblock%}
 
-            {%if request.user.id%}
-
-                {%if request.user.is_staff%}
-
-                <a href="{%url users.views.seleccionar_contri%}">{{request.user.username}}</a> | <a href= "{%url users.views.panel%}">{{request.session.contri}}</a> | <a href="{%url gonzalez.users.views.logout%}">Cerrar Sesion</a>
-
+            <div id="contri">
+                {%if request.user.id%}
+                                {%if request.user.is_staff%}<a class="login_info" href="{%url users.views.seleccionar_contri%}">{{request.user.username}}</a>
+                                {%else%} {{request.user.username}} {%endif%}  | 
+                                <a class="login_info" href= "{%url users.views.panel%}">{{request.user.get_profile.contribuyente}}</a> | 
+                                <a class="login_info" href="{%url gonzalez.users.views.logout%}">Cerrar Sesion</a>
                 {%else%}
-
-                {{request.user.username}} | <a href= "{%url users.views.panel%}">{{request.user.get_profile.contribuyente}}</a> | <a href="{%url gonzalez.users.views.logout%}">Cerrar Sesion</a>
-
+                    {{request.user.username}}
+                    Contribuyentes iniciar sesión <a class="login_info" href="{%url gonzalez.users.views.login%}">AQUÍ</a>
                 {%endif%}
-            {%else%}
-                {{request.user.username}}
-                Contribuyentes iniciar sesión <a href="{%url gonzalez.users.views.login%}">AQUÍ</a>
-            {%endif%}
+            </div>
         </div>
 
         <div id="sidecontent">
