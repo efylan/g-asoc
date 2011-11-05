@@ -82,7 +82,9 @@
                     </tr>
                     {%for concepto in cheque.concepto_set.all%}
                     <tr>
-                        <td><a href="{%url diot.views.editar_concepto concepto.id%}">{{concepto.proveedor.rfc}}</a></td>
+                        <td><a {%if cheque.estado == 3%} href= "{%url diot.views.editar_rapido cheque.id%}" {%else%} href="{%url diot.views.editar_concepto concepto.id%}" {%endif%}> {{concepto.proveedor.rfc}} </a>
+</td>
+
                         <td>{{concepto.proveedor.nombre}}</td>
                         <td>{{concepto.get_tipo_display}}</td>
                         <td>{{concepto.exento|intcomma}}</td>

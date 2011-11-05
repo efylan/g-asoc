@@ -264,9 +264,15 @@ def editar_rapido(request, cheque_id):
 
     try:
         cheque = Cheque.get_actives.get(id=cheque_id)
-        concepto = cheque.concepto_set.all()[0]
     except Cheque.DoesNotExist:
         raise Http404
+
+    try:
+        concepto = cheque.concepto_set.all()[0]
+    except:
+        concepto = Concepto()
+
+
 
     if not cheque.cuenta.contri.id == contri.id:
         raise Http404
