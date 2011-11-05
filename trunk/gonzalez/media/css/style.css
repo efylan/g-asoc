@@ -219,16 +219,36 @@ border:0px black none;
   font-weight: bold;
 
 }
-.new_link.button, .new_link.button:visited { background-color:#59A3F8; float:left; margin-left:1em; 
+
+
+.new_link.button, .new_link.button:visited { 
+ background-color:#59A3F8; 
+ float:left; 
+ margin-left:1em; 
 -moz-box-shadow: 0 0 5px #888;
  -webkit-box-shadow: 0 0 5px#888;
  box-shadow: 0 0 5px #888;}
+
+.new_link3.button, .new_link3.button:visited { 
+ background-color:#41E38D;
+ float:left; 
+ margin-left:1em; 
+-moz-box-shadow: 0 0 5px #888;
+ -webkit-box-shadow: 0 0 5px#888;
+ box-shadow: 0 0 5px #888;}
+
 
 .new_link2.button, .new_link2.button:visited { background-color:#41E38D;  float:right; margin-right:1em;
 -moz-box-shadow: 0 0 5px #888;
  -webkit-box-shadow: 0 0 5px#888;
  box-shadow: 0 0 5px #888;}
 /*.new_link.button:hover{ text-decoration: underline; }*/
+
+.new_link4.button, .new_link4.button:visited {  background-color:#59A3F8; float:right; margin-right:1em;
+-moz-box-shadow: 0 0 5px #888;
+ -webkit-box-shadow: 0 0 5px#888;
+ box-shadow: 0 0 5px #888;}
+
 
 .del_link.button, .del_link.button:visited { background-color:red; float:right; margin-left:1em;
 -moz-box-shadow: 0 0 5px #888;
