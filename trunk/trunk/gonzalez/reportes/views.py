@@ -6,8 +6,13 @@ from django.http import Http404
 from reportes.forms import MesForm
 import csv
 from decimal import Decimal
+from django.db.models import Q
+
 
 EXCLUDE_LIST = [SUELDOS,IMPUESTOS,MOV_BANCARIOS]
+NO_APLICABLE1 = 'no aplica'
+NO_APLICABLE2 = 'noaplica'
+NO_APLICABLES = ['noaplica', 'no aplica']
 
 def index_reportes(request):
     return render_to_response('reportes/main_reportes.html',{},RequestContext(request))
@@ -32,8 +37,8 @@ def core_reporte_proveedor(contri, month, year, request):
     empresa = Empresa.objects.all()[0]
     #cheques = Cheque.objects.filter(fecha__month=month, fecha__year=year, cuenta__contri=contri)
     conceptos_raw = Concepto.objects.filter(cheque__fecha__month=month, cheque__fecha__year=year,  cheque__cuenta__contri=contri)
-    conceptos = conceptos_raw.exclude(tipo__in=EXCLUDE_LIST)
-    excluidos = conceptos_raw.filter(tipo__in=EXCLUDE_LIST).order_by('proveedor')
+    conceptos = conceptos_raw.exclude(tipo__in=EXCLUDE_LIST).exclude(Q(proveedor__rfc__icontains=NO_APLICABLE1) | Q(proveedor__rfc__icontains=NO_APLICABLE2)).order_by('proveedor')
+    excluidos = conceptos_raw.filter(tipo__in=EXCLUDE_LIST).filter(Q(proveedor__rfc__icontains=NO_APLICABLE1) | Q(proveedor__rfc__icontains=NO_APLICABLE2)).order_by('proveedor')
     final = resumen_proveedores(conceptos)
     tot_exc = resumen_totales(excluidos)
     resumen = final['prov_list']
@@ -400,8 +405,13 @@ def generar_txt(request):
             month = f.cleaned_data['month']
             year = f.cleaned_data['year']
             conceptos_raw = Concepto.objects.filter(cheque__fecha__month=month, cheque__fecha__year=year,  cheque__cuenta__contri=contri)
-            conceptos = conceptos_raw.exclude(tipo__in=EXCLUDE_LIST)
-            excluidos = conceptos_raw.filter(tipo__in=EXCLUDE_LIST).order_by('proveedor')
+            #conceptos = conceptos_raw.exclude(tipo__in=EXCLUDE_LIST)
+            #excluidos = conceptos_raw.filter(tipo__in=EXCLUDE_LIST).order_by('proveedor')
+
+            conceptos = conceptos_raw.exclude(tipo__in=EXCLUDE_LIST).exclude(Q(proveedor__rfc__icontains=NO_APLICABLE1) | Q(proveedor__rfc__icontains=NO_APLICABLE2)).order_by('proveedor')
+            excluidos = conceptos_raw.filter(tipo__in=EXCLUDE_LIST).filter(Q(proveedor__rfc__icontains=NO_APLICABLE1) | Q(proveedor__rfc__icontains=NO_APLICABLE2)).order_by('proveedor')
+
+
 
             # Create the HttpResponse object with the appropriate CSV header.
             response = HttpResponse(mimetype='text/csv')
