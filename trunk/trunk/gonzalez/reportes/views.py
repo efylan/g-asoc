@@ -37,8 +37,12 @@ def core_reporte_proveedor(contri, month, year, request):
     empresa = Empresa.objects.all()[0]
     #cheques = Cheque.objects.filter(fecha__month=month, fecha__year=year, cuenta__contri=contri)
     conceptos_raw = Concepto.objects.filter(cheque__fecha__month=month, cheque__fecha__year=year,  cheque__cuenta__contri=contri)
-    conceptos = conceptos_raw.exclude(tipo__in=EXCLUDE_LIST).exclude(Q(proveedor__rfc__icontains=NO_APLICABLE1) | Q(proveedor__rfc__icontains=NO_APLICABLE2)).order_by('proveedor')
-    excluidos = conceptos_raw.filter(tipo__in=EXCLUDE_LIST).filter(Q(proveedor__rfc__icontains=NO_APLICABLE1) | Q(proveedor__rfc__icontains=NO_APLICABLE2)).order_by('proveedor')
+
+
+    conceptos = conceptos_raw.exclude(Q(proveedor__rfc__icontains=NO_APLICABLE1) | Q(proveedor__rfc__icontains=NO_APLICABLE2) | Q(tipo__in=EXCLUDE_LIST)).order_by('proveedor')
+
+    excluidos = conceptos_raw.filter(Q(proveedor__rfc__icontains=NO_APLICABLE1) | Q(proveedor__rfc__icontains=NO_APLICABLE2) | Q(tipo__in=EXCLUDE_LIST)).order_by('proveedor')
+
     final = resumen_proveedores(conceptos)
     tot_exc = resumen_totales(excluidos)
     resumen = final['prov_list']
@@ -370,7 +374,7 @@ def resumen_tipos(conceptos):
     dict_tipos['sueldos']['total']=dict_tipos['sueldos']['base_0'] + dict_tipos['sueldos']['sub_11'] + dict_tipos['sueldos']['sub_16']+ dict_tipos['sueldos']['iva_11'] + dict_tipos['sueldos']['iva_16']
     dict_tipos['comisiones']['total']=dict_tipos['comisiones']['base_0'] + dict_tipos['comisiones']['sub_11'] + dict_tipos['comisiones']['sub_16']+ dict_tipos['comisiones']['iva_11'] + dict_tipos['comisiones']['iva_16']
 
-    print dict_tipos['comisiones']
+
 
     keys = dict_tipos.keys()
     dict_tipos['t_base0'] = 0
@@ -408,8 +412,9 @@ def generar_txt(request):
             #conceptos = conceptos_raw.exclude(tipo__in=EXCLUDE_LIST)
             #excluidos = conceptos_raw.filter(tipo__in=EXCLUDE_LIST).order_by('proveedor')
 
-            conceptos = conceptos_raw.exclude(tipo__in=EXCLUDE_LIST).exclude(Q(proveedor__rfc__icontains=NO_APLICABLE1) | Q(proveedor__rfc__icontains=NO_APLICABLE2)).order_by('proveedor')
-            excluidos = conceptos_raw.filter(tipo__in=EXCLUDE_LIST).filter(Q(proveedor__rfc__icontains=NO_APLICABLE1) | Q(proveedor__rfc__icontains=NO_APLICABLE2)).order_by('proveedor')
+            conceptos = conceptos_raw.exclude(Q(proveedor__rfc__icontains=NO_APLICABLE1) | Q(proveedor__rfc__icontains=NO_APLICABLE2) | Q(tipo__in=EXCLUDE_LIST)).order_by('proveedor')
+
+            excluidos = conceptos_raw.filter(Q(proveedor__rfc__icontains=NO_APLICABLE1) | Q(proveedor__rfc__icontains=NO_APLICABLE2) | Q(tipo__in=EXCLUDE_LIST)).order_by('proveedor')
 
 
 
