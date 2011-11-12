@@ -49,7 +49,7 @@
                     </tr>
                     {%for concepto in cheque.concepto_set.all%}
                     <tr>
-                        <td><a href="{%url diot.views.editar_concepto concepto.id%}">{{concepto.proveedor.rfc}}</a></td>
+                        <td>{{concepto.proveedor.rfc}}</td>
                         <td>{{concepto.proveedor.nombre}}</td>
                         <td>{{concepto.get_tipo_display}}</td>
                         <td>{{concepto.subtotal}}</td>

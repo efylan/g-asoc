@@ -270,7 +270,7 @@ def editar_rapido(request, cheque_id):
     try:
         concepto = cheque.concepto_set.all()[0]
     except:
-        concepto = Concepto()
+        return HttpResponseRedirect('/diot/cheques/eliminar/%s/' % cheque_id)
 
 
 
@@ -486,6 +486,8 @@ def eliminar_concepto(request, concepto_id):
 
     if request.POST:
         concepto.delete()
+        if cheque.estado == 3:
+            cheque.delete()
         return HttpResponseRedirect('/diot/cheques/fechas/%s/%s/'%(year,month))
     else:
         return render_to_response('diot/cheques/eliminar_concepto.html',{'cheque':cheque,'concepto':concepto}, RequestContext(request))
