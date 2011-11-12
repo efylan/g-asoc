@@ -26,7 +26,7 @@ class CrearChequeRapidoForm(forms.Form):
     cuenta = forms.ModelChoiceField(Cuenta.objects.none()) #Filtrar en init!
     referencia = forms.CharField(max_length=20) #Sera que si sera que no?
     fecha = forms.DateTimeField()
-    RFC_proveedor = forms.CharField(min_length=12,max_length=18) #hacer txtfield que se actualize con javascript
+    RFC_proveedor = forms.CharField(min_length=12,max_length=14 , help_text = 'Sin guiones, espacios o separadores') #hacer txtfield que se actualize con javascript
     nombre_proveedor = forms.CharField(max_length=75) #para crear proveedor
     beneficiario = forms.CharField(max_length=75)
     concepto = forms.ChoiceField(choices = TIPO_CONCEPTO)
@@ -57,7 +57,7 @@ class CrearChequeRapidoForm(forms.Form):
 class AgregarConceptoForm(forms.ModelForm):
     iva = forms.DecimalField(max_digits=12, decimal_places=2, required=False, label='IVA calculado')#X?
     iva_registrado = forms.DecimalField(max_digits=12, decimal_places=2, required=False, label='IVA registrado')#X?
-    RFC_proveedor = forms.CharField(min_length=12,max_length=18) #hacer txtfield que se actualize con javascript
+    RFC_proveedor = forms.CharField(min_length=12,max_length=14 , help_text = 'Sin guiones, espacios o separadores') #hacer txtfield que se actualize con javascript
     nombre_proveedor = forms.CharField(max_length=75) #para crear proveedor
     bancos = forms.DecimalField(max_digits=12, decimal_places=2, label="Importe TOTAL factura")
     diferencia = forms.DecimalField(max_digits=12, decimal_places=2, required=False)#X?
@@ -82,7 +82,7 @@ class EditarChequeRapidoForm(forms.Form):
     cuenta = forms.ModelChoiceField(Cuenta.objects.none()) #Filtrar en init!
     referencia = forms.CharField(max_length=20) #Sera que si sera que no?
     fecha = forms.DateField()
-    RFC_proveedor = forms.CharField(min_length=12,max_length=18) #hacer txtfield que se actualize con javascript
+    RFC_proveedor = forms.CharField(min_length=12,max_length=14, help_text = 'Sin guiones, espacios o separadores') #hacer txtfield que se actualize con javascript
     nombre_proveedor = forms.CharField(max_length=75) #para crear proveedor
     beneficiario = forms.CharField(max_length=75)
     concepto = forms.ChoiceField(choices = TIPO_CONCEPTO)
@@ -134,7 +134,7 @@ class EditarChequeRapidoForm(forms.Form):
 class EditarConceptoForm(forms.ModelForm):
     iva = forms.DecimalField(max_digits=12, decimal_places=2, required=False, label='IVA calculado')#X?
     iva_registrado = forms.DecimalField(max_digits=12, decimal_places=2, required=False, label='IVA registrado')#X?
-    RFC_proveedor = forms.CharField(min_length=12,max_length=18) #hacer txtfield que se actualize con javascript
+    RFC_proveedor = forms.CharField(min_length=12,max_length=14 , help_text = 'Sin guiones, espacios o separadores') #hacer txtfield que se actualize con javascript
     nombre_proveedor = forms.CharField(max_length=75) #para crear proveedor
     bancos = forms.DecimalField(max_digits=12, decimal_places=2)
     diferencia = forms.DecimalField(max_digits=12, decimal_places=2, required=False)#X?
