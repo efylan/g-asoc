@@ -163,7 +163,7 @@ class Cheque(models.Model):
     beneficiario = models.CharField(max_length=75)
     cuenta = models.ForeignKey(Cuenta)
     #importe = models.DecimalField(max_digits=12, decimal_places=2) #ELIMINAR?
-    bancos = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="BANCOS (Importe)")
+    bancos = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="Importe de Cheque")
     fecha = models.DateField()
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_modificacion = models.DateTimeField(auto_now=True)
@@ -195,6 +195,7 @@ class Cheque(models.Model):
     
 class Concepto(models.Model):
     cheque = models.ForeignKey(Cheque)
+    referencia = models.CharField(max_length=40, verbose_name="No. de Factura", null=True, blank=True)
     proveedor = models.ForeignKey(Proveedor)
     tipo = models.PositiveSmallIntegerField(choices = TIPO_CONCEPTO)
     exento = models.DecimalField(max_digits=12, decimal_places=2)

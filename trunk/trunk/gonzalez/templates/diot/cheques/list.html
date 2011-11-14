@@ -30,9 +30,6 @@
             </tr>
             {%endwith%}
         {%endfor%}
-        <tr>
-            <td colspan = "4"><a href="{%url diot.views.tmensual_crear year month%}">Crear Nuevo</a></td>
-        </tr>
     </table>
     <br>
     <br>
@@ -63,6 +60,7 @@
             <td colspan="7">
                 <table class="con_list">
                     <tr>
+                        <th>No. Factura</th>
                         <th>RFC</th>
                         <th>Proveedor</th>
                         <th>Concepto</th>
@@ -82,6 +80,7 @@
                     </tr>
                     {%for concepto in cheque.concepto_set.all%}
                     <tr>
+                        <td>{{concepto.referencia}}</td>
                         <td><a {%if cheque.estado == 3%} href= "{%url diot.views.editar_rapido cheque.id%}" {%else%} href="{%url diot.views.editar_concepto concepto.id%}" {%endif%}> {{concepto.proveedor.rfc}} </a>
 </td>
 

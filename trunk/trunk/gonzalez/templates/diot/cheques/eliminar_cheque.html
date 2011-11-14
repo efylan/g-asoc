@@ -33,6 +33,7 @@
 <h2>Conceptos</h2>
                 <table class="con_list">
                     <tr>
+                        <th>No. Factura</th>
                         <th>RFC</th>
                         <th>Proveedor</th>
                         <th>Concepto</th>
@@ -49,6 +50,7 @@
                     </tr>
                     {%for concepto in cheque.concepto_set.all%}
                     <tr>
+                        <td>{{concepto.referencia}}</td>
                         <td>{{concepto.proveedor.rfc}}</td>
                         <td>{{concepto.proveedor.nombre}}</td>
                         <td>{{concepto.get_tipo_display}}</td>

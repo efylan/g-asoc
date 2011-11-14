@@ -15,6 +15,7 @@
 <h1>Eliminar Concepto</h1>
                 <table class="con_list">
                     <tr>
+                        <th>No. Factura</th>
                         <th>RFC</th>
                         <th>Proveedor</th>
                         <th>Concepto</th>
@@ -31,6 +32,7 @@
                     </tr>
 
                     <tr>
+                        <td>{{concepto.proveedor.referencia}}</td>
                         <td>{{concepto.proveedor.rfc}}</td>
                         <td>{{concepto.proveedor.nombre}}</td>
                         <td>{{concepto.get_tipo_display}}</td>
