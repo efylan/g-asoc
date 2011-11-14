@@ -19,12 +19,14 @@ class CrearChequeForm(forms.ModelForm):
     def __init__(self, contri, *args, **kwargs):
         super(CrearChequeForm, self).__init__(*args, **kwargs)
         self.fields['cuenta'].queryset=Cuenta.get_actives.filter(contri__id=contri.id)
+        self.fields['referencia'].label='No. de Cheque'
 
 
 
 class CrearChequeRapidoForm(forms.Form):
     cuenta = forms.ModelChoiceField(Cuenta.objects.none()) #Filtrar en init!
-    referencia = forms.CharField(max_length=20) #Sera que si sera que no?
+    referencia = forms.CharField(max_length=20, label = "No. de Cheque") #Sera que si sera que no?
+    num_factura = forms.CharField(max_length=40, label="No. de Factura") #Sera que si sera que no?
     fecha = forms.DateTimeField()
     RFC_proveedor = forms.CharField(min_length=12,max_length=14 , help_text = 'Sin guiones, espacios o separadores') #hacer txtfield que se actualize con javascript
     nombre_proveedor = forms.CharField(max_length=75) #para crear proveedor
@@ -41,8 +43,8 @@ class CrearChequeRapidoForm(forms.Form):
     diferencia_iva = forms.DecimalField(max_digits=12, decimal_places=2, required=False, initial=0)#X?
     ret_iva = forms.DecimalField(max_digits=12, decimal_places=2, required=False, initial=0)#?
     ret_isr = forms.DecimalField(max_digits=12, decimal_places=2, required=False, initial=0)#?
-    importe = forms.DecimalField(max_digits=12, decimal_places=2) #mismo para concepto?
-    bancos = forms.DecimalField(max_digits=12, decimal_places=2)
+    importe = forms.DecimalField(max_digits=12, decimal_places=2, label = "Importe Calculado") #mismo para concepto?
+    bancos = forms.DecimalField(max_digits=12, decimal_places=2, label = "Importe de Factura")
     diferencia = forms.DecimalField(max_digits=12, decimal_places=2, required=False, initial=0)#X?
 
 
@@ -66,7 +68,7 @@ class AgregarConceptoForm(forms.ModelForm):
 
     class Meta:
         model = Concepto
-        fields = ('RFC_proveedor', 'nombre_proveedor', 'tipo','exento', 'subtotal', 'impuesto', 'iva', 'iva_registrado', 'descuento', 'iva_descuento','diferencia_iva','ret_iva', 'ret_isr', 'importe', 'bancos','diferencia')
+        fields = ('referencia','RFC_proveedor', 'nombre_proveedor', 'tipo','exento', 'subtotal', 'impuesto', 'iva', 'iva_registrado', 'descuento', 'iva_descuento','diferencia_iva','ret_iva', 'ret_isr', 'importe', 'bancos','diferencia')
 
     def __init__(self, *args, **kwargs):
         super(AgregarConceptoForm, self).__init__(*args, **kwargs)
@@ -80,7 +82,8 @@ class AgregarConceptoForm(forms.ModelForm):
     
 class EditarChequeRapidoForm(forms.Form):
     cuenta = forms.ModelChoiceField(Cuenta.objects.none()) #Filtrar en init!
-    referencia = forms.CharField(max_length=20) #Sera que si sera que no?
+    referencia = forms.CharField(max_length=20, label = "No. de Cheque") #Sera que si sera que no?
+    num_factura = forms.CharField(max_length=40, label="No. de Factura") #Sera que si sera que no?
     fecha = forms.DateField()
     RFC_proveedor = forms.CharField(min_length=12,max_length=14, help_text = 'Sin guiones, espacios o separadores') #hacer txtfield que se actualize con javascript
     nombre_proveedor = forms.CharField(max_length=75) #para crear proveedor
@@ -111,6 +114,7 @@ class EditarChequeRapidoForm(forms.Form):
         self.fields['iva'].widget.attrs['readonly']=True
         self.fields['cuenta'].initial = cheque.cuenta
         self.fields['referencia'].initial = cheque.referencia
+        self.fields['num_factura'].initial = concepto.referencia
         self.fields['fecha'].initial = cheque.fecha
         self.fields['RFC_proveedor'].initial = concepto.proveedor.rfc
         self.fields['nombre_proveedor'].initial = concepto.proveedor.nombre
@@ -143,7 +147,7 @@ class EditarConceptoForm(forms.ModelForm):
 
     class Meta:
         model = Concepto
-        fields = ('RFC_proveedor', 'nombre_proveedor', 'tipo', 'exento', 'subtotal', 'impuesto', 'iva', 'iva_registrado', 'descuento', 'iva_descuento','diferencia_iva','ret_iva', 'ret_isr', 'importe', 'bancos','diferencia')
+        fields = ('referencia','RFC_proveedor', 'nombre_proveedor', 'tipo', 'exento', 'subtotal', 'impuesto', 'iva', 'iva_registrado', 'descuento', 'iva_descuento','diferencia_iva','ret_iva', 'ret_isr', 'importe', 'bancos','diferencia')
 
     def __init__(self, *args, **kwargs):
         super(EditarConceptoForm, self).__init__(*args, **kwargs)

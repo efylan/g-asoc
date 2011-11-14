@@ -123,6 +123,7 @@ def cheques_crear_rapido(request):
         else:
             cuenta = f.cleaned_data['cuenta']
             referencia = f.cleaned_data['referencia']
+            referencia_factura = f.cleaned_data['num_factura']
             fecha = f.cleaned_data['fecha']
             RFC_proveedor = f.cleaned_data['RFC_proveedor']
             nombre_proveedor = f.cleaned_data['nombre_proveedor']
@@ -171,6 +172,7 @@ def cheques_crear_rapido(request):
 
             concepto = Concepto()
             concepto.cheque = cheque
+            concepto.referencia = referencia_factura
             concepto.proveedor = prov
             concepto.tipo = tipo_concepto
             concepto.exento = exento
@@ -285,6 +287,7 @@ def editar_rapido(request, cheque_id):
         else:
             cuenta = f.cleaned_data['cuenta']
             referencia = f.cleaned_data['referencia']
+            referencia_factura = f.cleaned_data['num_factura']
             fecha = f.cleaned_data['fecha']
             RFC_proveedor = f.cleaned_data['RFC_proveedor']
             nombre_proveedor = f.cleaned_data['nombre_proveedor']
@@ -332,6 +335,7 @@ def editar_rapido(request, cheque_id):
 
             concepto = cheque.concepto_set.all()[0]
             concepto.cheque = cheque
+            concepto.referencia = referencia_factura
             concepto.proveedor = prov
             concepto.tipo = tipo_concepto
             concepto.exento = exento

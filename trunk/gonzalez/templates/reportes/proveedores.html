@@ -33,7 +33,7 @@
     {%for concepto in res.conceptos%}
     <tr class="conceptos">
         <td class="small">{{concepto.cheque.cuenta}}</td>
-        <td>{{concepto.cheque.referencia}}</td>
+        <td>{{concepto.cheque.referencia}} {% if concepto.referencia%} - {{concepto.referencia}}{%endif%}</td>
         <td>{{concepto.get_tipo_display}}</td>
         <td class="number">{{concepto.get_base_0|intcomma}}</td>
         <td class="number">{{concepto.get_sub_11|intcomma}}</td>
