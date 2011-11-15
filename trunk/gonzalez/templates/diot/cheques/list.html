@@ -109,44 +109,6 @@
 <br>
 <br>
 
-<table class="object_list">
-    <tr>
-        <td colspan="11">TOTALES</td>
-        <td colspan="3">DIFERENCIAS</td>
-    </tr>
-    <tr>
-        <th>Base 0</th>
-        <th>Subtotal 11%</th>
-        <th>Subtotal 16%</th>
-        <th>IVA 11%</th>
-        <th>IVA 16%</th>
-        <th>Desc</th>
-        <th>Desc IVA</th>
-        <th>Ret. IVA</th>
-        <th>Ret. ISR</th>
-        <th>Importe</th>
-        <th class="bluef">Bancos</th>
-        <th class="redf">Diferencia</td>
-        <th class="redf">IVA 11%</td>
-        <th class="redf">IVA 16%</td>
-    </tr>
-    <tr>
-        <td>{{final.totales.base_0|intcomma}}</td>
-        <td>{{final.totales.sub_11|intcomma}}</td>
-        <td>{{final.totales.sub_16|intcomma}}</td>
-        <td>{{final.totales.iva_11|intcomma}}</td>
-        <td>{{final.totales.iva_16|intcomma}}</td>
-        <td>{{final.totales.desc|intcomma}}</td>
-        <td>{{final.totales.iva_desc|intcomma}}</td>
-        <td>{{final.totales.ret_iva|intcomma}}</td>
-        <td>{{final.totales.ret_isr|intcomma}}</td>
-        <td>{{final.totales.importe|intcomma}}</td>
-        <td class="bluef">{{final.totales.bancos|intcomma}}</td>
-        <td class="redf">{{final.totales.diff|intcomma}}</td>
-        <td class="redf">{{final.totales.diff_11|intcomma}}</td>
-        <td class="redf">{{final.totales.diff_16|intcomma}}</td>
-    </tr>
-</table>
 
 <br>
 
@@ -277,6 +239,47 @@
     {%endif%}
 
 </table>
+<br>
+
+<table class="object_list">
+    <tr>
+        <td colspan="11">TOTALES</td>
+        <td colspan="3">DIFERENCIAS</td>
+    </tr>
+    <tr>
+        <th>Base 0</th>
+        <th>Subtotal 11%</th>
+        <th>Subtotal 16%</th>
+        <th>IVA 11%</th>
+        <th>IVA 16%</th>
+        <th>Desc</th>
+        <th>Desc IVA</th>
+        <th>Ret. IVA</th>
+        <th>Ret. ISR</th>
+        <th>Importe</th>
+        <th class="bluef">Bancos</th>
+        <th class="redf">Diferencia</td>
+        <th class="redf">IVA 11%</td>
+        <th class="redf">IVA 16%</td>
+    </tr>
+    <tr>
+        <td>{{final.totales.base_0|intcomma}}</td>
+        <td>{{final.totales.sub_11|intcomma}}</td>
+        <td>{{final.totales.sub_16|intcomma}}</td>
+        <td>{{final.totales.iva_11|intcomma}}</td>
+        <td>{{final.totales.iva_16|intcomma}}</td>
+        <td>{{final.totales.desc|intcomma}}</td>
+        <td>{{final.totales.iva_desc|intcomma}}</td>
+        <td>{{final.totales.ret_iva|intcomma}}</td>
+        <td>{{final.totales.ret_isr|intcomma}}</td>
+        <td>{{final.totales.importe|intcomma}}</td>
+        <td class="bluef">{{final.totales.bancos|intcomma}}</td>
+        <td class="redf">{{final.totales.diff|intcomma}}</td>
+        <td class="redf">{{final.totales.diff_11|intcomma}}</td>
+        <td class="redf">{{final.totales.diff_16|intcomma}}</td>
+    </tr>
+</table>
+
 
 <br>
 
@@ -292,6 +295,10 @@
         <td>{{cuenta.total|intcomma}}</td>
     </tr>
     {%endfor%}
+    <tr>
+        <td>TOTAL</td>
+        <td>{{total_cuentas|intcomma}}</td>
+    </tr>
 </table>
 
 {%endblock%}

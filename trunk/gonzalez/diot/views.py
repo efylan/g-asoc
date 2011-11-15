@@ -254,10 +254,10 @@ def cheques_mes(request, year, month):
     contri = request.session['contri']
     cheques = Cheque.get_actives.filter(cuenta__contri__id=contri.id, fecha__year=year,fecha__month=month).order_by('id')
     final = get_all_totales(cheques)
-    resumen = resumen_cuentas(cheques, contri)
+    resumen, total_cuentas = resumen_cuentas(cheques, contri)
     mensuales = TotalMensual.objects.filter(contri=contri, month=month, year=year)
 
-    return render_to_response('diot/cheques/list.html', {'cheques':cheques,'final':final, 'resumen':resumen, 'mensuales':mensuales,'month':month, 'year':year}, RequestContext(request))
+    return render_to_response('diot/cheques/list.html', {'cheques':cheques,'final':final, 'resumen':resumen, 'mensuales':mensuales,'month':month, 'year':year, 'total_cuentas':total_cuentas}, RequestContext(request))
 
 
 
@@ -788,17 +788,17 @@ def resumen_cuentas(cheques, contri=None):
     else:
         cuentas = Cuenta.objects.filter(contri=contri)
     cuenta_list=[]
+    total=0
     for cuenta in cuentas:
         cuenta_dict={}
         cuenta_dict['numero'] = cuenta.numero
         cuenta_dict['banco'] = cuenta.banco.nombre
         cuenta_dict['total'] = 0
-        
         for cheque in cheques.filter(cuenta=cuenta):
-            cuenta_dict['total']+=cheque.get_total_conceptos()
-
+            cuenta_dict['total']+=cheque.get_total_conceptos()            
+        total += cuenta_dict['total']
         cuenta_list.append(cuenta_dict)
-    return cuenta_list
+    return cuenta_list, total
 
 
 from utils import get_next_or_previous
