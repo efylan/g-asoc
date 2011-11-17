@@ -1,5 +1,5 @@
 from django.shortcuts import render_to_response, HttpResponseRedirect
-from diot.models import Cuenta, Cheque, Proveedor, Concepto, COMPRAS, GASTOS, HONORARIOS, RENTA, IMPUESTOS, MOV_BANCARIOS, ACT_FIJO, OTROS, SUELDOS, COMISIONES
+from diot.models import Cuenta, Cheque, Proveedor, Concepto, COMPRAS, GASTOS, HONORARIOS, RENTA, IMPUESTOS, MOV_BANCARIOS, ACT_FIJO, OTROS, SUELDOS, COMISIONES, IMSS
 
 from django.template import RequestContext
 from diot.forms import CrearCuentaForm, CrearChequeForm, CrearChequeRapidoForm, AgregarConceptoForm, EditarConceptoForm, EditarChequeRapidoForm, CrearTotalForm, EditarTotalForm
@@ -619,6 +619,7 @@ def get_all_totales(cheques):
     dict_tipos['otros'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0}
     dict_tipos['sueldos'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0}
     dict_tipos['comisiones'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0}
+    dict_tipos['imss'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0}
 
     for cheque in cheques:
         for concepto in cheque.concepto_set.all():
@@ -654,6 +655,9 @@ def get_all_totales(cheques):
                 elif concepto.tipo == COMISIONES:
                     dict_tipos['comisiones']['base_0']+=concepto.subtotal
                     dict_tipos['comisiones']['base_0']+=concepto.exento
+                elif concepto.tipo == IMSS:
+                    dict_tipos['imss']['base_0']+=concepto.subtotal
+                    dict_tipos['imss']['base_0']+=concepto.exento
 
 
 
@@ -703,6 +707,10 @@ def get_all_totales(cheques):
                     dict_tipos['comisiones']['sub_11']+=concepto.subtotal
                     dict_tipos['comisiones']['iva_11']+=concepto.impuesto_real
                     dict_tipos['comisiones']['base_0']+=concepto.exento
+                elif concepto.tipo == IMSS:
+                    dict_tipos['imss']['sub_11']+=concepto.subtotal
+                    dict_tipos['imss']['iva_11']+=concepto.impuesto_real
+                    dict_tipos['imss']['base_0']+=concepto.exento
 
 
             elif concepto.impuesto.porcentaje ==16:
@@ -750,6 +758,10 @@ def get_all_totales(cheques):
                     dict_tipos['comisiones']['sub_16']+=concepto.subtotal
                     dict_tipos['comisiones']['iva_16']+=concepto.impuesto_real
                     dict_tipos['comisiones']['base_0']+=concepto.exento
+                elif concepto.tipo == IMSS:
+                    dict_tipos['imss']['sub_16']+=concepto.subtotal
+                    dict_tipos['imss']['iva_16']+=concepto.impuesto_real
+                    dict_tipos['imss']['base_0']+=concepto.exento
 
 
             dict_totales['desc'] += concepto.descuento
@@ -771,6 +783,7 @@ def get_all_totales(cheques):
         dict_tipos['otros']['total']=dict_tipos['otros']['base_0'] + dict_tipos['otros']['sub_11'] + dict_tipos['otros']['sub_16']
         dict_tipos['sueldos']['total']=dict_tipos['sueldos']['base_0'] + dict_tipos['sueldos']['sub_11'] + dict_tipos['sueldos']['sub_16']
         dict_tipos['comisiones']['total']=dict_tipos['comisiones']['base_0'] + dict_tipos['comisiones']['sub_11'] + dict_tipos['comisiones']['sub_16']
+        dict_tipos['imss']['total']=dict_tipos['imss']['base_0'] + dict_tipos['imss']['sub_11'] + dict_tipos['imss']['sub_16']
 
 
     dict_totales['total_acreditable'] = dict_totales['iva_11'] + dict_totales['iva_16']

@@ -197,6 +197,17 @@
     </tr>
     {%endif%}
 
+    {% if final.tipos.imss.total != 0 %}
+    <tr>
+        <th>IMSS-INF-RCV</th>
+        <td>{{final.tipos.imss.base_0|intcomma}}</td>
+        <td>{{final.tipos.imss.sub_11|intcomma}}</td>
+        <td>{{final.tipos.imss.sub_16|intcomma}}</td>
+        <td class="bluef">{{final.tipos.imss.total|intcomma}}</td>
+    </tr>
+    {%endif%}
+
+
     {% if final.tipos.comisiones.total != 0 %}
     <tr>
         <th>COMISIONES</th>

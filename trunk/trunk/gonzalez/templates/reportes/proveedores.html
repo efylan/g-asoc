@@ -154,6 +154,8 @@
         <th>Subtotal 16%</th>
         <th>IVA 11%</th>
         <th>IVA 16%</th>
+        <th>Desc.</th>
+        <th>Desc. IVA</th>
         <th>SUBTOTAL</th>
         <th class="bluef">TOTAL</th>
     </tr>
@@ -165,6 +167,8 @@
         <td class="number">{{tipos.compras.sub_16|intcomma}}</td>
         <td class="number">{{tipos.compras.iva_11|intcomma}}</td>
         <td class="number">{{tipos.compras.iva_16|intcomma}}</td>
+        <td class="number">{{tipos.compras.desc|intcomma}}</td>
+        <td class="number">{{tipos.compras.desc_iva|intcomma}}</td>
         <td class="number">{{tipos.compras.subtotal|intcomma}}</td>
         <td class="bluef number">{{tipos.compras.total|intcomma}}</td>
     </tr>
@@ -178,6 +182,8 @@
         <td class="number">{{tipos.gastos.sub_16|intcomma}}</td>
         <td class="number">{{tipos.gastos.iva_11|intcomma}}</td>
         <td class="number">{{tipos.gastos.iva_16|intcomma}}</td>
+        <td class="number">{{tipos.gastos.desc|intcomma}}</td>
+        <td class="number">{{tipos.gastos.desc_iva|intcomma}}</td>
         <td class="number">{{tipos.gastos.subtotal|intcomma}}</td>
         <td class="bluef number">{{tipos.gastos.total|intcomma}}</td>
     </tr>
@@ -190,6 +196,8 @@
         <td class="number">{{tipos.honorarios.sub_16|intcomma}}</td>
         <td class="number">{{tipos.honorarios.iva_11|intcomma}}</td>
         <td class="number">{{tipos.honorarios.iva_16|intcomma}}</td>
+        <td class="number">{{tipos.honorarios.desc|intcomma}}</td>
+        <td class="number">{{tipos.honorarios.desc_iva|intcomma}}</td>
         <td class="number">{{tipos.honorarios.subtotal|intcomma}}</td>
         <td class="bluef number">{{tipos.honorarios.total|intcomma}}</td>
     </tr>
@@ -202,6 +210,8 @@
         <td class="number">{{tipos.renta.sub_16|intcomma}}</td>
         <td class="number">{{tipos.renta.iva_11|intcomma}}</td>
         <td class="number">{{tipos.renta.iva_16|intcomma}}</td>
+        <td class="number">{{tipos.renta.desc|intcomma}}</td>
+        <td class="number">{{tipos.renta.desc_iva|intcomma}}</td>
         <td class="number">{{tipos.renta.subtotal|intcomma}}</td>
         <td class="bluef number">{{tipos.renta.total|intcomma}}</td>
     </tr>
@@ -214,6 +224,8 @@
         <td class="number">{{tipos.impuestos.sub_16|intcomma}}</td>
         <td class="number">{{tipos.impuestos.iva_11|intcomma}}</td>
         <td class="number">{{tipos.impuestos.iva_16|intcomma}}</td>
+        <td class="number">{{tipos.impuestos.desc|intcomma}}</td>
+        <td class="number">{{tipos.impuestos.desc_iva|intcomma}}</td>
         <td class="number">{{tipos.impuestos.subtotal|intcomma}}</td>
         <td class="bluef number">{{tipos.impuestos.total|intcomma}}</td>
     </tr>
@@ -226,10 +238,28 @@
         <td class="number">{{tipos.sueldos.sub_16|intcomma}}</td>
         <td class="number">{{tipos.sueldos.iva_11|intcomma}}</td>
         <td class="number">{{tipos.sueldos.iva_16|intcomma}}</td>
+        <td class="number">{{tipos.sueldos.desc|intcomma}}</td>
+        <td class="number">{{tipos.sueldos.desc_iva|intcomma}}</td>
         <td class="number">{{tipos.sueldos.subtotal|intcomma}}</td>
         <td class="bluef number">{{tipos.sueldos.total|intcomma}}</td>
     </tr>
     {%endif%}
+
+    {%if tipos.imss.total != 0%}
+    <tr>
+        <th>IMSS-INF-RCV</th>
+        <td class="number">{{tipos.imss.base_0|intcomma}}</td>
+        <td class="number">{{tipos.imss.sub_11|intcomma}}</td>
+        <td class="number">{{tipos.imss.sub_16|intcomma}}</td>
+        <td class="number">{{tipos.imss.iva_11|intcomma}}</td>
+        <td class="number">{{tipos.imss.iva_16|intcomma}}</td>
+        <td class="number">{{tipos.imss.desc|intcomma}}</td>
+        <td class="number">{{tipos.imss.desc_iva|intcomma}}</td>
+        <td class="number">{{tipos.imss.subtotal|intcomma}}</td>
+        <td class="bluef number">{{tipos.imss.total|intcomma}}</td>
+    </tr>
+    {%endif%}
+
 
     {%if tipos.comisiones.total != 0%}
     <tr>
@@ -239,6 +269,8 @@
         <td class="number">{{tipos.comisiones.sub_16|intcomma}}</td>
         <td class="number">{{tipos.comisiones.iva_11|intcomma}}</td>
         <td class="number">{{tipos.comisiones.iva_16|intcomma}}</td>
+        <td class="number">{{tipos.comisiones.desc|intcomma}}</td>
+        <td class="number">{{tipos.comisiones.desc_iva|intcomma}}</td>
         <td class="number">{{tipos.comisiones.subtotal|intcomma}}</td>
         <td class="bluef number">{{tipos.comisiones.total|intcomma}}</td>
     </tr>
@@ -252,6 +284,8 @@
         <td class="number">{{tipos.mov_bancarios.sub_16|intcomma}}</td>
         <td class="number">{{tipos.mov_bancarios.iva_11|intcomma}}</td>
         <td class="number">{{tipos.mov_bancarios.iva_16|intcomma}}</td>
+        <td class="number">{{tipos.mov_bancarios.desc|intcomma}}</td>
+        <td class="number">{{tipos.mov_bancarios.desc_iva|intcomma}}</td>
         <td class="number">{{tipos.mov_bancarios.subtotal|intcomma}}</td>
         <td class="bluef number">{{tipos.mov_bancarios.total|intcomma}}</td>
     </tr>
@@ -264,6 +298,8 @@
         <td class="number">{{tipos.act_fijo.sub_16|intcomma}}</td>
         <td class="number">{{tipos.act_fijo.iva_11|intcomma}}</td>
         <td class="number">{{tipos.act_fijo.iva_16|intcomma}}</td>
+        <td class="number">{{tipos.act_fijo.desc|intcomma}}</td>
+        <td class="number">{{tipos.act_fijo.desc_iva|intcomma}}</td>
         <td class="number">{{tipos.act_fijo.subtotal|intcomma}}</td>
         <td class="bluef number">{{tipos.act_fijo.total|intcomma}}</td>
     </tr>
@@ -276,6 +312,8 @@
         <td class="number">{{tipos.otros.sub_16|intcomma}}</td>
         <td class="number">{{tipos.otros.iva_11|intcomma}}</td>
         <td class="number">{{tipos.otros.iva_16|intcomma}}</td>
+        <td class="number">{{tipos.otros.desc|intcomma}}</td>
+        <td class="number">{{tipos.otros.desc_iva|intcomma}}</td>
         <td class="number">{{tipos.otros.subtotal|intcomma}}</td>
         <td class="bluef number">{{tipos.otros.total|intcomma}}</td>
     </tr>
@@ -287,6 +325,8 @@
         <th class="number">{{tipos.t_sub16|intcomma}}</th>
         <th class="number">{{tipos.t_iva11|intcomma}}</th>
         <th class="number">{{tipos.t_iva16|intcomma}}</th>
+        <th class="number">{{tipos.t_desc|intcomma}}</th>
+        <th class="number">{{tipos.t_desc_iva|intcomma}}</th>
         <th class="number">{{tipos.t_subtotal|intcomma}}</th>
         <th class="number">{{tipos.t_total|intcomma}}</th>
     </tr>
