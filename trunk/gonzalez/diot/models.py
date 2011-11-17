@@ -12,8 +12,9 @@ ACT_FIJO=7
 OTROS=8
 SUELDOS=9
 COMISIONES = 10
+IMSS = 11
 
-TIPO_CONCEPTO = ((COMPRAS,"Compras"),(GASTOS,"Gastos"),(HONORARIOS,"Honorarios"),(RENTA,"Renta"),(IMPUESTOS, "Impuestos"),(SUELDOS,'Sueldos'),(COMISIONES,'Comisiones Bancarias'), (MOV_BANCARIOS,"Movimientos Bancarios"),(ACT_FIJO, "Activos Fijos"),(OTROS,"Otros"))
+TIPO_CONCEPTO = ((COMPRAS,"Compras"),(GASTOS,"Gastos"),(HONORARIOS,"Honorarios"),(RENTA,"Renta"),(IMPUESTOS, "Impuestos"),(SUELDOS,'Sueldos'),(IMSS,'IMSS-INF-RCV'),(COMISIONES,'Comisiones Bancarias'), (MOV_BANCARIOS,"Movimientos Bancarios"),(ACT_FIJO, "Activos Fijos"),(OTROS,"Otros"))
 #------------------------------------------------------------
 NACIONAL = 1
 EXTRANJERO = 2

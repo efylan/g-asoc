@@ -1,5 +1,5 @@
 from django.shortcuts import render_to_response, HttpResponseRedirect, HttpResponse
-from diot.models import Cuenta, Cheque, Proveedor, Concepto, COMPRAS, GASTOS, HONORARIOS, RENTA, IMPUESTOS, MOV_BANCARIOS, ACT_FIJO, OTROS, SUELDOS, EXTRANJERO, NACIONAL, GLOBAL, COMISIONES
+from diot.models import Cuenta, Cheque, Proveedor, Concepto, COMPRAS, GASTOS, HONORARIOS, RENTA, IMPUESTOS, MOV_BANCARIOS, ACT_FIJO, OTROS, SUELDOS, EXTRANJERO, NACIONAL, GLOBAL, COMISIONES, IMSS
 from empresa.models import Empresa
 from django.template import RequestContext
 from django.http import Http404
@@ -176,6 +176,7 @@ def resumen_tipos(conceptos):
     dict_tipos['otros'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0,'ret_iva':0, 'ret_isr':0, 'desc':0, 'desc_iva':0}
     dict_tipos['sueldos'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0,'ret_iva':0, 'ret_isr':0, 'desc':0, 'desc_iva':0}
     dict_tipos['comisiones'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0,'ret_iva':0, 'ret_isr':0, 'desc':0, 'desc_iva':0}
+    dict_tipos['imss'] = {'base_0':0, 'sub_11':0, 'sub_16':0, 'iva_11':0, 'iva_16':0,'ret_iva':0, 'ret_isr':0, 'desc':0, 'desc_iva':0}
 
 
     for concepto in conceptos:
@@ -230,6 +231,11 @@ def resumen_tipos(conceptos):
             dict_tipos['comisiones']['ret_isr']+=concepto.ret_isr
             dict_tipos['comisiones']['desc']+=concepto.descuento
             dict_tipos['comisiones']['desc_iva']+=concepto.iva_descuento
+        elif concepto.tipo == IMSS:
+            dict_tipos['imss']['ret_iva']+=concepto.ret_iva
+            dict_tipos['imss']['ret_isr']+=concepto.ret_isr
+            dict_tipos['imss']['desc']+=concepto.descuento
+            dict_tipos['imss']['desc_iva']+=concepto.iva_descuento
 
 
         if concepto.impuesto==None:
@@ -263,6 +269,9 @@ def resumen_tipos(conceptos):
             elif concepto.tipo == COMISIONES:
                 dict_tipos['comisiones']['base_0']+=concepto.subtotal
                 dict_tipos['comisiones']['base_0']+=concepto.exento
+            elif concepto.tipo == IMSS:
+                dict_tipos['imss']['base_0']+=concepto.subtotal
+                dict_tipos['imss']['base_0']+=concepto.exento
 
 
         elif concepto.impuesto.porcentaje==11:
@@ -306,6 +315,11 @@ def resumen_tipos(conceptos):
                 dict_tipos['comisiones']['sub_11']+=concepto.subtotal
                 dict_tipos['comisiones']['iva_11']+=concepto.impuesto_real
                 dict_tipos['comisiones']['base_0']+=concepto.exento
+            elif concepto.tipo == IMSS:
+                dict_tipos['imss']['sub_11']+=concepto.subtotal
+                dict_tipos['imss']['iva_11']+=concepto.impuesto_real
+                dict_tipos['imss']['base_0']+=concepto.exento
+
 
         elif concepto.impuesto.porcentaje ==16:
 
@@ -349,31 +363,46 @@ def resumen_tipos(conceptos):
                 dict_tipos['comisiones']['sub_16']+=concepto.subtotal
                 dict_tipos['comisiones']['iva_16']+=concepto.impuesto_real
                 dict_tipos['comisiones']['base_0']+=concepto.exento
+            elif concepto.tipo == IMSS:
+                dict_tipos['imss']['sub_16']+=concepto.subtotal
+                dict_tipos['imss']['iva_16']+=concepto.impuesto_real
+                dict_tipos['imss']['base_0']+=concepto.exento
 
 
-    dict_tipos['compras']['subtotal']=dict_tipos['compras']['base_0'] + dict_tipos['compras']['sub_11'] + dict_tipos['compras']['sub_16']
-    dict_tipos['gastos']['subtotal']=dict_tipos['gastos']['base_0'] + dict_tipos['gastos']['sub_11'] + dict_tipos['gastos']['sub_16']
-    dict_tipos['honorarios']['subtotal']=dict_tipos['honorarios']['base_0'] + dict_tipos['honorarios']['sub_11'] + dict_tipos['honorarios']['sub_16']
-    dict_tipos['renta']['subtotal']=dict_tipos['renta']['base_0'] + dict_tipos['renta']['sub_11'] + dict_tipos['renta']['sub_16']
-    dict_tipos['impuestos']['subtotal']=dict_tipos['impuestos']['base_0'] + dict_tipos['impuestos']['sub_11'] + dict_tipos['impuestos']['sub_16']
-    dict_tipos['mov_bancarios']['subtotal']=dict_tipos['mov_bancarios']['base_0'] + dict_tipos['mov_bancarios']['sub_11'] + dict_tipos['mov_bancarios']['sub_16']
-    dict_tipos['act_fijo']['subtotal']=dict_tipos['act_fijo']['base_0'] + dict_tipos['act_fijo']['sub_11'] + dict_tipos['act_fijo']['sub_16']
-    dict_tipos['otros']['subtotal']=dict_tipos['otros']['base_0'] + dict_tipos['otros']['sub_11'] + dict_tipos['otros']['sub_16']
-    dict_tipos['sueldos']['subtotal']=dict_tipos['sueldos']['base_0'] + dict_tipos['sueldos']['sub_11'] + dict_tipos['sueldos']['sub_16']
-    dict_tipos['comisiones']['subtotal']=dict_tipos['comisiones']['base_0'] + dict_tipos['comisiones']['sub_11'] + dict_tipos['comisiones']['sub_16']
+    dict_tipos['compras']['subtotal']=dict_tipos['compras']['base_0'] + dict_tipos['compras']['sub_11'] + dict_tipos['compras']['sub_16'] - dict_tipos['compras']['desc'] - dict_tipos['compras']['desc_iva']
+    dict_tipos['gastos']['subtotal']=dict_tipos['gastos']['base_0'] + dict_tipos['gastos']['sub_11'] + dict_tipos['gastos']['sub_16'] - dict_tipos['gastos']['desc'] - dict_tipos['gastos']['desc_iva']
+    dict_tipos['honorarios']['subtotal']=dict_tipos['honorarios']['base_0'] + dict_tipos['honorarios']['sub_11'] + dict_tipos['honorarios']['sub_16'] - dict_tipos['honorarios']['desc'] - dict_tipos['honorarios']['desc_iva']
+    dict_tipos['renta']['subtotal']=dict_tipos['renta']['base_0'] + dict_tipos['renta']['sub_11'] + dict_tipos['renta']['sub_16'] - dict_tipos['renta']['desc'] - dict_tipos['renta']['desc_iva']
+    dict_tipos['impuestos']['subtotal']=dict_tipos['impuestos']['base_0'] + dict_tipos['impuestos']['sub_11'] + dict_tipos['impuestos']['sub_16'] - dict_tipos['impuestos']['desc'] - dict_tipos['impuestos']['desc_iva']
+    dict_tipos['mov_bancarios']['subtotal']=dict_tipos['mov_bancarios']['base_0'] + dict_tipos['mov_bancarios']['sub_11'] + dict_tipos['mov_bancarios']['sub_16'] - dict_tipos['mov_bancarios']['desc'] - dict_tipos['mov_bancarios']['desc_iva']
+    dict_tipos['act_fijo']['subtotal']=dict_tipos['act_fijo']['base_0'] + dict_tipos['act_fijo']['sub_11'] + dict_tipos['act_fijo']['sub_16'] - dict_tipos['act_fijo']['desc'] - dict_tipos['act_fijo']['desc_iva']
+    dict_tipos['otros']['subtotal']=dict_tipos['otros']['base_0'] + dict_tipos['otros']['sub_11'] + dict_tipos['otros']['sub_16'] - dict_tipos['otros']['desc'] - dict_tipos['otros']['desc_iva']
+    dict_tipos['sueldos']['subtotal']=dict_tipos['sueldos']['base_0'] + dict_tipos['sueldos']['sub_11'] + dict_tipos['sueldos']['sub_16'] - dict_tipos['sueldos']['desc'] - dict_tipos['sueldos']['desc_iva']
+    dict_tipos['comisiones']['subtotal']=dict_tipos['comisiones']['base_0'] + dict_tipos['comisiones']['sub_11'] + dict_tipos['comisiones']['sub_16'] - dict_tipos['comisiones']['desc'] - dict_tipos['comisiones']['desc_iva']
+    dict_tipos['imss']['subtotal']=dict_tipos['imss']['base_0'] + dict_tipos['imss']['sub_11'] + dict_tipos['imss']['sub_16'] - dict_tipos['imss']['desc'] - dict_tipos['imss']['desc_iva']
 
 
-    dict_tipos['compras']['total']=dict_tipos['compras']['base_0'] + dict_tipos['compras']['sub_11'] + dict_tipos['compras']['sub_16'] + dict_tipos['compras']['iva_11'] +dict_tipos['compras']['iva_16']
-    dict_tipos['gastos']['total']=dict_tipos['gastos']['base_0'] + dict_tipos['gastos']['sub_11'] + dict_tipos['gastos']['sub_16'] + + dict_tipos['gastos']['iva_11'] + + dict_tipos['gastos']['iva_16']
-    dict_tipos['honorarios']['total']=dict_tipos['honorarios']['base_0'] + dict_tipos['honorarios']['sub_11'] + dict_tipos['honorarios']['sub_16'] + dict_tipos['honorarios']['iva_11'] + dict_tipos['honorarios']['iva_16']
-    dict_tipos['renta']['total']=dict_tipos['renta']['base_0'] + dict_tipos['renta']['sub_11'] + dict_tipos['renta']['sub_16'] + dict_tipos['renta']['iva_11'] + dict_tipos['renta']['iva_16']
-    dict_tipos['impuestos']['total']=dict_tipos['impuestos']['base_0'] + dict_tipos['impuestos']['sub_11'] + dict_tipos['impuestos']['sub_16'] + dict_tipos['impuestos']['iva_11'] + dict_tipos['impuestos']['iva_16']
-    dict_tipos['mov_bancarios']['total']=dict_tipos['mov_bancarios']['base_0'] + dict_tipos['mov_bancarios']['sub_11'] + dict_tipos['mov_bancarios']['sub_16'] + dict_tipos['mov_bancarios']['iva_11'] + dict_tipos['mov_bancarios']['iva_16']
-    dict_tipos['act_fijo']['total']=dict_tipos['act_fijo']['base_0'] + dict_tipos['act_fijo']['sub_11'] + dict_tipos['act_fijo']['sub_16'] + dict_tipos['act_fijo']['iva_11'] + dict_tipos['act_fijo']['iva_16']
-    dict_tipos['otros']['total']=dict_tipos['otros']['base_0'] + dict_tipos['otros']['sub_11'] + dict_tipos['otros']['sub_16'] + dict_tipos['otros']['iva_11'] + dict_tipos['otros']['iva_16']
-    dict_tipos['sueldos']['total']=dict_tipos['sueldos']['base_0'] + dict_tipos['sueldos']['sub_11'] + dict_tipos['sueldos']['sub_16']+ dict_tipos['sueldos']['iva_11'] + dict_tipos['sueldos']['iva_16']
-    dict_tipos['comisiones']['total']=dict_tipos['comisiones']['base_0'] + dict_tipos['comisiones']['sub_11'] + dict_tipos['comisiones']['sub_16']+ dict_tipos['comisiones']['iva_11'] + dict_tipos['comisiones']['iva_16']
+    dict_tipos['compras']['total']=dict_tipos['compras']['base_0'] + dict_tipos['compras']['sub_11'] + dict_tipos['compras']['sub_16'] + dict_tipos['compras']['iva_11'] +dict_tipos['compras']['iva_16'] - dict_tipos['compras']['desc'] - dict_tipos['compras']['desc_iva']
 
+    dict_tipos['gastos']['total']=dict_tipos['gastos']['base_0'] + dict_tipos['gastos']['sub_11'] + dict_tipos['gastos']['sub_16'] + + dict_tipos['gastos']['iva_11'] + + dict_tipos['gastos']['iva_16'] - dict_tipos['gastos']['desc'] - dict_tipos['gastos']['desc_iva']
+
+    dict_tipos['honorarios']['total']=dict_tipos['honorarios']['base_0'] + dict_tipos['honorarios']['sub_11'] + dict_tipos['honorarios']['sub_16'] + dict_tipos['honorarios']['iva_11'] + dict_tipos['honorarios']['iva_16'] - dict_tipos['honorarios']['desc'] - dict_tipos['honorarios']['desc_iva']
+
+    dict_tipos['renta']['total']=dict_tipos['renta']['base_0'] + dict_tipos['renta']['sub_11'] + dict_tipos['renta']['sub_16'] + dict_tipos['renta']['iva_11'] + dict_tipos['renta']['iva_16'] - dict_tipos['renta']['desc'] - dict_tipos['renta']['desc_iva']
+
+    dict_tipos['impuestos']['total']=dict_tipos['impuestos']['base_0'] + dict_tipos['impuestos']['sub_11'] + dict_tipos['impuestos']['sub_16'] + dict_tipos['impuestos']['iva_11'] + dict_tipos['impuestos']['iva_16'] - dict_tipos['impuestos']['desc'] - dict_tipos['impuestos']['desc_iva']
+
+    dict_tipos['mov_bancarios']['total']=dict_tipos['mov_bancarios']['base_0'] + dict_tipos['mov_bancarios']['sub_11'] + dict_tipos['mov_bancarios']['sub_16'] + dict_tipos['mov_bancarios']['iva_11'] + dict_tipos['mov_bancarios']['iva_16'] - dict_tipos['mov_bancarios']['desc'] - dict_tipos['mov_bancarios']['desc_iva']
+
+    dict_tipos['act_fijo']['total']=dict_tipos['act_fijo']['base_0'] + dict_tipos['act_fijo']['sub_11'] + dict_tipos['act_fijo']['sub_16'] + dict_tipos['act_fijo']['iva_11'] + dict_tipos['act_fijo']['iva_16'] - dict_tipos['act_fijo']['desc'] - dict_tipos['act_fijo']['desc_iva']
+
+    dict_tipos['otros']['total']=dict_tipos['otros']['base_0'] + dict_tipos['otros']['sub_11'] + dict_tipos['otros']['sub_16'] + dict_tipos['otros']['iva_11'] + dict_tipos['otros']['iva_16'] - dict_tipos['otros']['desc'] - dict_tipos['otros']['desc_iva']
+
+    dict_tipos['sueldos']['total']=dict_tipos['sueldos']['base_0'] + dict_tipos['sueldos']['sub_11'] + dict_tipos['sueldos']['sub_16']+ dict_tipos['sueldos']['iva_11'] + dict_tipos['sueldos']['iva_16'] - dict_tipos['sueldos']['desc'] - dict_tipos['sueldos']['desc_iva']
+
+    dict_tipos['comisiones']['total']=dict_tipos['comisiones']['base_0'] + dict_tipos['comisiones']['sub_11'] + dict_tipos['comisiones']['sub_16']+ dict_tipos['comisiones']['iva_11'] + dict_tipos['comisiones']['iva_16'] - dict_tipos['comisiones']['desc'] - dict_tipos['comisiones']['desc_iva']
+
+    dict_tipos['imss']['total']=dict_tipos['imss']['base_0'] + dict_tipos['imss']['sub_11'] + dict_tipos['imss']['sub_16']+ dict_tipos['imss']['iva_11'] + dict_tipos['imss']['iva_16'] - dict_tipos['imss']['desc'] - dict_tipos['imss']['desc_iva']
 
 
     keys = dict_tipos.keys()
@@ -382,6 +411,8 @@ def resumen_tipos(conceptos):
     dict_tipos['t_iva11'] = 0
     dict_tipos['t_iva16'] = 0
     dict_tipos['t_sub16'] = 0
+    dict_tipos['t_desc'] = 0
+    dict_tipos['t_desc_iva'] = 0
     dict_tipos['t_subtotal'] = 0
     dict_tipos['t_total'] = 0
 
@@ -391,6 +422,8 @@ def resumen_tipos(conceptos):
         dict_tipos['t_sub16'] += dict_tipos[key]['sub_16']
         dict_tipos['t_iva11'] += dict_tipos[key]['iva_11']
         dict_tipos['t_iva16'] += dict_tipos[key]['iva_16']
+        dict_tipos['t_desc'] += dict_tipos[key]['desc']
+        dict_tipos['t_desc_iva'] += dict_tipos[key]['desc_iva']
         dict_tipos['t_subtotal'] += dict_tipos[key]['subtotal']
         dict_tipos['t_total'] += dict_tipos[key]['total']
 

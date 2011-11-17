@@ -20,14 +20,15 @@ class CrearChequeForm(forms.ModelForm):
         super(CrearChequeForm, self).__init__(*args, **kwargs)
         self.fields['cuenta'].queryset=Cuenta.get_actives.filter(contri__id=contri.id)
         self.fields['referencia'].label='No. de Cheque'
+        self.fields['fecha'].label='Fecha de Cheque'
 
 
 
 class CrearChequeRapidoForm(forms.Form):
     cuenta = forms.ModelChoiceField(Cuenta.objects.none()) #Filtrar en init!
+    fecha = forms.DateTimeField(label="Fecha de Cheque")
     referencia = forms.CharField(max_length=20, label = "No. de Cheque") #Sera que si sera que no?
     num_factura = forms.CharField(max_length=40, label="No. de Factura") #Sera que si sera que no?
-    fecha = forms.DateTimeField()
     RFC_proveedor = forms.CharField(min_length=12,max_length=14 , help_text = 'Sin guiones, espacios o separadores') #hacer txtfield que se actualize con javascript
     nombre_proveedor = forms.CharField(max_length=75) #para crear proveedor
     beneficiario = forms.CharField(max_length=75)
@@ -82,9 +83,9 @@ class AgregarConceptoForm(forms.ModelForm):
     
 class EditarChequeRapidoForm(forms.Form):
     cuenta = forms.ModelChoiceField(Cuenta.objects.none()) #Filtrar en init!
+    fecha = forms.DateField(label="Fecha de Cheque")
     referencia = forms.CharField(max_length=20, label = "No. de Cheque") #Sera que si sera que no?
     num_factura = forms.CharField(max_length=40, label="No. de Factura") #Sera que si sera que no?
-    fecha = forms.DateField()
     RFC_proveedor = forms.CharField(min_length=12,max_length=14, help_text = 'Sin guiones, espacios o separadores') #hacer txtfield que se actualize con javascript
     nombre_proveedor = forms.CharField(max_length=75) #para crear proveedor
     beneficiario = forms.CharField(max_length=75)
