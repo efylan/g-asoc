@@ -55,16 +55,16 @@ def core_reporte_proveedor(contri, month, year,minimo, request):
 
 
     gran_tot = {}
-    gran_tot['base_0'] = totales['base_0'] + tot_exc['base_0']
-    gran_tot['sub_11'] = totales['sub_11'] + tot_exc['sub_11']
-    gran_tot['sub_16'] = totales['sub_16'] + tot_exc['sub_16']
-    gran_tot['iva_11'] = totales['iva_11'] + tot_exc['iva_11']
-    gran_tot['iva_16'] = totales['iva_16'] + tot_exc['iva_16']
-    gran_tot['ret_iva'] = totales['ret_iva'] + tot_exc['ret_iva']
-    gran_tot['ret_isr'] = totales['ret_isr'] + tot_exc['ret_isr']
-    gran_tot['importe'] = totales['importe'] + tot_exc['importe']
-    gran_tot['descuento'] = totales['descuento'] + tot_exc['descuento']
-    gran_tot['descuento_iva'] = totales['descuento_iva'] + tot_exc['descuento_iva']
+    gran_tot['base_0'] = totales['base_0'] + tot_exc['base_0'] + totales_g['base_0']
+    gran_tot['sub_11'] = totales['sub_11'] + tot_exc['sub_11'] + totales_g['sub_11']
+    gran_tot['sub_16'] = totales['sub_16'] + tot_exc['sub_16'] + totales_g['sub_16']
+    gran_tot['iva_11'] = totales['iva_11'] + tot_exc['iva_11'] + totales_g['iva_11']
+    gran_tot['iva_16'] = totales['iva_16'] + tot_exc['iva_16'] + totales_g['iva_16']
+    gran_tot['ret_iva'] = totales['ret_iva'] + tot_exc['ret_iva'] + totales_g['ret_iva']
+    gran_tot['ret_isr'] = totales['ret_isr'] + tot_exc['ret_isr'] + totales_g['ret_isr']
+    gran_tot['importe'] = totales['importe'] + tot_exc['importe'] + totales_g['importe']
+    gran_tot['descuento'] = totales['descuento'] + tot_exc['descuento'] + totales_g['descuento']
+    gran_tot['descuento_iva'] = totales['descuento_iva'] + tot_exc['descuento_iva'] + totales_g['descuento_iva']
     return render_to_response('reportes/proveedores.html',{'resumen':resumen, 'empresa':empresa, 'contri':contri, 'totales':totales,'excluidos':excluidos, 'tot_exc':tot_exc, 'gran_tot':gran_tot, 'tipos':tipos,'resumen_g':resumen_g,'totales_g':totales_g}, RequestContext(request))
 
 
