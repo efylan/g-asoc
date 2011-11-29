@@ -9,7 +9,7 @@ from decimal import Decimal
 from django.db.models import Q
 
 
-EXCLUDE_LIST = [SUELDOS,IMPUESTOS,MOV_BANCARIOS]
+EXCLUDE_LIST = [SUELDOS,IMPUESTOS,MOV_BANCARIOS, IMSS]
 NO_APLICABLE1 = 'no aplica'
 NO_APLICABLE2 = 'noaplica'
 NO_APLICABLES = ['noaplica', 'no aplica']
@@ -27,12 +27,13 @@ def reporte_proveedor(request):
         else:
             month = f.cleaned_data['month']
             year = f.cleaned_data['year']
-            return core_reporte_proveedor(contri, month, year, request)
+            minimo = f.cleaned_data['minimo']
+            return core_reporte_proveedor(contri, month, year, minimo, request)
     else:
         return render_to_response('reportes/proveedores_f.html',{'form':f},RequestContext(request))
 
 
-def core_reporte_proveedor(contri, month, year, request):
+def core_reporte_proveedor(contri, month, year,minimo, request):
 
     empresa = Empresa.objects.all()[0]
     #cheques = Cheque.objects.filter(fecha__month=month, fecha__year=year, cuenta__contri=contri)
@@ -43,10 +44,13 @@ def core_reporte_proveedor(contri, month, year, request):
 
     excluidos = conceptos_raw.filter(Q(proveedor__rfc__icontains=NO_APLICABLE1) | Q(proveedor__rfc__icontains=NO_APLICABLE2) | Q(tipo__in=EXCLUDE_LIST)).order_by('proveedor')
 
-    final = resumen_proveedores(conceptos)
+    final = resumen_proveedores(conceptos, minimo)
     tot_exc = resumen_totales(excluidos)
     resumen = final['prov_list']
     totales = final['totales']
+    resumen_g = final['global_list']
+    totales_g = final['totales_g']
+
     tipos = resumen_tipos(conceptos_raw)
 
 
@@ -61,13 +65,27 @@ def core_reporte_proveedor(contri, month, year, request):
     gran_tot['importe'] = totales['importe'] + tot_exc['importe']
     gran_tot['descuento'] = totales['descuento'] + tot_exc['descuento']
     gran_tot['descuento_iva'] = totales['descuento_iva'] + tot_exc['descuento_iva']
+    return render_to_response('reportes/proveedores.html',{'resumen':resumen, 'empresa':empresa, 'contri':contri, 'totales':totales,'excluidos':excluidos, 'tot_exc':tot_exc, 'gran_tot':gran_tot, 'tipos':tipos,'resumen_g':resumen_g,'totales_g':totales_g}, RequestContext(request))
 
-    return render_to_response('reportes/proveedores.html',{'resumen':resumen, 'empresa':empresa, 'contri':contri, 'totales':totales,'excluidos':excluidos, 'tot_exc':tot_exc, 'gran_tot':gran_tot, 'tipos':tipos}, RequestContext(request))
 
-
-def resumen_proveedores(conceptos):
+def resumen_proveedores(conceptos, minimo):
     raw_list = conceptos.values_list('proveedor_id',flat=True).distinct()
     provs = Proveedor.objects.filter(id__in=raw_list).order_by('rfc')
+
+    #TODO poner limitador del 10% del total general. ;(
+    globales = []
+    totales_g = {}
+    total_todo = 0
+    totales_g['base_0'] = 0
+    totales_g['sub_11'] = 0
+    totales_g['sub_16'] = 0
+    totales_g['iva_11'] = 0
+    totales_g['iva_16'] = 0
+    totales_g['ret_iva'] = 0
+    totales_g['ret_isr'] = 0
+    totales_g['importe'] = 0
+    totales_g['descuento'] = 0 #?
+    totales_g['descuento_iva'] = 0 #?
 
     prov_list = []
     totales = {}
@@ -81,9 +99,15 @@ def resumen_proveedores(conceptos):
     totales['importe'] = 0
     totales['descuento'] = 0 #?
     totales['descuento_iva'] = 0 #?
+
+    for con in conceptos:
+        total_todo += con.importe
+    maximo = total_todo * Decimal('0.10')
+
     for prov in provs:
         prov_dict={}
         conceptos_prov = conceptos.filter(proveedor=prov.id).order_by('cheque')
+        global_todo = 0
         prov_dict['proveedor'] = prov
         prov_dict['conceptos'] = conceptos_prov
         prov_dict['base_0'] = 0
@@ -114,20 +138,48 @@ def resumen_proveedores(conceptos):
             prov_dict['ret_isr'] += con.ret_isr
             prov_dict['importe'] += con.bancos
 
-        totales['base_0'] += prov_dict['base_0']
-        totales['sub_11'] += prov_dict['sub_11']
-        totales['sub_16'] += prov_dict['sub_16']
-        totales['iva_11'] += prov_dict['iva_11']
-        totales['iva_16'] += prov_dict['iva_16']
-        totales['ret_iva'] += prov_dict['ret_iva']
-        totales['ret_isr'] += prov_dict['ret_isr']
-        totales['importe'] += prov_dict['importe']
-        totales['descuento'] += prov_dict['descuento'] #?
-        totales['descuento_iva'] += prov_dict['descuento_iva'] #?
-        prov_list.append(prov_dict)
+        global_todo += prov_dict['importe']
+        if minimo != None:
+            if prov_dict['importe'] <= minimo and global_todo < maximo:
+                totales_g['base_0'] += prov_dict['base_0']
+                totales_g['sub_11'] += prov_dict['sub_11']
+                totales_g['sub_16'] += prov_dict['sub_16']
+                totales_g['iva_11'] += prov_dict['iva_11']
+                totales_g['iva_16'] += prov_dict['iva_16']
+                totales_g['ret_iva'] += prov_dict['ret_iva']
+                totales_g['ret_isr'] += prov_dict['ret_isr']
+                totales_g['importe'] += prov_dict['importe']
+                totales_g['descuento'] += prov_dict['descuento'] #?
+                totales_g['descuento_iva'] += prov_dict['descuento_iva'] #?
+                globales.append(prov_dict)
+            else:
+                totales['base_0'] += prov_dict['base_0']
+                totales['sub_11'] += prov_dict['sub_11']
+                totales['sub_16'] += prov_dict['sub_16']
+                totales['iva_11'] += prov_dict['iva_11']
+                totales['iva_16'] += prov_dict['iva_16']
+                totales['ret_iva'] += prov_dict['ret_iva']
+                totales['ret_isr'] += prov_dict['ret_isr']
+                totales['importe'] += prov_dict['importe']
+                totales['descuento'] += prov_dict['descuento'] #?
+                totales['descuento_iva'] += prov_dict['descuento_iva'] #?
+                prov_list.append(prov_dict)
+        else:
+            totales['base_0'] += prov_dict['base_0']
+            totales['sub_11'] += prov_dict['sub_11']
+            totales['sub_16'] += prov_dict['sub_16']
+            totales['iva_11'] += prov_dict['iva_11']
+            totales['iva_16'] += prov_dict['iva_16']
+            totales['ret_iva'] += prov_dict['ret_iva']
+            totales['ret_isr'] += prov_dict['ret_isr']
+            totales['importe'] += prov_dict['importe']
+            totales['descuento'] += prov_dict['descuento'] #?
+            totales['descuento_iva'] += prov_dict['descuento_iva'] #?
+            prov_list.append(prov_dict)
+
     totales['importe_11'] = totales['sub_11'] + totales['iva_11']
     totales['importe_16'] = totales['sub_16'] + totales['iva_16']
-    final_dict = {'prov_list':prov_list, 'totales':totales}
+    final_dict = {'prov_list':prov_list, 'totales':totales, 'global_list':globales, 'totales_g':totales_g}
     return final_dict
 
 
@@ -441,6 +493,7 @@ def generar_txt(request):
 
             month = f.cleaned_data['month']
             year = f.cleaned_data['year']
+            minimo = f.cleaned_data['minimo']
             conceptos_raw = Concepto.objects.filter(cheque__fecha__month=month, cheque__fecha__year=year,  cheque__cuenta__contri=contri)
             #conceptos = conceptos_raw.exclude(tipo__in=EXCLUDE_LIST)
             #excluidos = conceptos_raw.filter(tipo__in=EXCLUDE_LIST).order_by('proveedor')
@@ -455,15 +508,17 @@ def generar_txt(request):
             response = HttpResponse(mimetype='text/csv')
             response['Content-Disposition'] = 'attachment; filename=diot_%s_%s_%s.txt' % (contri.rfc, month, year)
             writer = csv.writer(response, delimiter = '|', lineterminator="|\n")
-            resumen_txt = totales_txt(conceptos)
+            resumen_txt = totales_txt(conceptos, minimo)
             for fila in resumen_txt:
                 writer.writerow(fila)
             return response
     else:
         return render_to_response('reportes/gentxt_f.html',{'form':f},RequestContext(request))
 
-def totales_txt(conceptos):
-    res = resumen_proveedores(conceptos)['prov_list']
+def totales_txt(conceptos, minimo):
+    todos=resumen_proveedores(conceptos, minimo)
+    res = todos['prov_list']
+    globales = todos['global_list']
     lista_diot = []
     for prov in res:
         if prov['proveedor'].tipo == EXTRANJERO:
@@ -512,6 +567,140 @@ def totales_txt(conceptos):
         fila = [prov['proveedor'].get_tipo(), prov['proveedor'].get_operacion(), prov['proveedor'].rfc, '' ,'' ,'' ,'' , valor_16, '', '', valor_11, '', '', impo_16, '', impo_11, '', impo_exento, '', exento, retencion, iva_desc]
         lista_diot.append(fila)
 
+    lista_globales = []
+    for prov in globales:
+        if prov['proveedor'].tipo == EXTRANJERO:
+            valor_11 = ''
+            valor_16 = ''
+            exento = ''
+            impo_11 = Decimal(str(prov['sub_11'])).quantize(Decimal(0))
+            impo_16 = Decimal(str(prov['sub_16'])).quantize(Decimal(0))
+            impo_exento = Decimal(str(prov['base_0'])).quantize(Decimal(0))
+            if impo_11 == 0:
+                impo_11 = ''
+            if impo_16 == 0:
+                impo_16 = ''
+            if impo_exento == 0:
+                impo_exento = ''
+            
+        else:
+            valor_11 = Decimal(str(prov['sub_11'])).quantize(Decimal(0))
+            valor_16 = Decimal(str(prov['sub_16'])).quantize(Decimal(0))
+            exento = Decimal(str(prov['base_0'])).quantize(Decimal(0))
+            impo_11 = ''
+            impo_16 = ''
+            impo_exento = ''
+
+            if valor_11 == 0:
+                valor_11 = ''
+            if valor_16 == 0:
+                valor_16 = ''
+            if exento == 0:
+                exento = ''
+
+
+
+        retencion = prov['ret_iva'] + prov['ret_isr']
+        if retencion == 0:
+            retencion = ''
+        else:
+            retencion = Decimal(str(retencion)).quantize(Decimal(0))
+
+        iva_desc = prov['descuento_iva']
+        if iva_desc == 0:
+            iva_desc = ''
+        else:
+            iva_desc = Decimal(str(iva_desc)).quantize(Decimal(0))
+
+        fila = [prov['proveedor'].get_tipo(), prov['proveedor'].get_operacion(), prov['proveedor'].rfc, '' ,'' ,'' ,'' , valor_16, '', '', valor_11, '', '', impo_16, '', impo_11, '', impo_exento, '', exento, retencion, iva_desc]
+        lista_globales.append(fila)
+
+
+    tots_g = [15, 85, '', 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0]
+    for elem in lista_globales:
+        if elem[3] == '':
+            elem[3] = 0
+        tots_g[3] += elem[3]
+
+        if elem[4] == '':
+            elem[4] = 0
+        tots_g[4] += elem[4]
+
+        if elem[5] == '':
+            elem[5] = 0
+        tots_g[5] += elem[5]
+
+        if elem[6] == '':
+            elem[6] = 0
+        tots_g[6] += elem[6]
+
+        if elem[7] == '':
+            elem[7] = 0
+        tots_g[7] += elem[7]
+
+        if elem[8] == '':
+            elem[8] = 0
+        tots_g[8] += elem[8]
+
+        if elem[9] == '':
+            elem[9] = 0
+        tots_g[9] += elem[9]
+
+        if elem[10] == '':
+            elem[10] = 0
+        tots_g[10] += elem[10]
+
+        if elem[11] == '':
+            elem[11] = 0
+        tots_g[11] += elem[11]
+
+        if elem[12] == '':
+            elem[12] = 0
+        tots_g[12] += elem[12]
+
+        if elem[13] == '':
+            elem[13] = 0
+        tots_g[13] += elem[13]
+
+        if elem[14] == '':
+            elem[14] = 0
+        tots_g[14] += elem[14]
+
+        if elem[15] == '':
+            elem[15] = 0
+        tots_g[15] += elem[15]
+
+        if elem[16] == '':
+            elem[16] = 0
+        tots_g[16] += elem[16]
+
+        if elem[17] == '':
+            elem[17] = 0
+        tots_g[17] += elem[17]
+
+        if elem[18] == '':
+            elem[18] = 0
+        tots_g[18] += elem[18]
+
+        if elem[19] == '':
+            elem[19] = 0
+        tots_g[19] += elem[19]
+
+        if elem[20] == '':
+            elem[20] = 0
+        tots_g[20] += elem[20]
+
+        if elem[21] == '':
+            elem[21] = 0
+        tots_g[21] += elem[21]
+
+
+    for i, v in enumerate(tots_g):
+        if v == 0:
+            tots_g[i] = ''
+
+    if len(lista_globales) > 0:
+        lista_diot.append(tots_g)
     return lista_diot
 
 

@@ -62,6 +62,12 @@ body
         background-color:silver;
     }
 
+.global_info
+    {
+        background-color:rgb(230,230,240);
+    }
+
+
 .object_list
 {
     margin: auto;
