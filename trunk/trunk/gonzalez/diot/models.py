@@ -86,7 +86,7 @@ class Proveedor(models.Model):
 
 class ProveedorAdmin(admin.ModelAdmin):
     list_display=('rfc','nombre','get_tipo_display','get_operacion_display')
-
+    ordering=['nombre']
 
 
 try:
