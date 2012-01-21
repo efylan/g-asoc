@@ -40,9 +40,9 @@ def core_reporte_proveedor(contri, month, year,minimo, request):
     conceptos_raw = Concepto.objects.filter(cheque__fecha__month=month, cheque__fecha__year=year,  cheque__cuenta__contri=contri)
 
 
-    conceptos = conceptos_raw.exclude(Q(proveedor__rfc__icontains=NO_APLICABLE1) | Q(proveedor__rfc__icontains=NO_APLICABLE2) | Q(tipo__in=EXCLUDE_LIST)).order_by('proveedor')
+    conceptos = conceptos_raw.exclude(Q(proveedor__rfc__icontains=NO_APLICABLE1) | Q(proveedor__rfc__icontains=NO_APLICABLE2) | Q(tipo__in=EXCLUDE_LIST)).order_by('proveedor__nombre')
 
-    excluidos = conceptos_raw.filter(Q(proveedor__rfc__icontains=NO_APLICABLE1) | Q(proveedor__rfc__icontains=NO_APLICABLE2) | Q(tipo__in=EXCLUDE_LIST)).order_by('proveedor')
+    excluidos = conceptos_raw.filter(Q(proveedor__rfc__icontains=NO_APLICABLE1) | Q(proveedor__rfc__icontains=NO_APLICABLE2) | Q(tipo__in=EXCLUDE_LIST)).order_by('proveedor__nombre')
 
     final = resumen_proveedores(conceptos, minimo)
     tot_exc = resumen_totales(excluidos)
@@ -70,7 +70,7 @@ def core_reporte_proveedor(contri, month, year,minimo, request):
 
 def resumen_proveedores(conceptos, minimo):
     raw_list = conceptos.values_list('proveedor_id',flat=True).distinct()
-    provs = Proveedor.objects.filter(id__in=raw_list).order_by('rfc')
+    provs = Proveedor.objects.filter(id__in=raw_list).order_by('nombre')
 
     #TODO poner limitador del 10% del total general. ;(
     globales = []
@@ -498,9 +498,9 @@ def generar_txt(request):
             #conceptos = conceptos_raw.exclude(tipo__in=EXCLUDE_LIST)
             #excluidos = conceptos_raw.filter(tipo__in=EXCLUDE_LIST).order_by('proveedor')
 
-            conceptos = conceptos_raw.exclude(Q(proveedor__rfc__icontains=NO_APLICABLE1) | Q(proveedor__rfc__icontains=NO_APLICABLE2) | Q(tipo__in=EXCLUDE_LIST)).order_by('proveedor')
+            conceptos = conceptos_raw.exclude(Q(proveedor__rfc__icontains=NO_APLICABLE1) | Q(proveedor__rfc__icontains=NO_APLICABLE2) | Q(tipo__in=EXCLUDE_LIST)).order_by('proveedor__nombre')
 
-            excluidos = conceptos_raw.filter(Q(proveedor__rfc__icontains=NO_APLICABLE1) | Q(proveedor__rfc__icontains=NO_APLICABLE2) | Q(tipo__in=EXCLUDE_LIST)).order_by('proveedor')
+            excluidos = conceptos_raw.filter(Q(proveedor__rfc__icontains=NO_APLICABLE1) | Q(proveedor__rfc__icontains=NO_APLICABLE2) | Q(tipo__in=EXCLUDE_LIST)).order_by('proveedor__nombre')
 
 
 

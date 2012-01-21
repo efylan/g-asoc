@@ -216,7 +216,7 @@ class Concepto(models.Model):
     activo = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return "%s - %s" % (self.proveedor.nombre, self.get_tipo_display())
+        return "%s - %s - %s - Contri: %s" % (self.proveedor.nombre, self.get_tipo_display(), self.cheque.fecha, self.cheque.cuenta.contri.nombre)
 
     def get_impuesto_calculado(self):
         if self.impuesto == None:
