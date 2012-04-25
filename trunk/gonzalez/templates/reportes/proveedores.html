@@ -32,7 +32,7 @@
     </tr>
     {%for concepto in res.conceptos%}
     <tr class="conceptos">
-        <td class="small">{{concepto.cheque.c0.00uenta}}</td>
+        <td class="small">{{concepto.cheque.cuenta}}</td>
         <td>{{concepto.cheque.referencia}} {% if concepto.referencia%} - {{concepto.referencia}}{%endif%}</td>
         <td>{{concepto.get_tipo_display}}</td>
         {%if gran_tot.base_0 != 0%}<td class="number">{{concepto.get_base_0|intcomma}}</td>{%endif%}

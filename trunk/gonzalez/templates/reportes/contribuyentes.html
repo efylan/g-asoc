@@ -1,0 +1,116 @@
+{%extends 'reportes/reportes_base.html'%}
+{%load humanize%}
+{%block extrahead%}
+    <title>Reporte Ordenado</title>
+{%endblock%}
+
+{%block titlecontent%}
+<h2>Reporte Ordenado</h2>
+{%endblock%}
+
+{%block maincontent%}
+<table class="report_list">
+    <tr>
+        <th>Cuenta</th>
+        <th>Refer.</th>
+        <th>Concepto</th>
+        <th>RFC</th>
+        <th>Proveedor</th>
+        {%if gran_tot.base_0 != 0%}<th>Base 0%</th>{%endif%}
+        {%if gran_tot.sub_11 != 0%}<th>Sub. 11%</th>{%endif%}
+        {%if gran_tot.sub_16 != 0%}<th>Sub. 16%</th>{%endif%}
+        {%if gran_tot.descuento != 0%}<th>Desc.</th>{%endif%}
+        {%if gran_tot.descuento_iva != 0%}<th>IVA Desc.</th>{%endif%}
+        {%if gran_tot.iva_11 != 0%}<th>IVA 11%</th>{%endif%}
+        {%if gran_tot.iva_16 != 0%}<th>IVA 16%</th>{%endif%}
+        {%if gran_tot.ret_iva != 0%}<th>Ret. IVA</th>{%endif%}
+        {%if gran_tot.ret_isr != 0%}<th>Ret. ISR</th>{%endif%}
+        <th>Importe</th>
+    </tr>
+
+    {%for concepto in conceptos%}
+    <tr class="conceptos">
+        <td class="small">{{concepto.cheque.cuenta}}</td>
+        <td>{{concepto.cheque.referencia}} {% if concepto.referencia%} - {{concepto.referencia}}{%endif%}</td>
+        <td>{{concepto.get_tipo_display}}</td>
+        <td>{{concepto.proveedor.rfc}}</td>
+        <td>{{concepto.proveedor.nombre}}</td>
+        {%if gran_tot.base_0 != 0%}<td class="number">{{concepto.get_base_0|intcomma}}</td>{%endif%}
+        {%if gran_tot.sub_11 != 0%}<td class="number">{{concepto.get_sub_11|intcomma}}</td>{%endif%}
+        {%if gran_tot.sub_16 != 0%}<td class="number">{{concepto.get_sub_16|intcomma}}</td>{%endif%}
+        {%if gran_tot.descuento != 0%}<td class="number">{{concepto.get_desc|intcomma}}</td>{%endif%}
+        {%if gran_tot.descuento_iva != 0%}<td class="number">{{concepto.get_iva_desc|intcomma}}</td>{%endif%}
+        {%if gran_tot.iva_11 != 0%}<td class="number">{{concepto.get_iva_11|intcomma}}</td>{%endif%}
+        {%if gran_tot.iva_16 != 0%}<td class="number">{{concepto.get_iva_16|intcomma}}</td>{%endif%}
+        {%if gran_tot.ret_iva != 0%}<td class="number">{%if concepto.ret_iva != 0%}{{concepto.ret_iva|intcomma}}{%endif%}</td>{%endif%}
+        {%if gran_tot.ret_isr != 0%}<td class="number">{%if concepto.ret_isr != 0%}{{concepto.ret_isr|intcomma}}{%endif%}</td>{%endif%}
+        <td class="number">{{concepto.bancos|intcomma}}</td>
+    </tr>
+    {%endfor%}
+    {%if concepto.count > 1%}
+    <tr class="parcial">
+        <td colspan="3">TOTALES</td>
+        {%if gran_tot.base_0 != 0%}<td class="number">{%if res.base_0 != 0%}{{res.base_0|intcomma}}{%endif%}</td>{%endif%}
+        {%if gran_tot.sub_11 != 0%}<td class="number">{%if res.sub_11 != 0%}{{res.sub_11|intcomma}}{%endif%}</td>{%endif%}
+        {%if gran_tot.sub_16 != 0%}<td class="number">{%if res.sub_16 != 0%}{{res.sub_16|intcomma}}{%endif%}</td>{%endif%}
+        {%if gran_tot.descuento != 0%}<td class="number">{%if res.descuento != 0%}{{res.descuento|intcomma}}{%endif%}</td>{%endif%}
+        {%if gran_tot.descuento_iva != 0%}<td class="number">{%if res.descuento_iva != 0%}{{res.descuento_iva|intcomma}}{%endif%}</td>{%endif%}
+        {%if gran_tot.iva_11 != 0%}<td class="number">{%if res.iva_11 != 0%}{{res.iva_11|intcomma}}{%endif%}</td>{%endif%}
+        {%if gran_tot.iva_16 != 0%}<td class="number">{%if res.iva_16 != 0%}{{res.iva_16|intcomma}}{%endif%}</td>{%endif%}
+        {%if gran_tot.ret_iva != 0%}<td class="number">{%if res.ret_iva != 0%}{{res.ret_iva|intcomma}}{%endif%}</td>{%endif%}
+        {%if gran_tot.ret_isr != 0%}<td class="number">{%if res.ret_isr != 0%}{{res.ret_isr|intcomma}}{%endif%}</td>{%endif%}
+        <td class="number">{{res.importe|intcomma}}</td>
+    </tr>
+    {%endif%}
+
+<tr>
+    <td></td>
+</tr>
+<tr>
+    <td></td>
+</tr>
+    
+
+<tr>
+    <td></td>
+</tr>
+
+    <tr class="parcial">
+        <td colspan="5">GRAN TOTAL</td>
+        {%if gran_tot.base_0 != 0%}
+        <td class="number">{%if gran_tot.base_0 != 0%}{{gran_tot.base_0|intcomma}}{%endif%}</td>
+        {%endif%}
+        {%if gran_tot.sub_11 != 0%}
+        <td class="number">{%if gran_tot.sub_11 != 0%}{{gran_tot.sub_11|intcomma}}{%endif%}</td>
+        {%endif%}
+        {%if gran_tot.sub_16 != 0%}
+        <td class="number">{%if gran_tot.sub_16 != 0%}{{gran_tot.sub_16|intcomma}}{%endif%}</td>
+        {%endif%}
+        {%if gran_tot.descuento != 0%}
+        <td class="number">{%if gran_tot.descuento != 0%}{{gran_tot.descuento|intcomma}}{%endif%}</td>
+        {%endif%}
+        {%if gran_tot.descuento_iva != 0%}
+        <td class="number">{%if gran_tot.descuento_iva != 0%}{{gran_tot.descuento_iva|intcomma}}{%endif%}</td>
+        {%endif%}
+        {%if gran_tot.iva_11 != 0%}
+        <td class="number">{%if gran_tot.iva_11 != 0%}{{gran_tot.iva_11|intcomma}}{%endif%}</td>
+        {%endif%}
+        {%if gran_tot.iva_16 != 0%}
+        <td class="number">{%if gran_tot.iva_16 != 0%}{{gran_tot.iva_16|intcomma}}{%endif%}</td>
+        {%endif%}
+        {%if gran_tot.ret_iva != 0%}
+        <td class="number">{%if gran_tot.ret_iva != 0%}{{gran_tot.ret_iva|intcomma}}{%endif%}</td>
+        {%endif%}
+        {%if gran_tot.ret_isr != 0%}
+        <td class="number">{%if gran_tot.ret_isr != 0%}{{gran_tot.ret_isr|intcomma}}{%endif%}</td>
+        {%endif%}
+        <td class="number">{{gran_tot.importe|intcomma}}</td>
+    </tr>
+
+
+</table>
+
+<br>
+<br>
+
+{%endblock%}

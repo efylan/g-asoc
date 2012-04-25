@@ -1,0 +1,26 @@
+{%extends 'base.html'%}
+
+{%block extrahead%}
+<title>Reporte ordenado por Banco</title>
+{%endblock%}
+
+
+{%block sidecontent%}
+    {%include 'diot/menudiot.html'%}
+{%endblock%}
+
+{%block maincontent%}
+    <h1>Reporte ordenado por Banco</h1>
+
+    <form method="POST">
+        {%csrf_token%}
+        <table class="form_cc">
+            {{form}}
+            <tr>
+                <td> <input type="submit" value="Generar Reporte"> </td>
+            </tr>
+        </table>
+
+    </form>
+{%endblock%}
+
