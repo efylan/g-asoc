@@ -3,7 +3,7 @@ from diot.models import Cuenta, Cheque, Proveedor, Concepto, COMPRAS, GASTOS, HO
 from empresa.models import Empresa
 from django.template import RequestContext
 from django.http import Http404
-from reportes.forms import MesForm
+from reportes.forms import MesForm, ContriForm, FechaForm
 import csv
 from decimal import Decimal
 from django.db.models import Q
@@ -722,4 +722,60 @@ def totales_txt(conceptos, minimo):
 #OK-Valor de los actos o actividades pagados por los que no se pagara el IVA (Exentos)	
 #OK-IVA Retenido por el contribuyente	
 #OK-IVA correspondiente a las devoluciones, descuentos y bonificaciones sobre compras
+
+
+def reporte_contri(request):
+    if request.POST:
+        f = ContriForm(request.POST)
+        if f.errors:
+            return render_to_response('reportes/contribuyentes_f.html',{'form':f}, RequestContext(request))
+        else:
+            contri = request.session['contri']
+            month = f.cleaned_data['month']
+            year = f.cleaned_data['year']
+            orden = f.cleaned_data['orden']
+            conceptos = Concepto.objects.filter(cheque__fecha__month=month, cheque__fecha__year=year,  cheque__cuenta__contri=contri)
+            gran_tot = resumen_totales(conceptos)
+            if orden == 0:
+                conceptos = conceptos.order_by('fecha_creacion')
+            else:
+                conceptos = conceptos.order_by('cheque__cuenta')
+
+            
+           
+            return render_to_response('reportes/contribuyentes.html', {'contri':contri, 'month':month,'year':year,'conceptos':conceptos,  'gran_tot':gran_tot}, RequestContext(request))
+
+    else:
+        f = ContriForm()
+        return render_to_response('reportes/contribuyentes_f.html',{'form':f}, RequestContext(request))
+
+def reporte_bancos(request):
+    if request.POST:
+        f = FechaForm(request.POST)
+        if f.errors:
+            return render_to_response('reportes/bancos_f.html',{'form':f}, RequestContext(request))
+        else:
+            contri = request.session['contri']
+            cuentas = Cuenta.objects.filter(contri=contri)
+
+            month = f.cleaned_data['month']
+            year = f.cleaned_data['year']
+            conceptos = Concepto.objects.filter(cheque__fecha__month=month, cheque__fecha__year=year,  cheque__cuenta__contri=contri)
+            gran_tot = resumen_totales(conceptos)
+            cuentalist=[]
+            for cuenta in cuentas:
+                cuentadict={}
+                conceptos_cuenta = conceptos.filter(cheque__cuenta=cuenta).order_by('fecha_creacion')
+                cuentadict['cuenta'] = cuenta
+                cuentadict['conceptos'] = conceptos_cuenta 
+                cuentadict['totales'] = resumen_totales(conceptos_cuenta)
+                cuentalist.append(cuentadict)
+            
+            return render_to_response('reportes/bancos.html', {'contri':contri, 'month':month,'year':year,'conceptos':conceptos,  'gran_tot':gran_tot, 'resumen':cuentalist}, RequestContext(request))
+
+    else:
+        f = FechaForm()
+        return render_to_response('reportes/bancos_f.html',{'form':f}, RequestContext(request))
+
+
 

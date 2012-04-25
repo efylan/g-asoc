@@ -11,8 +11,10 @@
 {%block maincontent%}
 
     <ul class = "reportmenu">
-        <li><a href="{%url reportes.views.reporte_proveedor%}">Reporte ordenado por Provedor</a></li>
-        <li><a href="{%url reportes.views.generar_txt%}">Generar Archivo TXT</a></li>
+        {%if request.user.is_staff%}<li><a href="{%url reportes.views.reporte_proveedor%}">Reporte ordenado por Provedor</a></li>{%endif%}
+        <li><a href="{%url reportes.views.reporte_contri%}">Reporte de listado</a></li>
+        <li><a href="{%url reportes.views.reporte_bancos%}">Reporte ordenado por Banco</a></li>
+        {%if request.user.is_staff%}<li><a href="{%url reportes.views.generar_txt%}">Generar Archivo TXT</a></li>{%endif%}
     </ul>
 
 {%endblock%}
