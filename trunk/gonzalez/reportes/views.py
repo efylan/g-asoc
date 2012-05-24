@@ -734,16 +734,19 @@ def reporte_contri(request):
             month = f.cleaned_data['month']
             year = f.cleaned_data['year']
             orden = f.cleaned_data['orden']
-            conceptos = Concepto.objects.filter(cheque__fecha__month=month, cheque__fecha__year=year,  cheque__cuenta__contri=contri)
+            conceptos = Concepto.objects.filter(cheque__fecha__month=month, cheque__fecha__year=year,  cheque__cuenta__contri=contri, cheque__activo=1)
+            cheques = Cheque.get_actives.filter(cuenta__contri__id=contri.id, fecha__year=year,fecha__month=month).order_by('id')
             gran_tot = resumen_totales(conceptos)
-            if orden == 0:
+            print orden, type(orden)
+            if orden == '0':
                 conceptos = conceptos.order_by('id').order_by('cheque__id')
             else:
                 conceptos = conceptos.order_by('cheque__cuenta')
+                cheques = cheques.order_by('cuenta', 'id')
 
             
            
-            return render_to_response('reportes/contribuyentes.html', {'contri':contri, 'month':month,'year':year,'conceptos':conceptos,  'gran_tot':gran_tot}, RequestContext(request))
+            return render_to_response('reportes/contribuyentes.html', {'contri':contri, 'month':month,'year':year,'conceptos':conceptos,  'gran_tot':gran_tot, 'cheques':cheques}, RequestContext(request))
 
     else:
         f = ContriForm()

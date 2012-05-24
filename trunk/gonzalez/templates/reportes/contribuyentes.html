@@ -28,8 +28,8 @@
         {%if gran_tot.ret_isr != 0%}<th>Ret. ISR</th>{%endif%}
         <th>Importe</th>
     </tr>
-
-    {%for concepto in conceptos%}
+    {%for cheque in cheques %}
+    {%for concepto in cheque.concepto_set.all%}
     <tr class="conceptos">
         <td class="small">{{concepto.cheque.cuenta}}</td>
         <td>{{concepto.cheque.referencia}} </td>
@@ -48,6 +48,7 @@
         {%if gran_tot.ret_isr != 0%}<td class="number">{%if concepto.ret_isr != 0%}{{concepto.ret_isr|intcomma}}{%endif%}</td>{%endif%}
         <td class="number">{{concepto.bancos|intcomma}}</td>
     </tr>
+    {%endfor%}
     {%endfor%}
     {%if concepto.count > 1%}
     <tr class="parcial">
