@@ -737,7 +737,7 @@ def reporte_contri(request):
             conceptos = Concepto.objects.filter(cheque__fecha__month=month, cheque__fecha__year=year,  cheque__cuenta__contri=contri)
             gran_tot = resumen_totales(conceptos)
             if orden == 0:
-                conceptos = conceptos.order_by('fecha_creacion')
+                conceptos = conceptos.order_by('id').order_by('cheque__id')
             else:
                 conceptos = conceptos.order_by('cheque__cuenta')
 
