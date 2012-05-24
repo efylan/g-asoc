@@ -12,7 +12,8 @@
 <table class="report_list">
     <tr>
         <th>Cuenta</th>
-        <th>Refer.</th>
+        <th>Chq.</th>
+	<th>Fact.</th>
         <th>Concepto</th>
         <th>RFC</th>
         <th>Proveedor</th>
@@ -31,7 +32,8 @@
     {%for concepto in conceptos%}
     <tr class="conceptos">
         <td class="small">{{concepto.cheque.cuenta}}</td>
-        <td>{{concepto.cheque.referencia}} {% if concepto.referencia%} - {{concepto.referencia}}{%endif%}</td>
+        <td>{{concepto.cheque.referencia}} </td>
+	<td>{{concepto.referencia}}</td>
         <td>{{concepto.get_tipo_display}}</td>
         <td>{{concepto.proveedor.rfc}}</td>
         <td>{{concepto.proveedor.nombre}}</td>
@@ -49,7 +51,7 @@
     {%endfor%}
     {%if concepto.count > 1%}
     <tr class="parcial">
-        <td colspan="3">TOTALES</td>
+        <td colspan="6">TOTALES</td>
         {%if gran_tot.base_0 != 0%}<td class="number">{%if res.base_0 != 0%}{{res.base_0|intcomma}}{%endif%}</td>{%endif%}
         {%if gran_tot.sub_11 != 0%}<td class="number">{%if res.sub_11 != 0%}{{res.sub_11|intcomma}}{%endif%}</td>{%endif%}
         {%if gran_tot.sub_16 != 0%}<td class="number">{%if res.sub_16 != 0%}{{res.sub_16|intcomma}}{%endif%}</td>{%endif%}
@@ -76,7 +78,7 @@
 </tr>
 
     <tr class="parcial">
-        <td colspan="5">GRAN TOTAL</td>
+        <td colspan="6">GRAN TOTAL</td>
         {%if gran_tot.base_0 != 0%}
         <td class="number">{%if gran_tot.base_0 != 0%}{{gran_tot.base_0|intcomma}}{%endif%}</td>
         {%endif%}

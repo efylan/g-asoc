@@ -12,7 +12,8 @@
 <table class="report_list">
     <tr>
 
-        <th>Refer.</th>
+        <th>Chq.</th>
+	<th>Fact.</th>
         <th>RFC</th>
         <th>Nombre</th>
         <th>Concepto</th>
@@ -33,10 +34,11 @@
     </tr>
     {%for concepto in res.conceptos%}
     <tr class="conceptos">
-        <td>{{concepto.cheque.referencia}} {% if concepto.referencia%} - {{concepto.referencia}}{%endif%}</td>
+        <td class="small">{{concepto.cheque.referencia}} </td>
+	<td>{{concepto.referencia}}</td>
         <td class="small">{{concepto.proveedor.rfc}}</td>
         <td class="small">{{concepto.proveedor.nombre}}</td>
-        <td>{{concepto.get_tipo_display}}</td>
+        <td class="small">{{concepto.get_tipo_display}}</td>
         {%if gran_tot.base_0 != 0%}<td class="number">{{concepto.get_base_0|intcomma}}</td>{%endif%}
         {%if gran_tot.sub_11 != 0%}<td class="number">{{concepto.get_sub_11|intcomma}}</td>{%endif%}
         {%if gran_tot.sub_16 != 0%}<td class="number">{{concepto.get_sub_16|intcomma}}</td>{%endif%}
@@ -50,7 +52,7 @@
     </tr>
     {%endfor%}
     <tr class="parcial">
-        <td colspan="4">TOTALES</td>
+        <td colspan="5">TOTALES</td>
         {%if gran_tot.base_0 != 0%}<td class="number">{%if res.totales.base_0 != 0%}{{res.totales.base_0|intcomma}}{%endif%}</td>{%endif%}
         {%if gran_tot.sub_11 != 0%}<td class="number">{%if res.totales.sub_11 != 0%}{{res.totales.sub_11|intcomma}}{%endif%}</td>{%endif%}
         {%if gran_tot.sub_16 != 0%}<td class="number">{%if res.totales.sub_16 != 0%}{{res.totales.sub_16|intcomma}}{%endif%}</td>{%endif%}
@@ -89,7 +91,7 @@
     <td></td>
 </tr>
     <tr class="parcial">
-        <td colspan="4">GRAN TOTAL</td>
+        <td colspan="5">GRAN TOTAL</td>
         {%if gran_tot.base_0 != 0%}
         <td class="number">{%if gran_tot.base_0 != 0%}{{gran_tot.base_0|intcomma}}{%endif%}</td>
         {%endif%}

@@ -28,7 +28,7 @@
     {%for res in resumen%}
     <tr>
         <td colspan="8" class="prov_info">{{res.proveedor.nombre}}</td>
-        <td colspan="5" class="prov_info">{{res.proveedor.rfc}}</td>
+        <td colspan="1" class="prov_info">{{res.proveedor.rfc}}</td>
     </tr>
     {%for concepto in res.conceptos%}
     <tr class="conceptos">
@@ -95,7 +95,7 @@
     {%for glob in resumen_g%}
     <tr>
         <td colspan="8" class="global_info">{{glob.proveedor.nombre}}</td>        
-        <td colspan="5" class="global_info">{{glob.proveedor.rfc}}</td>
+        <td colspan="1" class="global_info">{{glob.proveedor.rfc}}</td>
     </tr>
     {%for concepto in glob.conceptos%}
     <tr class="conceptos">
