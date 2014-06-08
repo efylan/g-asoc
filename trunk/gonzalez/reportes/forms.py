@@ -3,7 +3,10 @@ from django import forms
 from datetime import date
 
 MONTH = ((1,'Enero'),(2,'Febrero'),(3,'Marzo'),(4,'Abril'),(5,'Mayo'),(6,'Junio'),(7,'Julio'), (8,'Agosto'), (9,'Septiembre'), (10,'Octubre'),(11,'Noviembre'),(12,'Diciembre')) 
-YEAR = ((2011,'2011'), (2012,'2012'))
+YEAR = []
+for year in range(2011,2021):
+    YEAR.append((year,str(year)))
+    
 ORDER_CHOICES = ((0,'Orden de captura'),(1,'Por cuenta bancaria'))
 
 class MesForm(forms.Form):
