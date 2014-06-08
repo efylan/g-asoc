@@ -55,6 +55,7 @@ function set_date_input(textinput){
 $( document ).ready( function() {
 
     set_date_input($('#id_fecha'))
+    set_date_input($('.input_fecha'))
 
     $('#id_exento').change(function() {
         calcular_iva();

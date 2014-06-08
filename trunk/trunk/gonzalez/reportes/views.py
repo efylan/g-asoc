@@ -25,19 +25,19 @@ def reporte_proveedor(request):
         if f.errors:
             return render_to_response('reportes/proveedores_f.html',{'form':f},RequestContext(request))
         else:
-            month = f.cleaned_data['month']
-            year = f.cleaned_data['year']
+            inicio = f.cleaned_data['fecha_inicio']
+            fin = f.cleaned_data['fecha_fin']
             minimo = f.cleaned_data['minimo']
-            return core_reporte_proveedor(contri, month, year, minimo, request)
+            return core_reporte_proveedor(contri, inicio, fin, minimo, request)
     else:
         return render_to_response('reportes/proveedores_f.html',{'form':f},RequestContext(request))
 
 
-def core_reporte_proveedor(contri, month, year,minimo, request):
+def core_reporte_proveedor(contri, inicio, fin,minimo, request):
 
     empresa = Empresa.objects.all()[0]
     #cheques = Cheque.objects.filter(fecha__month=month, fecha__year=year, cuenta__contri=contri)
-    conceptos_raw = Concepto.objects.filter(cheque__fecha__month=month, cheque__fecha__year=year,  cheque__cuenta__contri=contri)
+    conceptos_raw = Concepto.objects.filter(cheque__fecha__gte=inicio, cheque__fecha__lte=fin, cheque__cuenta__contri=contri)
 
 
     conceptos = conceptos_raw.exclude(Q(proveedor__rfc__icontains=NO_APLICABLE1) | Q(proveedor__rfc__icontains=NO_APLICABLE2) | Q(tipo__in=EXCLUDE_LIST)).order_by('proveedor__nombre')
@@ -491,10 +491,10 @@ def generar_txt(request):
             return render_to_response('reportes/gentxt_f.html',{'form':f},RequestContext(request))
         else:
 
-            month = f.cleaned_data['month']
-            year = f.cleaned_data['year']
+            inicio = f.cleaned_data['fecha_inicio']
+            fin = f.cleaned_data['fecha_fin']
             minimo = f.cleaned_data['minimo']
-            conceptos_raw = Concepto.objects.filter(cheque__fecha__month=month, cheque__fecha__year=year,  cheque__cuenta__contri=contri)
+            conceptos_raw = Concepto.objects.filter(cheque__fecha__gte=inicio, cheque__fecha__lte=fin, cheque__cuenta__contri=contri)
             #conceptos = conceptos_raw.exclude(tipo__in=EXCLUDE_LIST)
             #excluidos = conceptos_raw.filter(tipo__in=EXCLUDE_LIST).order_by('proveedor')
 
@@ -506,7 +506,7 @@ def generar_txt(request):
 
             # Create the HttpResponse object with the appropriate CSV header.
             response = HttpResponse(mimetype='text/csv')
-            response['Content-Disposition'] = 'attachment; filename=diot_%s_%s_%s.txt' % (contri.rfc, month, year)
+            response['Content-Disposition'] = 'attachment; filename=diot_%s_%s_%s-%s_%s.txt' % (contri.rfc, inicio.month, inicio.year, fin.month, fin.year)
             writer = csv.writer(response, delimiter = '|', lineterminator="|\n")
             resumen_txt = totales_txt(conceptos, minimo)
             for fila in resumen_txt:
@@ -731,11 +731,11 @@ def reporte_contri(request):
             return render_to_response('reportes/contribuyentes_f.html',{'form':f}, RequestContext(request))
         else:
             contri = request.session['contri']
-            month = f.cleaned_data['month']
-            year = f.cleaned_data['year']
+            inicio = f.cleaned_data['fecha_inicio']
+            fin = f.cleaned_data['fecha_fin']            
             orden = f.cleaned_data['orden']
-            conceptos = Concepto.objects.filter(cheque__fecha__month=month, cheque__fecha__year=year,  cheque__cuenta__contri=contri, cheque__activo=1)
-            cheques = Cheque.get_actives.filter(cuenta__contri__id=contri.id, fecha__year=year,fecha__month=month).order_by('id')
+            conceptos = Concepto.objects.filter(cheque__fecha__gte=inicio, cheque__fecha__lte=fin, cheque__cuenta__contri=contri, cheque__activo=1)
+            cheques = Cheque.get_actives.filter(cuenta__contri__id=contri.id, fecha__gte=inicio, fecha__lte=fin).order_by('id')
             gran_tot = resumen_totales(conceptos)
             print orden, type(orden)
             if orden == '0':
@@ -746,7 +746,7 @@ def reporte_contri(request):
 
             
            
-            return render_to_response('reportes/contribuyentes.html', {'contri':contri, 'month':month,'year':year,'conceptos':conceptos,  'gran_tot':gran_tot, 'cheques':cheques}, RequestContext(request))
+            return render_to_response('reportes/contribuyentes.html', {'contri':contri, 'inicio':inicio,'fin':fin,'conceptos':conceptos,  'gran_tot':gran_tot, 'cheques':cheques}, RequestContext(request))
 
     else:
         f = ContriForm()
@@ -760,10 +760,9 @@ def reporte_bancos(request):
         else:
             contri = request.session['contri']
             cuentas = Cuenta.objects.filter(contri=contri)
-
-            month = f.cleaned_data['month']
-            year = f.cleaned_data['year']
-            conceptos = Concepto.objects.filter(cheque__fecha__month=month, cheque__fecha__year=year,  cheque__cuenta__contri=contri)
+            inicio = f.cleaned_data['fecha_inicio']
+            fin = f.cleaned_data['fecha_fin']
+            conceptos = Concepto.objects.filter(cheque__fecha__gte=inicio, cheque__fecha__lte=fin,  cheque__cuenta__contri=contri)
             gran_tot = resumen_totales(conceptos)
             cuentalist=[]
             for cuenta in cuentas:
@@ -774,7 +773,7 @@ def reporte_bancos(request):
                 cuentadict['totales'] = resumen_totales(conceptos_cuenta)
                 cuentalist.append(cuentadict)
             
-            return render_to_response('reportes/bancos.html', {'contri':contri, 'month':month,'year':year,'conceptos':conceptos,  'gran_tot':gran_tot, 'resumen':cuentalist}, RequestContext(request))
+            return render_to_response('reportes/bancos.html', {'contri':contri, 'inicio':inicio,'fin':fin,'conceptos':conceptos,  'gran_tot':gran_tot, 'resumen':cuentalist}, RequestContext(request))
 
     else:
         f = FechaForm()
