@@ -65,7 +65,7 @@ def core_reporte_proveedor(contri, inicio, fin,minimo, request):
     gran_tot['importe'] = totales['importe'] + tot_exc['importe'] + totales_g['importe']
     gran_tot['descuento'] = totales['descuento'] + tot_exc['descuento'] + totales_g['descuento']
     gran_tot['descuento_iva'] = totales['descuento_iva'] + tot_exc['descuento_iva'] + totales_g['descuento_iva']
-    return render_to_response('reportes/proveedores.html',{'resumen':resumen, 'empresa':empresa, 'contri':contri, 'totales':totales,'excluidos':excluidos, 'tot_exc':tot_exc, 'gran_tot':gran_tot, 'tipos':tipos,'resumen_g':resumen_g,'totales_g':totales_g}, RequestContext(request))
+    return render_to_response('reportes/proveedores.html',{'inicio':inicio, 'fin':fin, 'resumen':resumen, 'empresa':empresa, 'contri':contri, 'totales':totales,'excluidos':excluidos, 'tot_exc':tot_exc, 'gran_tot':gran_tot, 'tipos':tipos,'resumen_g':resumen_g,'totales_g':totales_g}, RequestContext(request))
 
 
 def resumen_proveedores(conceptos, minimo):
