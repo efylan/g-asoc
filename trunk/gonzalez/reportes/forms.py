@@ -10,33 +10,33 @@ for year in range(2011,2021):
 ORDER_CHOICES = ((0,'Orden de captura'),(1,'Por cuenta bancaria'))
 
 class MesForm(forms.Form):
-    month = forms.ChoiceField(choices = MONTH, label="Mes")
-    year = forms.ChoiceField(choices = YEAR, label="Año")
+    fecha_inicio = forms.DateField()
+    fecha_fin = forms.DateField()
     minimo = forms.DecimalField(max_digits=10, decimal_places=2, label="Minimo para Global", required=False, help_text='No se englobará en caso de estar vacío.')
 
     def __init__(self, *args, **kwargs):
         super(MesForm, self).__init__(*args, **kwargs)
         hoy = date.today()    
-        self.fields['month'].initial = hoy.month
-        self.fields['year'].initial = hoy.year
+        self.fields['fecha_inicio'].widget.attrs['class'] = 'input_fecha'
+        self.fields['fecha_fin'].widget.attrs['class'] = 'input_fecha'
 
 class ContriForm(forms.Form):
-    month = forms.ChoiceField(choices = MONTH, label="Mes")
-    year = forms.ChoiceField(choices = YEAR, label="Año")
+    fecha_inicio = forms.DateField()
+    fecha_fin = forms.DateField()
     orden = forms.ChoiceField(choices= ORDER_CHOICES, label="Orden")
 
     def __init__(self, *args, **kwargs):
         super(ContriForm, self).__init__(*args, **kwargs)
         hoy = date.today()    
-        self.fields['month'].initial = hoy.month
-        self.fields['year'].initial = hoy.year
+        self.fields['fecha_inicio'].widget.attrs['class'] = 'input_fecha'
+        self.fields['fecha_fin'].widget.attrs['class'] = 'input_fecha'
 
 class FechaForm(forms.Form):
-    month = forms.ChoiceField(choices = MONTH, label="Mes")
-    year = forms.ChoiceField(choices = YEAR, label="Año")
+    fecha_inicio = forms.DateField()
+    fecha_fin = forms.DateField()
 
     def __init__(self, *args, **kwargs):
         super(FechaForm, self).__init__(*args, **kwargs)
         hoy = date.today()    
-        self.fields['month'].initial = hoy.month
-        self.fields['year'].initial = hoy.year
+        self.fields['fecha_inicio'].widget.attrs['class'] = 'input_fecha'
+        self.fields['fecha_fin'].widget.attrs['class'] = 'input_fecha'

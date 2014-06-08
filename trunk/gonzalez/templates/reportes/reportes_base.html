@@ -25,6 +25,8 @@
             <br>
             RFC: {{contri.rfc}}
             <br>
+            {%if inicio%}De {{inicio.day}}/{{inicio.month}}/{{inicio.year}} a {{fin.day}}/{{fin.month}}/{{fin.year}}{%endif%}
+            <br>
 
             {%block titlecontent%}
             {%endblock%}
