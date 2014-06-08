@@ -3,7 +3,7 @@ from diot.models import Cuenta, Cheque, Impuesto, Concepto
 from diot.models import TIPO_CONCEPTO
 
 MONTH = ((1,'Enero'),(2,'Febrero'),(3,'Marzo'),(4,'Abril'),(5,'Mayo'),(6,'Junio'),(7,'Julio'), (8,'Agosto'), (9,'Septiembre'), (10,'Octubre'),(11,'Noviembre'),(12,'Diciembre')) 
-YEAR = ((2011,'2011'), (2012,'2012'))
+YEAR = ((2011,'2011'),(2012,'2012'),(2013,'2013'),(2014,'2014'),(2015,'2015'),(2016,'2016'),(2017,'2017'),(2018,'2018'),(2019,'2019'),(2020,2020))
 
 
 class CrearCuentaForm(forms.ModelForm):

@@ -13,10 +13,10 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'gonzalez',                      # Or path to database file if using sqlite3.
-        'USER': 'root',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'NAME': '35034_gonzalez',                      # Or path to database file if using sqlite3.
+        'USER': 'g-asociados',                    # Not used with sqlite3.
+        'PASSWORD': 'r3d1r3ct',                  # Not used with sqlite3.
+        'HOST': 'mysql.alwaysdata.com',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
@@ -35,7 +35,7 @@ AUTH_PROFILE_MODULE = 'users.Perfil'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-MX'
 
 SITE_ID = 1
 
@@ -45,7 +45,7 @@ USE_I18N = True
 
 # If you set this to False, Django will not format dates, numbers and
 # calendars according to the current locale
-USE_L10N = True
+USE_L10N = False
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
@@ -69,7 +69,8 @@ STATIC_URL = '/static/'
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
-ADMIN_MEDIA_PREFIX = '/static/admin/'
+ADMIN_MEDIA_PREFIX = '/media/admin_media/'
+
 
 # Additional locations of static files
 STATICFILES_DIRS = (

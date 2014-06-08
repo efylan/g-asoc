@@ -46,11 +46,8 @@ $.ajaxSetup({
          }
      } 
 });
-
+ 
 function set_date_input(textinput){
-   /* recibe una caja de texto
-    y le asigna el datepicker */
-    textinput.attr("readonly", "true")
     textinput.datepicker($.datepicker.regional['es'])
 }
 
